@@ -1,3 +1,15 @@
 <resources>
     <string name="app_name">Weather</string>
+
+    <!-- Alert dialogs -->
+    <string name="alert_dialog_header_warning">Warning!</string>
+    <string name="alert_dialog_text_warning">In order for this app to work properly, you must allow the location permissions. The application cannot work without them!</string>
+    <string name="alert_dialog_header_enable_location">"Enable location"</string>
+    <string name="alert_dialog_text_enable_location">Your Locations Settings is set to \'Off\'.\nPlease Enable Location to use this app</string>
+
+    <!-- Buttons -->
+    <string name="button_ok">OK</string>
+    <string name="button_close_app">Close App</string>
+    <string name="button_location_settings">Location Settings</string>
+    <string name="button_cancel">Cancel</string>
 </resources>

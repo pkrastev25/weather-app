@@ -6,5 +6,11 @@ package com.petar.weather.util;
 
 public class Constants {
 
+    // API
     public static final String API_BASE_URL = "https://www.metaweather.com/";
+
+    // Permissions
+    public static final int REQUEST_CODE_ACCESS_FINE_LOCATION = 0;
+    public static final int MIN_TIME_LOCATION_UPDATE = 0;
+    public static final int MIN_DISTANCE_LOCATION_UPDATE = 0;
 }
