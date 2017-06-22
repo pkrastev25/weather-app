@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.databinding.DataBindingUtil;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -14,9 +15,11 @@ import android.support.annotation.NonNull;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.view.View;
 
 import com.hannesdorfmann.mosby3.mvp.MvpActivity;
 import com.petar.weather.R;
+import com.petar.weather.databinding.ActivityMainBinding;
 import com.petar.weather.presenters.MainActivityPresenter;
 import com.petar.weather.ui.views.IMainActivity;
 import com.petar.weather.util.Constants;
@@ -24,11 +27,16 @@ import com.petar.weather.util.Constants;
 public class MainActivity extends MvpActivity<IMainActivity, MainActivityPresenter> implements LocationListener, IMainActivity {
 
     private LocationManager mLocationManager;
+    private View mSplashScreen;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        ActivityMainBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
+        binding.setView(this);
+        mSplashScreen = binding.splashScreen;
 
         checkPermissions();
     }
@@ -44,6 +52,7 @@ public class MainActivity extends MvpActivity<IMainActivity, MainActivityPresent
         super.onDestroy();
         mLocationManager.removeUpdates(this);
         mLocationManager = null;
+        mSplashScreen = null;
     }
 
     @NonNull
@@ -92,8 +101,8 @@ public class MainActivity extends MvpActivity<IMainActivity, MainActivityPresent
 
     private void showExplanationDialog() {
         final AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle(R.string.alert_dialog_header)
-                .setMessage(R.string.alert_dialog_text)
+        builder.setTitle(R.string.alert_dialog_header_warning)
+                .setMessage(R.string.alert_dialog_text_warning)
                 .setPositiveButton(R.string.button_ok, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -128,6 +137,7 @@ public class MainActivity extends MvpActivity<IMainActivity, MainActivityPresent
         // 0,0 coordinates is where the Equator crosses the Greenwich meridian, sounds good for spotting out errors !
         if (location != null && location.getLatitude() != 0 && location.getLongitude() != 0) {
             mLocationManager.removeUpdates(this);
+            presenter.processLocation(location);
         }
     }
 
@@ -164,5 +174,10 @@ public class MainActivity extends MvpActivity<IMainActivity, MainActivityPresent
                     }
                 });
         dialog.show();
+    }
+
+    @Override
+    public void hideSplashScreen() {
+        mSplashScreen.setVisibility(View.INVISIBLE);
     }
 }

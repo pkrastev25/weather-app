@@ -1,5 +1,7 @@
 <resources>
+    <!-- General -->
     <string name="app_name">Weather</string>
+    <string name="splash_screen_text">This is a sample splash screen text!</string>
 
     <!-- Alert dialogs -->
     <string name="alert_dialog_header_warning">Warning!</string>
