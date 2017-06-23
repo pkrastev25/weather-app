@@ -9,4 +9,6 @@ import com.hannesdorfmann.mosby3.mvp.MvpView;
 public interface IMainActivity extends MvpView {
 
     void hideSplashScreen();
+
+    void navigateToForecastActivity(int id);
 }

@@ -79,8 +79,9 @@ public class MainActivity extends MvpActivity<IMainActivity, MainActivityPresent
         mLocationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
         try {
+            // TODO: Include the GPS provider as well
             mLocationManager.requestLocationUpdates(
-                    LocationManager.GPS_PROVIDER,
+                    LocationManager.NETWORK_PROVIDER,
                     Constants.MIN_TIME_LOCATION_UPDATE,
                     Constants.MIN_DISTANCE_LOCATION_UPDATE,
                     this
@@ -179,5 +180,12 @@ public class MainActivity extends MvpActivity<IMainActivity, MainActivityPresent
     @Override
     public void hideSplashScreen() {
         mSplashScreen.setVisibility(View.INVISIBLE);
+    }
+
+    @Override
+    public void navigateToForecastActivity(int id) {
+        Intent intent = new Intent(this, ForecastActivity.class);
+        intent.putExtra("woId", id);
+        startActivity(intent);
     }
 }

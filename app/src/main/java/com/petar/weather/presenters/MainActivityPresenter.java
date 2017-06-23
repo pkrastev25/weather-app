@@ -9,6 +9,7 @@ import com.petar.weather.networking.models.NLocation;
 import com.petar.weather.ui.views.IMainActivity;
 import com.petar.weather.util.FormatUtil;
 
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -25,7 +26,6 @@ public class MainActivityPresenter extends MvpBasePresenter<IMainActivity> {
 
     public void processLocation(Location location) {
         initTask();
-
         mTask.execute(FormatUtil.formatCoordinates(location));
     }
 
@@ -33,9 +33,15 @@ public class MainActivityPresenter extends MvpBasePresenter<IMainActivity> {
         mTask = new LocationQueryWithCoordinatesTask(new AAsyncTask.AAsyncTaskListener<List<NLocation>>() {
             @Override
             public void onLoadFinished(List<NLocation> nLocations) {
-                if (isViewAttached()) {
-                    getView().hideSplashScreen();
+                if (!nLocations.isEmpty()) {
+                    Collections.sort(nLocations);
+
+                    if (isViewAttached()) {
+                        getView().hideSplashScreen();
+                        getView().navigateToForecastActivity(nLocations.get(0).getWoeid());
+                    }
                 }
+                // TODO: Implement logic when we do not have near points
             }
 
             @Override

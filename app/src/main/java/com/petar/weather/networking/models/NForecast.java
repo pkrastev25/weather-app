@@ -11,7 +11,7 @@ public class NForecast {
 
     @SerializedName("id")
     @Expose
-    private Integer id;
+    private Long id;
     @SerializedName("weather_state_name")
     @Expose
     private String weatherStateName;
@@ -55,11 +55,11 @@ public class NForecast {
     @Expose
     private Integer predictability;
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

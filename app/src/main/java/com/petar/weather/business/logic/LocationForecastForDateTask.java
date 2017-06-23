@@ -9,17 +9,18 @@ import java.util.List;
  * Created by User on 22.6.2017 г..
  */
 
-public class LocationForecastForDateTask extends AAsyncTask<String, List<NForecast>> {
+public class LocationForecastForDateTask extends AAsyncTask<Object, List<NForecast>> {
 
     public LocationForecastForDateTask(AAsyncTaskListener listener) {
         super(listener);
     }
 
     @Override
-    protected List<NForecast> doInBackground(String... params) {
+    protected List<NForecast> doInBackground(Object... params) {
         try {
-            int id = Integer.valueOf(params[0]);
-            return ApiLogic.getInstance().getLocationForecastForDate(id, params[1]);
+            int id = (Integer) params[0];
+            String date = (String) params[1];
+            return ApiLogic.getInstance().getLocationForecastForDate(id, date);
         } catch (Exception e) {
             mException = e;
         }
