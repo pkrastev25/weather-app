@@ -3,13 +3,12 @@ package com.petar.weather.presenters;
 import android.location.Location;
 
 import com.hannesdorfmann.mosby3.mvp.MvpBasePresenter;
-import com.petar.weather.business.logic.AAsyncTask;
-import com.petar.weather.business.logic.LocationQueryWithCoordinatesTask;
-import com.petar.weather.networking.models.NLocation;
+import com.petar.weather.util.AsyncTaskUtil;
+import com.petar.weather.logic.DataLogic;
+import com.petar.weather.logic.models.ILocation;
 import com.petar.weather.ui.views.IMainActivity;
 import com.petar.weather.util.FormatUtil;
 
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -18,34 +17,32 @@ import java.util.List;
 
 public class MainActivityPresenter extends MvpBasePresenter<IMainActivity> {
 
-    private LocationQueryWithCoordinatesTask mTask;
-
     public MainActivityPresenter() {
 
     }
 
-    public void processLocation(Location location) {
-        initTask();
-        mTask.execute(FormatUtil.formatCoordinates(location));
-    }
-
-    private void initTask() {
-        mTask = new LocationQueryWithCoordinatesTask(new AAsyncTask.AAsyncTaskListener<List<NLocation>>() {
+    public void processLocation(final Location location) {
+        AsyncTaskUtil.doInBackground(new AsyncTaskUtil.IAsyncTaskHelperListener<List<? extends ILocation>>() {
             @Override
-            public void onLoadFinished(List<NLocation> nLocations) {
-                if (!nLocations.isEmpty()) {
-                    Collections.sort(nLocations);
+            public List<? extends ILocation> onExecuteTask() throws Exception {
+                return DataLogic.getInstance().getLocationQueryResultWithCoordinates(
+                        FormatUtil.coordinatesFormat(location)
+                );
+            }
 
+            @Override
+            public void onSuccess(List<? extends ILocation> nLocations) {
+                if (!nLocations.isEmpty()) {
                     if (isViewAttached()) {
                         getView().hideSplashScreen();
-                        getView().navigateToForecastActivity(nLocations.get(0).getWoeid());
+                        getView().navigateToForecastActivity(nLocations.get(0).getId());
                     }
                 }
                 // TODO: Implement logic when we do not have near points
             }
 
             @Override
-            public void onError() {
+            public void onError(Exception error) {
 
             }
         });

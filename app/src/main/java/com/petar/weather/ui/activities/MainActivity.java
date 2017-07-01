@@ -24,6 +24,8 @@ import com.petar.weather.presenters.MainActivityPresenter;
 import com.petar.weather.ui.views.IMainActivity;
 import com.petar.weather.util.Constants;
 
+import net.danlew.android.joda.JodaTimeAndroid;
+
 public class MainActivity extends MvpActivity<IMainActivity, MainActivityPresenter> implements LocationListener, IMainActivity {
 
     private LocationManager mLocationManager;
@@ -33,6 +35,7 @@ public class MainActivity extends MvpActivity<IMainActivity, MainActivityPresent
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        JodaTimeAndroid.init(this);
 
         ActivityMainBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
         binding.setView(this);

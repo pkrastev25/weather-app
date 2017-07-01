@@ -2,6 +2,11 @@ package com.petar.weather.util;
 
 import android.location.Location;
 
+import com.petar.weather.logic.models.AForecast;
+
+import org.joda.time.DateTime;
+
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
@@ -12,16 +17,24 @@ import java.util.Locale;
 
 public class FormatUtil {
 
-    private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy/MM/dd/", Locale.getDefault());
+    private static final DateFormat DATE_REQUEST_FORMAT = new SimpleDateFormat("yyyy/MM/dd/", Locale.getDefault());
+    private static final DateFormat DATE_SHOW_FORMAT = DateFormat.getDateInstance(DateFormat.MEDIUM, Locale.getDefault());
+    private static final DateFormat TIME_SHOW_FORMAT = DateFormat.getTimeInstance(DateFormat.SHORT, Locale.getDefault());
 
-    public static String formatCoordinates(Location location) {
+    public static String coordinatesFormat(Location location) {
         String latitude = String.valueOf((float) location.getLatitude());
         String longitude = String.valueOf((float) location.getLongitude());
 
         return latitude + "," + longitude;
     }
 
-    public static String formatDate(Calendar calendar) {
-        return DATE_FORMAT.format(calendar.getTime());
+    public static String dateRequestFormat(Calendar calendar) {
+        return DATE_REQUEST_FORMAT.format(calendar.getTime());
+    }
+
+    public static String forecastDateFormat(AForecast forecast) {
+        DateTime applicableDate = new DateTime(forecast.getApplicableDate());
+        DateTime created = new DateTime(forecast.getCreatedDate());
+        return TIME_SHOW_FORMAT.format(created.toDate()) + " " + DATE_SHOW_FORMAT.format(applicableDate.toDate());
     }
 }

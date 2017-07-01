@@ -11,6 +11,11 @@ public class Constants {
 
     // Permissions
     public static final int REQUEST_CODE_ACCESS_FINE_LOCATION = 0;
+
+    // Location
     public static final int MIN_TIME_LOCATION_UPDATE = 0;
     public static final int MIN_DISTANCE_LOCATION_UPDATE = 0;
+
+    // Forecast
+    public static final int FORECASTS_FOR_A_DAY = 8;
 }
