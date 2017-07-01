@@ -1,6 +1,8 @@
-package com.petar.weather.networking.models;
+package com.petar.weather.networking;
 
-import com.petar.weather.networking.IApi;
+import com.petar.weather.networking.models.NForecast;
+import com.petar.weather.networking.models.NLocation;
+import com.petar.weather.networking.models.NLocationForecast;
 import com.petar.weather.util.Constants;
 
 import java.io.IOException;

@@ -3,8 +3,9 @@ package com.petar.weather.networking.models;
 import android.support.annotation.NonNull;
 
 import com.google.gson.annotations.SerializedName;
+import com.petar.weather.logic.models.ILocation;
 
-public class NLocation implements Comparable<NLocation> {
+public class NLocation implements ILocation {
 
     @SerializedName("distance")
     private Integer distance;
@@ -21,47 +22,16 @@ public class NLocation implements Comparable<NLocation> {
         return distance;
     }
 
-    public void setDistance(Integer distance) {
-        this.distance = distance;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public String getLocationType() {
-        return locationType;
-    }
-
-    public void setLocationType(String locationType) {
-        this.locationType = locationType;
-    }
-
-    public Integer getWoeid() {
+    @Override
+    public Integer getId() {
         return woeid;
     }
 
-    public void setWoeid(Integer woeid) {
-        this.woeid = woeid;
-    }
-
-    public String getLattLong() {
-        return lattLong;
-    }
-
-    public void setLattLong(String lattLong) {
-        this.lattLong = lattLong;
-    }
-
     @Override
-    public int compareTo(@NonNull NLocation o) {
-        if (distance > o.distance) {
+    public int compareTo(@NonNull ILocation o) {
+        if (distance > o.getDistance()) {
             return 1;
-        } else if (distance < o.distance) {
+        } else if (distance < o.getDistance()) {
             return -1;
         } else {
             return 0;

@@ -1,58 +1,45 @@
 package com.petar.weather.networking.models;
 
-import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+import com.petar.weather.logic.models.AForecast;
+
+import org.joda.time.DateTime;
 
 /**
  * Created by User on 21.6.2017 г..
  */
 
-public class NForecast {
+public class NForecast extends AForecast {
 
     @SerializedName("id")
-    @Expose
     private Long id;
     @SerializedName("weather_state_name")
-    @Expose
     private String weatherStateName;
     @SerializedName("weather_state_abbr")
-    @Expose
     private String weatherStateAbbr;
     @SerializedName("wind_direction_compass")
-    @Expose
     private String windDirectionCompass;
     @SerializedName("created")
-    @Expose
     private String created;
     @SerializedName("applicable_date")
-    @Expose
     private String applicableDate;
     @SerializedName("min_temp")
-    @Expose
     private Double minTemp;
     @SerializedName("max_temp")
-    @Expose
     private Double maxTemp;
     @SerializedName("the_temp")
-    @Expose
     private Double theTemp;
     @SerializedName("wind_speed")
-    @Expose
     private Double windSpeed;
     @SerializedName("wind_direction")
-    @Expose
     private Double windDirection;
     @SerializedName("air_pressure")
-    @Expose
     private Double airPressure;
     @SerializedName("humidity")
-    @Expose
     private Integer humidity;
     @SerializedName("visibility")
-    @Expose
     private Object visibility;
     @SerializedName("predictability")
-    @Expose
     private Integer predictability;
 
     public Long getId() {
@@ -63,31 +50,7 @@ public class NForecast {
         this.id = id;
     }
 
-    public String getWeatherStateName() {
-        return weatherStateName;
-    }
-
-    public void setWeatherStateName(String weatherStateName) {
-        this.weatherStateName = weatherStateName;
-    }
-
-    public String getWeatherStateAbbr() {
-        return weatherStateAbbr;
-    }
-
-    public void setWeatherStateAbbr(String weatherStateAbbr) {
-        this.weatherStateAbbr = weatherStateAbbr;
-    }
-
-    public String getWindDirectionCompass() {
-        return windDirectionCompass;
-    }
-
-    public void setWindDirectionCompass(String windDirectionCompass) {
-        this.windDirectionCompass = windDirectionCompass;
-    }
-
-    public String getCreated() {
+    public String getCreatedDate() {
         return created;
     }
 
@@ -99,79 +62,13 @@ public class NForecast {
         return applicableDate;
     }
 
-    public void setApplicableDate(String applicableDate) {
-        this.applicableDate = applicableDate;
+    @Override
+    public void convertDateStringToTimestamp() {
+        mTimestamp = new DateTime(applicableDate).getMillis();
     }
 
-    public Double getMinTemp() {
-        return minTemp;
-    }
-
-    public void setMinTemp(Double minTemp) {
-        this.minTemp = minTemp;
-    }
-
-    public Double getMaxTemp() {
-        return maxTemp;
-    }
-
-    public void setMaxTemp(Double maxTemp) {
-        this.maxTemp = maxTemp;
-    }
-
-    public Double getTheTemp() {
-        return theTemp;
-    }
-
-    public void setTheTemp(Double theTemp) {
-        this.theTemp = theTemp;
-    }
-
-    public Double getWindSpeed() {
-        return windSpeed;
-    }
-
-    public void setWindSpeed(Double windSpeed) {
-        this.windSpeed = windSpeed;
-    }
-
-    public Double getWindDirection() {
-        return windDirection;
-    }
-
-    public void setWindDirection(Double windDirection) {
-        this.windDirection = windDirection;
-    }
-
-    public Double getAirPressure() {
-        return airPressure;
-    }
-
-    public void setAirPressure(Double airPressure) {
-        this.airPressure = airPressure;
-    }
-
-    public Integer getHumidity() {
-        return humidity;
-    }
-
-    public void setHumidity(Integer humidity) {
-        this.humidity = humidity;
-    }
-
-    public Object getVisibility() {
-        return visibility;
-    }
-
-    public void setVisibility(Object visibility) {
-        this.visibility = visibility;
-    }
-
-    public Integer getPredictability() {
-        return predictability;
-    }
-
-    public void setPredictability(Integer predictability) {
-        this.predictability = predictability;
+    @Override
+    public String getWeatherState() {
+        return weatherStateName;
     }
 }
