@@ -9,20 +9,15 @@ import android.support.annotation.NonNull;
 
 public class AsyncTaskUtil extends AsyncTask<Void, Void, Object> {
 
-    private static IAsyncTaskHelperListener sListener;
-    private static AsyncTaskUtil sInstance;
+    private IAsyncTaskHelperListener mListener;
     private Exception mException;
 
     public AsyncTaskUtil(@NonNull IAsyncTaskHelperListener listener) {
-        sListener = listener;
+        mListener = listener;
     }
 
     public static void doInBackground(@NonNull IAsyncTaskHelperListener listener) {
-        if (sInstance == null) {
-            sInstance = new AsyncTaskUtil(listener);
-        }
-
-        sInstance.execute();
+        new AsyncTaskUtil(listener).execute();
     }
 
     @Override
@@ -30,24 +25,19 @@ public class AsyncTaskUtil extends AsyncTask<Void, Void, Object> {
         super.onPostExecute(result);
 
         if (mException != null) {
-            sListener.onError(mException);
+            mListener.onError(mException);
         } else {
-            sListener.onSuccess(result);
+            mListener.onSuccess(result);
         }
 
-        clear();
-    }
-
-    private void clear() {
         mException = null;
-        sListener = null;
-        sInstance = null;
+        mListener = null;
     }
 
     @Override
     protected Object doInBackground(Void... params) {
         try {
-            return sListener.onExecuteTask();
+            return mListener.onExecuteTask();
         } catch (Exception e) {
             mException = e;
             e.printStackTrace();
