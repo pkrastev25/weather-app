@@ -14,4 +14,10 @@
     <string name="button_close_app">Close App</string>
     <string name="button_location_settings">Location Settings</string>
     <string name="button_cancel">Cancel</string>
+
+    <!-- Toolbar -->
+    <string name="toolbar_location_hint">Searching for your current location…</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

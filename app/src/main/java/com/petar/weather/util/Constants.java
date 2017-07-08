@@ -18,4 +18,9 @@ public class Constants {
 
     // Forecast
     public static final int FORECASTS_FOR_A_DAY = 8;
+
+    // View pager for fragments
+    public static final int VIEW_PAGER_FRAGMENT_COUNT = 3;
+    public static final int HOURLY_FORECAST_FRAGMENT_POSITION = 0;
+    public static final int DAILY_FORECAST_FRAGMENT_POSITION = 1;
 }
