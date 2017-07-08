@@ -11,6 +11,7 @@ import com.petar.weather.R;
 import com.petar.weather.databinding.ForecastBinding;
 import com.petar.weather.logic.models.AForecast;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -18,10 +19,10 @@ import java.util.List;
  */
 
 public class ForecastRecyclerAdapter extends RecyclerView.Adapter<ForecastRecyclerAdapter.BindingHolder> {
-    private List<? extends AForecast> mForecasts;
+    private List<? extends AForecast> mData;
 
-    public ForecastRecyclerAdapter(List<? extends AForecast> forecasts) {
-        mForecasts = forecasts;
+    public ForecastRecyclerAdapter() {
+        mData = new ArrayList<>();
     }
 
     @Override
@@ -32,14 +33,19 @@ public class ForecastRecyclerAdapter extends RecyclerView.Adapter<ForecastRecycl
 
     @Override
     public void onBindViewHolder(BindingHolder holder, int position) {
-        final AForecast forecast = mForecasts.get(position);
+        final AForecast forecast = mData.get(position);
         holder.getBinding().setVariable(BR.item, forecast);
         holder.getBinding().executePendingBindings();
     }
 
     @Override
     public int getItemCount() {
-        return mForecasts.size();
+        return mData.size();
+    }
+
+    public void setData(List<? extends AForecast> data) {
+        mData = data;
+        notifyDataSetChanged();
     }
 
     public static class BindingHolder extends RecyclerView.ViewHolder {
