@@ -18,7 +18,7 @@ import java.util.Set;
 public class ForecastUtil {
 
     private static Set<Integer> mForecastHoursContainer;
-    
+
     public static List<? extends AForecast> extractData(List<? extends AForecast> data) {
         List<? extends AForecast> result = new ArrayList<>();
 

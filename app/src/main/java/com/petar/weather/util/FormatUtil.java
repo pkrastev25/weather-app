@@ -35,6 +35,17 @@ public class FormatUtil {
     public static String forecastDateFormat(AForecast forecast) {
         DateTime applicableDate = new DateTime(forecast.getApplicableDate());
         DateTime created = new DateTime(forecast.getCreatedDate());
+
         return TIME_SHOW_FORMAT.format(created.toDate()) + " " + DATE_SHOW_FORMAT.format(applicableDate.toDate());
+    }
+
+    public static String formatDistance(int distance) {
+        String formattedDistance = "";
+
+        if (distance != 0) {
+            formattedDistance = distance + "m";
+        }
+
+        return formattedDistance;
     }
 }
