@@ -2,33 +2,26 @@ package com.petar.weather.ui.activities;
 
 import android.Manifest;
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.databinding.DataBindingUtil;
-import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
-import com.hannesdorfmann.mosby3.mvp.MvpActivity;
 import com.petar.weather.R;
 import com.petar.weather.databinding.ActivityMainBinding;
-import com.petar.weather.presenters.MainActivityPresenter;
-import com.petar.weather.ui.views.IMainActivity;
 import com.petar.weather.util.Constants;
 
 import net.danlew.android.joda.JodaTimeAndroid;
 
-public class MainActivity extends MvpActivity<IMainActivity, MainActivityPresenter> implements LocationListener, IMainActivity {
+public class MainActivity extends AppCompatActivity {
 
-    private LocationManager mLocationManager;
     private View mSplashScreen;
 
     @Override
@@ -40,7 +33,11 @@ public class MainActivity extends MvpActivity<IMainActivity, MainActivityPresent
         ActivityMainBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
         binding.setView(this);
         mSplashScreen = binding.splashScreen;
+    }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
         checkPermissions();
     }
 
@@ -53,20 +50,13 @@ public class MainActivity extends MvpActivity<IMainActivity, MainActivityPresent
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        mLocationManager.removeUpdates(this);
-        mLocationManager = null;
         mSplashScreen = null;
-    }
-
-    @NonNull
-    @Override
-    public MainActivityPresenter createPresenter() {
-        return new MainActivityPresenter();
     }
 
     private void checkPermissions() {
         if (arePermissionsAllowed()) {
-            getLocation();
+            hideSplashScreen();
+            navigateToForecastActivity();
         } else {
             onRequestPermissions();
         }
@@ -76,22 +66,6 @@ public class MainActivity extends MvpActivity<IMainActivity, MainActivityPresent
         return ContextCompat.checkSelfPermission(
                 this, Manifest.permission.ACCESS_FINE_LOCATION
         ) == PackageManager.PERMISSION_GRANTED;
-    }
-
-    private void getLocation() {
-        mLocationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-
-        try {
-            // TODO: Include the GPS provider as well
-            mLocationManager.requestLocationUpdates(
-                    LocationManager.NETWORK_PROVIDER,
-                    Constants.MIN_TIME_LOCATION_UPDATE,
-                    Constants.MIN_DISTANCE_LOCATION_UPDATE,
-                    this
-            );
-        } catch (SecurityException e) {
-            onRequestPermissions();
-        }
     }
 
     private void onRequestPermissions() {
@@ -129,35 +103,12 @@ public class MainActivity extends MvpActivity<IMainActivity, MainActivityPresent
 
         if (requestCode == Constants.REQUEST_CODE_ACCESS_FINE_LOCATION) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                getLocation();
+                hideSplashScreen();
+                navigateToForecastActivity();
             } else {
                 finish();
             }
         }
-    }
-
-    @Override
-    public void onLocationChanged(Location location) {
-        // 0,0 coordinates is where the Equator crosses the Greenwich meridian, sounds good for spotting out errors !
-        if (location != null && location.getLatitude() != 0 && location.getLongitude() != 0) {
-            mLocationManager.removeUpdates(this);
-            presenter.processLocation(location);
-        }
-    }
-
-    @Override
-    public void onStatusChanged(String provider, int status, Bundle extras) {
-        // Do nothing, for now..
-    }
-
-    @Override
-    public void onProviderEnabled(String provider) {
-        getLocation();
-    }
-
-    @Override
-    public void onProviderDisabled(String provider) {
-        showEnableSettingsDialog();
     }
 
     private void showEnableSettingsDialog() {
@@ -180,15 +131,12 @@ public class MainActivity extends MvpActivity<IMainActivity, MainActivityPresent
         dialog.show();
     }
 
-    @Override
     public void hideSplashScreen() {
         mSplashScreen.setVisibility(View.INVISIBLE);
     }
 
-    @Override
-    public void navigateToForecastActivity(int id) {
+    public void navigateToForecastActivity() {
         Intent intent = new Intent(this, ForecastActivity.class);
-        intent.putExtra("woId", id);
         startActivity(intent);
     }
 }
