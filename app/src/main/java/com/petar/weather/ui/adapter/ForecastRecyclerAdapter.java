@@ -48,6 +48,10 @@ public class ForecastRecyclerAdapter extends RecyclerView.Adapter<ForecastRecycl
         notifyDataSetChanged();
     }
 
+    public boolean isEmpty() {
+        return mData.isEmpty();
+    }
+
     public static class BindingHolder extends RecyclerView.ViewHolder {
         private ForecastBinding mBinding;
 

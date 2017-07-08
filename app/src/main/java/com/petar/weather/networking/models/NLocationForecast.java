@@ -1,6 +1,7 @@
 package com.petar.weather.networking.models;
 
 import com.google.gson.annotations.SerializedName;
+import com.petar.weather.logic.models.AForecast;
 import com.petar.weather.logic.models.ILocationForecast;
 
 import java.util.List;
@@ -35,4 +36,9 @@ public class NLocationForecast implements ILocationForecast {
     private String lattLong;
     @SerializedName("timezone")
     private String timezone;
+
+    @Override
+    public List<? extends AForecast> getForecast() {
+        return consolidatedWeather;
+    }
 }

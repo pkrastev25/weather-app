@@ -46,7 +46,9 @@ public class ForecastActivity extends MvpLceActivity<RecyclerView, List<? extend
 
     private LocationRecyclerAdapter mLocationAdapter;
 
-    private ForecastActivityListener mListener;
+    // ACTIVITY-FRAGMENT COMMUNICATION helpers
+    private IDailyForecastFragmentListener mDailyForecastFragmentListener;
+    private IHourlyForecastFragmentListener mHourlyForecastFragmentListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -96,7 +98,8 @@ public class ForecastActivity extends MvpLceActivity<RecyclerView, List<? extend
 
         mLocationAdapter = null;
 
-        mListener = null;
+        mDailyForecastFragmentListener = null;
+        mHourlyForecastFragmentListener = null;
     }
 
     @NonNull
@@ -260,18 +263,30 @@ public class ForecastActivity extends MvpLceActivity<RecyclerView, List<? extend
     // End of LOCATION region
 
     // ACTIVITY-FRAGMENT COMMUNICATION region
-    public interface ForecastActivityListener {
+    private interface IForecastFragmentListener {
         void onLocationFound(Integer id);
     }
 
+    public interface IDailyForecastFragmentListener extends IForecastFragmentListener {}
+
+    public interface IHourlyForecastFragmentListener extends IForecastFragmentListener {}
+
     public void onLocationFound(Integer id) {
-        if (mListener != null) {
-            mListener.onLocationFound(id);
+        if (mHourlyForecastFragmentListener != null) {
+            mHourlyForecastFragmentListener.onLocationFound(id);
+        }
+
+        if (mDailyForecastFragmentListener != null) {
+            mDailyForecastFragmentListener.onLocationFound(id);
         }
     }
 
-    public void setListener(ForecastActivityListener listener) {
-        mListener = listener;
+    public void setDailyForecastFragmentListener(IDailyForecastFragmentListener dailyForecastFragmentListener) {
+        mDailyForecastFragmentListener = dailyForecastFragmentListener;
+    }
+
+    public void setHourlyForecastFragmentListener(IHourlyForecastFragmentListener hourlyForecastFragmentListener) {
+        mHourlyForecastFragmentListener = hourlyForecastFragmentListener;
     }
     // End of ACTIVITY-FRAGMENT COMMUNICATION region
 }

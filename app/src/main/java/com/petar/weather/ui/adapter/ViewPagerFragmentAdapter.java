@@ -4,6 +4,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
+import com.petar.weather.ui.fragments.DailyForecastFragment;
 import com.petar.weather.ui.fragments.HourlyForecastFragment;
 import com.petar.weather.ui.fragments.SettingsFragment;
 import com.petar.weather.util.Constants;
@@ -24,7 +25,7 @@ public class ViewPagerFragmentAdapter extends FragmentPagerAdapter {
             case (Constants.HOURLY_FORECAST_FRAGMENT_POSITION):
                 return new HourlyForecastFragment();
             case (Constants.DAILY_FORECAST_FRAGMENT_POSITION):
-                return new SettingsFragment();
+                return new DailyForecastFragment();
             default:
                 return new SettingsFragment();
         }
