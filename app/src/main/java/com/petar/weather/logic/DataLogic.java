@@ -1,7 +1,7 @@
 package com.petar.weather.logic;
 
 import com.petar.weather.logic.models.AForecast;
-import com.petar.weather.logic.models.ILocation;
+import com.petar.weather.logic.models.ALocation;
 import com.petar.weather.logic.models.ILocationForecast;
 import com.petar.weather.networking.ApiLogic;
 
@@ -28,11 +28,11 @@ public class DataLogic {
         return sInstance;
     }
 
-    public List<? extends ILocation> getLocationQueryResult(String query) throws IOException {
+    public List<? extends ALocation> getLocationQueryResult(String query) throws IOException {
         return ApiLogic.getInstance().getLocationQueryResult(query);
     }
 
-    public List<? extends ILocation> getLocationQueryResultWithCoordinates(String coordinates) throws IOException {
+    public List<? extends ALocation> getLocationQueryResultWithCoordinates(String coordinates) throws IOException {
         return ApiLogic.getInstance().getLocationQueryResultWithCoordinates(coordinates);
     }
 
