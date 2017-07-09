@@ -55,4 +55,11 @@ public class ApiLogic {
         Response<List<NForecast>> response = mApi.getLocationForecastForDate(id, date).execute();
         return response.body();
     }
+
+    // TODO: Rework this
+    public String getPNGImageUrl(String type) {
+        String imageUrl = Constants.API_BASE_URL + Constants.API_IMAGE_PNG;
+
+        return imageUrl.replace("{type}", type);
+    }
 }

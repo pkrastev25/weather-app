@@ -7,7 +7,8 @@ package com.petar.weather.util;
 public class Constants {
 
     // API
-    public static final String API_BASE_URL = "https://www.metaweather.com/";
+    public static final String API_BASE_URL = "https://www.metaweather.com";
+    public static final String API_IMAGE_PNG = "/static/img/weather/png/{type}.png";
 
     // Permissions
     public static final int REQUEST_CODE_ACCESS_FINE_LOCATION = 0;

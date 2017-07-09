@@ -48,4 +48,8 @@ public class FormatUtil {
 
         return formattedDistance;
     }
+
+    public static String formatTemperature(double temp) {
+        return String.valueOf(Math.round(temp));
+    }
 }

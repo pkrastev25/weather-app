@@ -22,6 +22,12 @@ public abstract class AForecast implements Comparable<AForecast> {
 
     public abstract String getApplicableDate();
 
+    public abstract String getImageType();
+
+    public abstract Double getMaxTemp();
+
+    public abstract Double getMinTemp();
+
     @Override
     public int compareTo(@NonNull AForecast o) {
         if (mTimestamp > o.mTimestamp) {

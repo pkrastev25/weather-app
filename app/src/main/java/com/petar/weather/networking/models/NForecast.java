@@ -63,6 +63,21 @@ public class NForecast extends AForecast {
     }
 
     @Override
+    public String getImageType() {
+        return weatherStateAbbr;
+    }
+
+    @Override
+    public Double getMaxTemp() {
+        return maxTemp;
+    }
+
+    @Override
+    public Double getMinTemp() {
+        return minTemp;
+    }
+
+    @Override
     public void convertDateStringToTimestamp() {
         mTimestamp = new DateTime(applicableDate).getMillis();
     }
