@@ -33,43 +33,11 @@ public class ForecastActivityPresenter extends MvpBasePresenter<IForecastActivit
                 public void onSuccess(List<? extends ALocation> result) {
                     if (isViewAttached()) {
                         if (!result.isEmpty()) {
-                            getView().setCurrentLocation(result.get(0));
+                            getView().setData(result.get(0));
+                            getView().showContent();
                         }
                     }
                     // TODO: Implement logic when we do not have near points
-                }
-
-                @Override
-                public void onError(Exception error) {
-
-                }
-            });
-        }
-    }
-
-    public void processLocationQuery(final String query) {
-        if (isViewAttached()) {
-            getView().showLoading(false);
-
-            AsyncTaskUtil.doInBackground(new AsyncTaskUtil.IAsyncTaskHelperListener<List<? extends ALocation>>() {
-
-                @Override
-                public List<? extends ALocation> onExecuteTask() throws Exception {
-                    return DataLogic.getInstance().getLocationQueryResult(query);
-                }
-
-                @Override
-                public void onSuccess(List<? extends ALocation> result) {
-                    if (isViewAttached()) {
-                        if (!result.isEmpty()) {
-                            if (result.size() == 1) {
-                                getView().setCurrentLocation(result.get(0));
-                            } else {
-                                getView().setData(result);
-                                getView().showContent();
-                            }
-                        }
-                    }
                 }
 
                 @Override

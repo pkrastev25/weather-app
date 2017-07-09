@@ -16,7 +16,7 @@
             android:id="@+id/current_location_icon"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:onClick="@{() -> view.onCurrentLocationClick()}"
+            android:onClick="@{() -> view.onFindCurrentLocationClick()}"
             android:src="@mipmap/ic_launcher_round"/>
 
         <TextView
@@ -24,15 +24,16 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:gravity="center_vertical"
+            android:gravity="center"
             android:onClick="@{() -> view.onCurrentLocationClick()}"
-            android:text="@{view.currentLocation}"/>
+            android:text="@{view.currentLocationTitle}"/>
 
-        <SearchView
+        <ImageView
             android:id="@+id/search"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_weight="0.2"/>
+            android:onClick="@{() -> view.onSearchClick()}"
+            android:src="@mipmap/ic_launcher_round"/>
     </LinearLayout>
 
 </layout>

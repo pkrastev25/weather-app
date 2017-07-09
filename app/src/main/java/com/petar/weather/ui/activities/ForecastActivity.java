@@ -10,46 +10,31 @@ import android.location.LocationManager;
 import android.support.annotation.NonNull;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.text.TextUtils;
-import android.view.KeyEvent;
-import android.view.View;
-import android.widget.ImageView;
-import android.widget.SearchView;
-import android.widget.TextView;
 
 import com.hannesdorfmann.mosby3.mvp.lce.MvpLceActivity;
 import com.petar.weather.R;
 import com.petar.weather.databinding.ActivityForecastBinding;
 import com.petar.weather.logic.models.ALocation;
 import com.petar.weather.presenters.ForecastActivityPresenter;
-import com.petar.weather.ui.adapter.LocationRecyclerAdapter;
 import com.petar.weather.ui.adapter.ViewPagerFragmentAdapter;
 import com.petar.weather.ui.views.IForecastActivity;
 import com.petar.weather.ui.views.IToolbarView;
 import com.petar.weather.util.Constants;
 
-import java.util.List;
-
-public class ForecastActivity extends MvpLceActivity<RecyclerView, List<? extends ALocation>, IForecastActivity, ForecastActivityPresenter>
-        implements IForecastActivity, IToolbarView, LocationListener, ALocation.ILocationListener {
+public class ForecastActivity extends MvpLceActivity<ViewPager, ALocation, IForecastActivity, ForecastActivityPresenter>
+        implements IForecastActivity, IToolbarView, LocationListener {
 
     // TOOLBAR helpers
-    private ImageView mToolbarLocationIcon;
-    private TextView mToolbarLocationText;
-    private SearchView mToolbarSearch;
-    private ObservableField<String> currentLocation;
+    private ObservableField<String> mCurrentLocationTitle;
 
     // LOCATION helpers
     private LocationManager mLocationManager;
-
-    private LocationRecyclerAdapter mLocationAdapter;
 
     // ACTIVITY-FRAGMENT COMMUNICATION helpers
     private IDailyForecastFragmentListener mDailyForecastFragmentListener;
     private IHourlyForecastFragmentListener mHourlyForecastFragmentListener;
 
+    // GENERAL ACTIVITY region
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,22 +42,10 @@ public class ForecastActivity extends MvpLceActivity<RecyclerView, List<? extend
         ActivityForecastBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_forecast);
         binding.setView(this);
 
-        mToolbarLocationIcon = binding.toolbar.currentLocationIcon;
-        mToolbarLocationText = binding.toolbar.currentLocationText;
-        mToolbarSearch = binding.toolbar.search;
-        mToolbarSearch.setOnQueryTextListener(this);
-        mToolbarSearch.setOnSearchClickListener(this);
-        mToolbarSearch.setOnCloseListener(this);
-
-        contentView.setLayoutManager(new LinearLayoutManager(this));
-        mLocationAdapter = new LocationRecyclerAdapter();
-        contentView.setAdapter(mLocationAdapter);
-
-        ViewPager fragmentPager = binding.pager;
         ViewPagerFragmentAdapter fragmentAdapter = new ViewPagerFragmentAdapter(getSupportFragmentManager());
-        fragmentPager.setAdapter(fragmentAdapter);
+        contentView.setAdapter(fragmentAdapter);
 
-        currentLocation = new ObservableField<>();
+        mCurrentLocationTitle = new ObservableField<>();
     }
 
     @Override
@@ -85,22 +58,15 @@ public class ForecastActivity extends MvpLceActivity<RecyclerView, List<? extend
     protected void onDestroy() {
         super.onDestroy();
 
-        mToolbarLocationIcon = null;
-        mToolbarLocationText = null;
-        mToolbarSearch.setOnQueryTextListener(null);
-        mToolbarSearch.setOnSearchClickListener(null);
-        mToolbarSearch.setOnCloseListener(null);
-        mToolbarSearch = null;
-
         mLocationManager.removeUpdates(this);
         mLocationManager = null;
-
-        mLocationAdapter = null;
 
         mDailyForecastFragmentListener = null;
         mHourlyForecastFragmentListener = null;
     }
+    // End of GENERAL ACTIVITY region
 
+    // MVP-LCE-ACTIVITY region
     @NonNull
     @Override
     public ForecastActivityPresenter createPresenter() {
@@ -113,102 +79,36 @@ public class ForecastActivity extends MvpLceActivity<RecyclerView, List<? extend
     }
 
     @Override
-    public void setData(List<? extends ALocation> data) {
-        for (ALocation location : data) {
-            location.setListener(this);
-        }
-
-        mLocationAdapter.setData(data);
-        showContent();
+    public void setData(ALocation current) {
+        mCurrentLocationTitle.set(current.getTitle());
+        onLocationFound(current.getId());
     }
 
     @Override
     public void loadData(boolean pullToRefresh) {
 
     }
-
-    @Override
-    public void setCurrentLocation(ALocation current) {
-        currentLocation.set(current.getTitle());
-        onLocationFound(current.getId());
-        hideLoadingView();
-    }
-
-    private void hideLoadingView() {
-        loadingView.setVisibility(View.INVISIBLE);
-    }
-
-    private void showLoadingView() {
-        loadingView.setVisibility(View.VISIBLE);
-    }
-
-    private boolean isLoading() {
-        return loadingView.getVisibility() == View.VISIBLE;
-    }
-
-    private void hideContentView() {
-        contentView.setVisibility(View.INVISIBLE);
-    }
-
-    @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (keyCode == KeyEvent.KEYCODE_BACK) {
-            if (!mToolbarSearch.isIconified()) {
-                mToolbarSearch.setIconified(true);
-
-                return true;
-            }
-        }
-
-        return super.onKeyDown(keyCode, event);
-    }
+    // End of MVP-LCE-ACTIVITY region
 
     // TOOLBAR section
     @Override
-    public ObservableField<String> getCurrentLocation() {
-        return currentLocation;
+    public ObservableField<String> getCurrentLocationTitle() {
+        return mCurrentLocationTitle;
+    }
+
+    @Override
+    public void onFindCurrentLocationClick() {
+        getLocation();
     }
 
     @Override
     public void onCurrentLocationClick() {
-        if (!isLoading()) {
-            getLocation();
-        }
+        // TODO: Implement
     }
 
     @Override
-    public void onItemClick(ALocation location) {
-        currentLocation.set(location.getTitle());
-        hideContentView();
-        onLocationFound(location.getId());
-    }
-
-    @Override
-    public boolean onQueryTextSubmit(String query) {
-        if (!TextUtils.isEmpty(query)) {
-            presenter.processLocationQuery(query);
-            return true;
-        }
-        return false;
-    }
-
-    @Override
-    public boolean onQueryTextChange(String newText) {
-        return false;
-    }
-
-
-    @Override
-    public boolean onClose() {
-        mToolbarLocationIcon.setVisibility(View.VISIBLE);
-        mToolbarLocationText.setVisibility(View.VISIBLE);
-        return false;
-    }
-
-    @Override
-    public void onClick(View v) {
-        mToolbarLocationIcon.setVisibility(View.GONE);
-        mToolbarLocationText.setVisibility(View.GONE);
+    public void onSearchClick() {
+        // TODO: Start a search activity
     }
     // End of TOOLBAR section
 
@@ -238,7 +138,7 @@ public class ForecastActivity extends MvpLceActivity<RecyclerView, List<? extend
     }
 
     private void getLocation() {
-        currentLocation.set(getResources().getString(R.string.toolbar_location_hint));
+        mCurrentLocationTitle.set(getResources().getString(R.string.toolbar_location_hint));
 
         mLocationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
