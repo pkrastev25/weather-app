@@ -2,6 +2,7 @@ package com.petar.weather.ui.fragments;
 
 
 import android.app.Activity;
+import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -18,8 +19,10 @@ import com.petar.weather.databinding.FragmentHourlyForecastBinding;
 import com.petar.weather.logic.models.AForecast;
 import com.petar.weather.presenters.HourlyForecastFragmentPresenter;
 import com.petar.weather.ui.activities.ForecastActivity;
+import com.petar.weather.ui.activities.ForecastDetailsActivity;
 import com.petar.weather.ui.adapter.ForecastRecyclerAdapter;
 import com.petar.weather.ui.views.IHourlyForecastFragment;
+import com.petar.weather.util.Constants;
 
 import java.util.List;
 
@@ -27,7 +30,7 @@ import java.util.List;
  * A simple {@link Fragment} subclass.
  */
 public class HourlyForecastFragment extends MvpLceFragment<RecyclerView, List<? extends AForecast>, IHourlyForecastFragment, HourlyForecastFragmentPresenter>
-        implements IHourlyForecastFragment, ForecastActivity.IHourlyForecastFragmentListener {
+        implements IHourlyForecastFragment, ForecastActivity.IHourlyForecastFragmentListener, AForecast.IForecastListener {
 
     private Integer mId;
     private ForecastRecyclerAdapter mAdapter;
@@ -80,6 +83,10 @@ public class HourlyForecastFragment extends MvpLceFragment<RecyclerView, List<? 
 
     @Override
     public void setData(List<? extends AForecast> data) {
+        for (AForecast current: data) {
+            current.setListener(this);
+        }
+
         mAdapter.setData(data);
     }
 
@@ -104,5 +111,12 @@ public class HourlyForecastFragment extends MvpLceFragment<RecyclerView, List<? 
         if (getUserVisibleHint()) {
             presenter.loadForecast(id);
         }
+    }
+
+    @Override
+    public void onItemClick(AForecast forecast) {
+        Intent intent = new Intent(getActivity(), ForecastDetailsActivity.class);
+        intent.putExtra(Constants.FORECAST_DETAILS_KEY, forecast);
+        startActivity(intent);
     }
 }

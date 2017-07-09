@@ -2,6 +2,7 @@ package com.petar.weather.ui.fragments;
 
 
 import android.app.Activity;
+import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -15,17 +16,20 @@ import android.view.ViewGroup;
 import com.hannesdorfmann.mosby3.mvp.lce.MvpLceFragment;
 import com.petar.weather.R;
 import com.petar.weather.databinding.FragmentDailyForecastBinding;
+import com.petar.weather.logic.models.AForecast;
 import com.petar.weather.logic.models.ILocationForecast;
 import com.petar.weather.presenters.DailyForecastFragmentPresenter;
 import com.petar.weather.ui.activities.ForecastActivity;
+import com.petar.weather.ui.activities.ForecastDetailsActivity;
 import com.petar.weather.ui.adapter.ForecastRecyclerAdapter;
 import com.petar.weather.ui.views.IDailyForecastFragment;
+import com.petar.weather.util.Constants;
 
 /**
  * A simple {@link Fragment} subclass.
  */
 public class DailyForecastFragment extends MvpLceFragment<RecyclerView, ILocationForecast, IDailyForecastFragment, DailyForecastFragmentPresenter>
-        implements IDailyForecastFragment, ForecastActivity.IDailyForecastFragmentListener {
+        implements IDailyForecastFragment, ForecastActivity.IDailyForecastFragmentListener, AForecast.IForecastListener {
 
     private Integer mId;
     private ForecastRecyclerAdapter mAdapter;
@@ -77,6 +81,10 @@ public class DailyForecastFragment extends MvpLceFragment<RecyclerView, ILocatio
 
     @Override
     public void setData(ILocationForecast data) {
+        for (AForecast current: data.getForecast()) {
+            current.setListener(this);
+        }
+
         mAdapter.setData(data.getForecast());
     }
 
@@ -102,5 +110,12 @@ public class DailyForecastFragment extends MvpLceFragment<RecyclerView, ILocatio
         if (getUserVisibleHint()) {
             presenter.loadLocationForecast(id);
         }
+    }
+
+    @Override
+    public void onItemClick(AForecast forecast) {
+        Intent intent = new Intent(getActivity(), ForecastDetailsActivity.class);
+        intent.putExtra(Constants.FORECAST_DETAILS_KEY, forecast);
+        startActivity(intent);
     }
 }

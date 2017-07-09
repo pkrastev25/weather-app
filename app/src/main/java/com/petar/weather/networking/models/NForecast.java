@@ -1,5 +1,7 @@
 package com.petar.weather.networking.models;
 
+import android.os.Parcel;
+
 import com.google.gson.annotations.SerializedName;
 import com.petar.weather.logic.models.AForecast;
 
@@ -86,4 +88,48 @@ public class NForecast extends AForecast {
     public String getWeatherState() {
         return weatherStateName;
     }
+
+
+    /**
+     * Based on https://stackoverflow.com/questions/4076946/parcelable-where-when-is-describecontents-used
+     *
+     * @return
+     */
+    @Override
+    public int describeContents() {
+        return CONTENTS_FILE_DESCRIPTOR ;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeLong(this.mTimestamp);
+        dest.writeString(this.weatherStateName);
+        dest.writeString(this.weatherStateAbbr);
+        dest.writeString(this.created);
+        dest.writeString(this.applicableDate);
+        dest.writeValue(this.minTemp);
+        dest.writeValue(this.maxTemp);
+    }
+
+    protected NForecast(Parcel in) {
+        this.mTimestamp = in.readLong();
+        this.weatherStateName = in.readString();
+        this.weatherStateAbbr = in.readString();
+        this.created = in.readString();
+        this.applicableDate = in.readString();
+        this.minTemp = (Double) in.readValue(Double.class.getClassLoader());
+        this.maxTemp = (Double) in.readValue(Double.class.getClassLoader());
+    }
+
+    public static final Creator<NForecast> CREATOR = new Creator<NForecast>() {
+        @Override
+        public NForecast createFromParcel(Parcel source) {
+            return new NForecast(source);
+        }
+
+        @Override
+        public NForecast[] newArray(int size) {
+            return new NForecast[size];
+        }
+    };
 }

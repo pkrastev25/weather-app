@@ -24,4 +24,7 @@ public class Constants {
     public static final int VIEW_PAGER_FRAGMENT_COUNT = 3;
     public static final int HOURLY_FORECAST_FRAGMENT_POSITION = 0;
     public static final int DAILY_FORECAST_FRAGMENT_POSITION = 1;
+
+    // Bundle keys
+    public static final String FORECAST_DETAILS_KEY = "forecast.details.key";
 }

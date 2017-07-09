@@ -33,7 +33,7 @@ import com.petar.weather.util.Constants;
 import java.util.List;
 
 public class ForecastActivity extends MvpLceActivity<RecyclerView, List<? extends ALocation>, IForecastActivity, ForecastActivityPresenter>
-        implements IForecastActivity, IToolbarView, LocationListener, ALocation.ALocationListener {
+        implements IForecastActivity, IToolbarView, LocationListener, ALocation.ILocationListener {
 
     // TOOLBAR helpers
     private ImageView mToolbarLocationIcon;
@@ -53,7 +53,6 @@ public class ForecastActivity extends MvpLceActivity<RecyclerView, List<? extend
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_forecast);
 
         ActivityForecastBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_forecast);
         binding.setView(this);

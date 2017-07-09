@@ -8,9 +8,9 @@ import android.support.annotation.NonNull;
 
 public abstract class ALocation implements Comparable<ALocation> {
 
-    protected ALocationListener mListener;
+    protected ILocationListener mListener;
 
-    public void setListener(ALocationListener listener) {
+    public void setListener(ILocationListener listener) {
         mListener = listener;
     }
 
@@ -37,7 +37,7 @@ public abstract class ALocation implements Comparable<ALocation> {
         }
     }
 
-    public interface ALocationListener {
+    public interface ILocationListener {
         void onItemClick(ALocation location);
     }
 }

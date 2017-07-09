@@ -21,6 +21,8 @@
         </activity>
         <activity android:name=".ui.activities.ForecastActivity">
         </activity>
+        <activity android:name=".ui.activities.ForecastDetailsActivity">
+        </activity>
     </application>
 
 </manifest>

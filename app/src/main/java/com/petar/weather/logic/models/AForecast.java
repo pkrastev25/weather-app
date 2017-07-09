@@ -1,14 +1,21 @@
 package com.petar.weather.logic.models;
 
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 
 /**
  * Created by User on 24.6.2017 г..
  */
 
-public abstract class AForecast implements Comparable<AForecast> {
+public abstract class AForecast implements Comparable<AForecast>, Parcelable {
 
     protected long mTimestamp;
+
+    protected IForecastListener mListener;
+
+    public void setListener(IForecastListener listener) {
+        mListener = listener;
+    }
 
     public long getTimestamp() {
         return mTimestamp;
@@ -37,5 +44,15 @@ public abstract class AForecast implements Comparable<AForecast> {
         } else {
             return 0;
         }
+    }
+
+    public void onItemClick() {
+        if (mListener != null) {
+            mListener.onItemClick(this);
+        }
+    }
+
+    public interface IForecastListener {
+        void onItemClick(AForecast forecast);
     }
 }
