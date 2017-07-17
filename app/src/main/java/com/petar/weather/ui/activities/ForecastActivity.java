@@ -11,7 +11,9 @@ import android.support.annotation.NonNull;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 
-import com.hannesdorfmann.mosby3.mvp.lce.MvpLceActivity;
+import com.hannesdorfmann.mosby3.mvp.viewstate.lce.LceViewState;
+import com.hannesdorfmann.mosby3.mvp.viewstate.lce.MvpLceViewStateActivity;
+import com.hannesdorfmann.mosby3.mvp.viewstate.lce.data.RetainingLceViewState;
 import com.petar.weather.R;
 import com.petar.weather.databinding.ActivityForecastBinding;
 import com.petar.weather.logic.models.ALocation;
@@ -21,8 +23,11 @@ import com.petar.weather.ui.views.IForecastActivity;
 import com.petar.weather.ui.views.IToolbarView;
 import com.petar.weather.util.Constants;
 
-public class ForecastActivity extends MvpLceActivity<ViewPager, ALocation, IForecastActivity, ForecastActivityPresenter>
+public class ForecastActivity extends MvpLceViewStateActivity<ViewPager, ALocation, IForecastActivity, ForecastActivityPresenter>
         implements IForecastActivity, IToolbarView, LocationListener {
+
+    // GENERAL ACTIVITY helpers
+    private ALocation mCurrentLocation;
 
     // TOOLBAR helpers
     private ObservableField<String> mCurrentLocationTitle;
@@ -51,7 +56,10 @@ public class ForecastActivity extends MvpLceActivity<ViewPager, ALocation, IFore
     @Override
     protected void onStart() {
         super.onStart();
-        getLocation();
+
+        if (mCurrentLocation == null) {
+            getLocation();
+        }
     }
 
     @Override
@@ -66,11 +74,23 @@ public class ForecastActivity extends MvpLceActivity<ViewPager, ALocation, IFore
     }
     // End of GENERAL ACTIVITY region
 
-    // MVP-LCE-ACTIVITY region
+    // MVP-LCE-VIEW-STATE-ACTIVITY region
     @NonNull
     @Override
     public ForecastActivityPresenter createPresenter() {
         return new ForecastActivityPresenter();
+    }
+
+    @Override
+    public void loadData(boolean pullToRefresh) {
+
+    }
+
+    @Override
+    public void setData(ALocation current) {
+        mCurrentLocation = current;
+        mCurrentLocationTitle.set(current.getTitle());
+        onLocationFound(current.getId());
     }
 
     @Override
@@ -79,16 +99,24 @@ public class ForecastActivity extends MvpLceActivity<ViewPager, ALocation, IFore
     }
 
     @Override
-    public void setData(ALocation current) {
-        mCurrentLocationTitle.set(current.getTitle());
-        onLocationFound(current.getId());
+    public void showContent() {
+        super.showContent();
+
+        mCurrentLocation = getData();
+        mCurrentLocationTitle.set(getData().getTitle());
     }
 
     @Override
-    public void loadData(boolean pullToRefresh) {
-
+    public ALocation getData() {
+        return mCurrentLocation;
     }
-    // End of MVP-LCE-ACTIVITY region
+
+    @NonNull
+    @Override
+    public LceViewState<ALocation, IForecastActivity> createViewState() {
+        return new RetainingLceViewState<>();
+    }
+    // End of MVP-LCE-VIEW-STATE-ACTIVITY region
 
     // TOOLBAR section
     @Override

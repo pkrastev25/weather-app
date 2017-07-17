@@ -43,6 +43,10 @@ public class ForecastRecyclerAdapter extends RecyclerView.Adapter<ForecastRecycl
         return mData.size();
     }
 
+    public List<? extends AForecast> getData() {
+        return mData;
+    }
+
     public void setData(List<? extends AForecast> data) {
         mData = data;
         notifyDataSetChanged();
