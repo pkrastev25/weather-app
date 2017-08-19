@@ -86,7 +86,7 @@ public class HourlyForecastFragment extends MvpLceViewStateFragment<RecyclerView
         super.setUserVisibleHint(isVisibleToUser);
 
         if (isVisibleToUser && mId != null && mAdapter.isEmpty()) {
-            presenter.loadForecast(mId);
+            presenter.loadForecast(getContext(), mId);
         }
     }
     // End of GENERAL FRAGMENT region
@@ -135,7 +135,7 @@ public class HourlyForecastFragment extends MvpLceViewStateFragment<RecyclerView
         mId = id;
 
         if (getUserVisibleHint() && didIdChange) {
-            presenter.loadForecast(id);
+            presenter.loadForecast(getContext(), id);
         }
     }
     // End of ACTIVITY-FRAGMENT COMMUNICATION region

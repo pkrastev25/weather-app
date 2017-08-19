@@ -17,7 +17,7 @@ import java.util.Locale;
 
 public class FormatUtil {
 
-    private static final DateFormat DATE_REQUEST_FORMAT = new SimpleDateFormat("yyyy/MM/dd/", Locale.getDefault());
+    private static final DateFormat DATE_REQUEST_FORMAT = new SimpleDateFormat(Constants.API_DATE_REQUEST_FORMAT, Locale.getDefault());
     private static final DateFormat DATE_SHOW_FORMAT = DateFormat.getDateInstance(DateFormat.MEDIUM, Locale.getDefault());
     private static final DateFormat TIME_SHOW_FORMAT = DateFormat.getTimeInstance(DateFormat.SHORT, Locale.getDefault());
 

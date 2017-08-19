@@ -20,7 +20,6 @@ import com.hannesdorfmann.mosby3.mvp.viewstate.lce.data.RetainingLceViewState;
 import com.petar.weather.R;
 import com.petar.weather.databinding.FragmentDailyForecastBinding;
 import com.petar.weather.logic.models.AForecast;
-import com.petar.weather.logic.models.ILocationForecast;
 import com.petar.weather.presenters.DailyForecastFragmentPresenter;
 import com.petar.weather.ui.activities.ForecastActivity;
 import com.petar.weather.ui.activities.ForecastDetailsActivity;
@@ -28,14 +27,15 @@ import com.petar.weather.ui.adapter.ForecastRecyclerAdapter;
 import com.petar.weather.ui.views.IDailyForecastFragment;
 import com.petar.weather.util.Constants;
 
+import java.util.List;
+
 /**
  * A simple {@link Fragment} subclass.
  */
-public class DailyForecastFragment extends MvpLceViewStateFragment<RecyclerView, ILocationForecast, IDailyForecastFragment, DailyForecastFragmentPresenter>
+public class DailyForecastFragment extends MvpLceViewStateFragment<RecyclerView, List<? extends AForecast>, IDailyForecastFragment, DailyForecastFragmentPresenter>
         implements IDailyForecastFragment, ForecastActivity.IDailyForecastFragmentListener, AForecast.IForecastListener {
 
     private Integer mId;
-    private ILocationForecast mLocationForecast;
     private ForecastRecyclerAdapter mAdapter;
 
     // GENERAL FRAGMENT region
@@ -86,7 +86,7 @@ public class DailyForecastFragment extends MvpLceViewStateFragment<RecyclerView,
         super.setUserVisibleHint(isVisibleToUser);
 
         if (isVisibleToUser && mId != null && mAdapter.isEmpty()) {
-            presenter.loadLocationForecast(mId);
+            presenter.loadLocationForecast(getContext(), mId);
         }
     }
     // End of GENERAL FRAGMENT region
@@ -103,14 +103,8 @@ public class DailyForecastFragment extends MvpLceViewStateFragment<RecyclerView,
     }
 
     @Override
-    public void setData(ILocationForecast data) {
-        mLocationForecast = data;
-
-        for (AForecast current: data.getForecast()) {
-            current.setListener(this);
-        }
-
-        mAdapter.setData(data.getForecast());
+    public void setData(List<? extends AForecast> data) {
+        mAdapter.setData(data);
     }
 
     @Override
@@ -119,21 +113,13 @@ public class DailyForecastFragment extends MvpLceViewStateFragment<RecyclerView,
     }
 
     @Override
-    public void showContent() {
-        super.showContent();
-
-        mLocationForecast = getData();
-        mAdapter.setData(getData().getForecast());
-    }
-
-    @Override
-    public ILocationForecast getData() {
-        return mLocationForecast;
+    public List<? extends AForecast> getData() {
+        return mAdapter != null ? mAdapter.getData() : null;
     }
 
     @NonNull
     @Override
-    public LceViewState<ILocationForecast, IDailyForecastFragment> createViewState() {
+    public LceViewState<List<? extends AForecast>, IDailyForecastFragment> createViewState() {
         return new RetainingLceViewState<>();
     }
     // End of MVP-LCE-VIEW-STATE-FRAGMENT region
@@ -145,7 +131,7 @@ public class DailyForecastFragment extends MvpLceViewStateFragment<RecyclerView,
         mId = id;
 
         if (getUserVisibleHint() && didIdChange) {
-            presenter.loadLocationForecast(id);
+            presenter.loadLocationForecast(getContext(), id);
         }
     }
     // End of ACTIVITY-FRAGMENT COMMUNICATION region

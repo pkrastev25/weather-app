@@ -1,10 +1,14 @@
 package com.petar.weather.presenters;
 
+import android.content.Context;
+
 import com.hannesdorfmann.mosby3.mvp.MvpBasePresenter;
 import com.petar.weather.logic.DataLogic;
-import com.petar.weather.logic.models.ILocationForecast;
+import com.petar.weather.logic.models.AForecast;
 import com.petar.weather.ui.views.IDailyForecastFragment;
 import com.petar.weather.util.AsyncTaskUtil;
+
+import java.util.List;
 
 /**
  * Created by User on 8.7.2017 г..
@@ -12,20 +16,21 @@ import com.petar.weather.util.AsyncTaskUtil;
 
 public class DailyForecastFragmentPresenter extends MvpBasePresenter<IDailyForecastFragment> {
 
-    public void loadLocationForecast(final int id) {
+    public void loadLocationForecast(final Context context, final int id) {
         if (isViewAttached()) {
             getView().showLoading(false);
 
-            AsyncTaskUtil.doInBackground(new AsyncTaskUtil.IAsyncTaskHelperListener<ILocationForecast>() {
+            AsyncTaskUtil.doInBackground(new AsyncTaskUtil.IAsyncTaskHelperListener<List<? extends AForecast>>() {
                 @Override
-                public ILocationForecast onExecuteTask() throws Exception {
-                    return DataLogic.getInstance().getLocationForecast(
+                public List<? extends AForecast> onExecuteTask() throws Exception {
+                    return DataLogic.getInstance().getLocationWeeklyForecast(
+                            context,
                             id
                     );
                 }
 
                 @Override
-                public void onSuccess(ILocationForecast result) {
+                public void onSuccess(List<? extends AForecast> result) {
                     if (isViewAttached()) {
                         getView().setData(result);
                         getView().showContent();

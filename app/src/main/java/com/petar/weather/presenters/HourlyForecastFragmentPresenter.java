@@ -1,12 +1,14 @@
 package com.petar.weather.presenters;
 
+import android.content.Context;
+
 import com.hannesdorfmann.mosby3.mvp.MvpBasePresenter;
 import com.petar.weather.logic.DataLogic;
 import com.petar.weather.logic.models.AForecast;
 import com.petar.weather.ui.views.IHourlyForecastFragment;
 import com.petar.weather.util.AsyncTaskUtil;
-import com.petar.weather.util.ForecastUtil;
 import com.petar.weather.util.FormatUtil;
+import com.petar.weather.util.NetworkUtil;
 
 import java.util.Calendar;
 import java.util.List;
@@ -17,7 +19,7 @@ import java.util.List;
 
 public class HourlyForecastFragmentPresenter extends MvpBasePresenter<IHourlyForecastFragment> {
 
-    public void loadForecast(final int id) {
+    public void loadForecast(final Context context, final int id) {
         if (isViewAttached()) {
             getView().showLoading(false);
 
@@ -25,6 +27,7 @@ public class HourlyForecastFragmentPresenter extends MvpBasePresenter<IHourlyFor
                 @Override
                 public List<? extends AForecast> onExecuteTask() throws Exception {
                     return DataLogic.getInstance().getLocationForecastForDate(
+                            context,
                             id,
                             FormatUtil.dateRequestFormat(Calendar.getInstance())
                     );
@@ -33,7 +36,7 @@ public class HourlyForecastFragmentPresenter extends MvpBasePresenter<IHourlyFor
                 @Override
                 public void onSuccess(List<? extends AForecast> result) {
                     if (isViewAttached()) {
-                        getView().setData(ForecastUtil.extractData(result));
+                        getView().setData(result);
                         getView().showContent();
                     }
                 }

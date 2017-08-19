@@ -146,7 +146,7 @@ public class ForecastActivity extends MvpLceViewStateActivity<ViewPager, ALocati
         // 0,0 coordinates is where the Equator crosses the Greenwich meridian, sounds good for spotting out errors !
         if (location != null && location.getLatitude() != 0 && location.getLongitude() != 0) {
             mLocationManager.removeUpdates(this);
-            presenter.processLocationCoordinates(location);
+            presenter.processLocationCoordinates(this, location);
         }
     }
 
