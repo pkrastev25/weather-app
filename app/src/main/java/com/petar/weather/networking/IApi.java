@@ -2,7 +2,7 @@ package com.petar.weather.networking;
 
 import com.petar.weather.networking.models.NForecast;
 import com.petar.weather.networking.models.NLocation;
-import com.petar.weather.networking.models.NLocationForecast;
+import com.petar.weather.networking.models.NWeeklyForecast;
 
 import java.util.List;
 
@@ -27,7 +27,7 @@ public interface IApi {
     );
 
     @GET("/api/location/{woeid}/")
-    Call<NLocationForecast> getLocationForecast(
+    Call<NWeeklyForecast> getLocationForecast(
             @Path("woeid") int id
     );
 

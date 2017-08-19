@@ -2,12 +2,14 @@ package com.petar.weather.networking;
 
 import com.petar.weather.networking.models.NForecast;
 import com.petar.weather.networking.models.NLocation;
-import com.petar.weather.networking.models.NLocationForecast;
+import com.petar.weather.networking.models.NWeeklyForecast;
 import com.petar.weather.util.Constants;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
+import okhttp3.OkHttpClient;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -29,11 +31,17 @@ public class ApiLogic {
     }
 
     private ApiLogic() {
+        final OkHttpClient client = new OkHttpClient.Builder()
+                .readTimeout(Constants.API_REQUEST_TIMEOUT_IN_SECONDS, TimeUnit.SECONDS)
+                .connectTimeout(Constants.API_REQUEST_TIMEOUT_IN_SECONDS, TimeUnit.SECONDS)
+                .build();
+
         mApi = new Retrofit.Builder()
                 .baseUrl(Constants.API_BASE_URL)
                 .addConverterFactory(
                         GsonConverterFactory.create()
-                ).build().create(IApi.class);
+                ).client(client)
+                .build().create(IApi.class);
     }
 
     public List<NLocation> getLocationQueryResult(String query) throws IOException {
@@ -46,8 +54,8 @@ public class ApiLogic {
         return response.body();
     }
 
-    public NLocationForecast getLocationForecast(int id) throws IOException {
-        Response<NLocationForecast> response = mApi.getLocationForecast(id).execute();
+    public NWeeklyForecast getLocationForecast(int id) throws IOException {
+        Response<NWeeklyForecast> response = mApi.getLocationForecast(id).execute();
         return response.body();
     }
 
@@ -58,8 +66,6 @@ public class ApiLogic {
 
     // TODO: Rework this
     public String getPNGImageUrl(String type) {
-        String imageUrl = Constants.API_BASE_URL + Constants.API_IMAGE_PNG;
-
-        return imageUrl.replace("{type}", type);
+        return Constants.API_BASE_URL + String.format(Constants.API_IMAGE_PNG, type);
     }
 }
