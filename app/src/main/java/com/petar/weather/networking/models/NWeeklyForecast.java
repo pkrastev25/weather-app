@@ -2,7 +2,7 @@ package com.petar.weather.networking.models;
 
 import com.google.gson.annotations.SerializedName;
 import com.petar.weather.logic.models.AForecast;
-import com.petar.weather.logic.models.ILocationForecast;
+import com.petar.weather.logic.models.IWeeklyForecast;
 
 import java.util.List;
 
@@ -10,7 +10,7 @@ import java.util.List;
  * Created by User on 21.6.2017 г..
  */
 
-public class NLocationForecast implements ILocationForecast {
+public class NWeeklyForecast implements IWeeklyForecast {
 
     @SerializedName("consolidated_weather")
     private List<NForecast> consolidatedWeather = null;
