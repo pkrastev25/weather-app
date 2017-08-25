@@ -26,7 +26,6 @@ public class ForecastUtil {
             return result;
         }
 
-        initTimestampField(data);
         Collections.sort(data);
         mForecastHoursContainer = new HashSet<>(Constants.FORECASTS_FOR_A_DAY);
 
@@ -36,9 +35,9 @@ public class ForecastUtil {
         int comparison = today.compareTo(forecastDate);
 
         if (comparison == 1) {
-            result = extractDataForTheFuture(data);
-        } else if (comparison == -1) {
             result = extractDataForThePast(data);
+        } else if (comparison == -1) {
+            result = extractDataForTheFuture(data);
         } else {
             result = extractDataForThePresent(data);
         }
@@ -49,15 +48,37 @@ public class ForecastUtil {
         return result;
     }
 
-    private static void initTimestampField(List<? extends AForecast> data) {
-        for (AForecast entry: data) {
-            entry.convertDateStringToTimestamp();
-        }
-    }
-
     private static List<? extends AForecast> extractDataForTheFuture(List<? extends AForecast> data) {
-        long mostRecentDate = data.get(data.size() - 1).getTimestamp();
-        return extractDataForDate(data, mostRecentDate);
+        List<AForecast> result = new ArrayList<>();
+        DateTime date = new DateTime(data.get(0).getCreatedDate());
+
+        while (mForecastHoursContainer.size() != Constants.FORECASTS_FOR_A_DAY) {
+            result.addAll(extractDataForDate(data, date.getMillis()));
+            date = date.minusDays(1);
+        }
+
+        /*
+         * Since there is a mix of different dates for the forecast, sorting
+         * by timestamp will not work! An implementation of a custom comparator is
+         * needed that sorts the dates by time, to be exact by the hours attribute
+         */
+        Collections.sort(result, new Comparator<AForecast>() {
+            @Override
+            public int compare(AForecast one, AForecast another) {
+                int oneHourAttribute = new DateTime(one.getCreatedDate()).getHourOfDay();
+                int anotherHourAttribute = new DateTime(another.getCreatedDate()).getHourOfDay();
+
+                if (oneHourAttribute > anotherHourAttribute) {
+                    return 1;
+                } else if (oneHourAttribute < anotherHourAttribute) {
+                    return -1;
+                } else {
+                    return 0;
+                }
+            }
+        });
+
+        return result;
     }
 
     private static List<? extends AForecast> extractDataForThePast(List<? extends AForecast> data) {

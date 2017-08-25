@@ -24,6 +24,7 @@ import com.petar.weather.presenters.DailyForecastFragmentPresenter;
 import com.petar.weather.ui.activities.ForecastActivity;
 import com.petar.weather.ui.activities.ForecastDetailsActivity;
 import com.petar.weather.ui.adapter.ForecastRecyclerAdapter;
+import com.petar.weather.ui.recycler.AListenerRecyclerItem;
 import com.petar.weather.ui.views.IDailyForecastFragment;
 import com.petar.weather.util.Constants;
 
@@ -32,7 +33,7 @@ import java.util.List;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class DailyForecastFragment extends MvpLceViewStateFragment<RecyclerView, List<? extends AForecast>, IDailyForecastFragment, DailyForecastFragmentPresenter>
+public class DailyForecastFragment extends MvpLceViewStateFragment<RecyclerView, List<? extends AListenerRecyclerItem>, IDailyForecastFragment, DailyForecastFragmentPresenter>
         implements IDailyForecastFragment, ForecastActivity.IDailyForecastFragmentListener, AForecast.IForecastListener {
 
     private Integer mId;
@@ -103,7 +104,7 @@ public class DailyForecastFragment extends MvpLceViewStateFragment<RecyclerView,
     }
 
     @Override
-    public void setData(List<? extends AForecast> data) {
+    public void setData(List<? extends AListenerRecyclerItem> data) {
         mAdapter.setData(data);
     }
 
@@ -113,13 +114,13 @@ public class DailyForecastFragment extends MvpLceViewStateFragment<RecyclerView,
     }
 
     @Override
-    public List<? extends AForecast> getData() {
+    public List<? extends AListenerRecyclerItem> getData() {
         return mAdapter != null ? mAdapter.getData() : null;
     }
 
     @NonNull
     @Override
-    public LceViewState<List<? extends AForecast>, IDailyForecastFragment> createViewState() {
+    public LceViewState<List<? extends AListenerRecyclerItem>, IDailyForecastFragment> createViewState() {
         return new RetainingLceViewState<>();
     }
     // End of MVP-LCE-VIEW-STATE-FRAGMENT region

@@ -24,19 +24,23 @@ import com.petar.weather.presenters.HourlyForecastFragmentPresenter;
 import com.petar.weather.ui.activities.ForecastActivity;
 import com.petar.weather.ui.activities.ForecastDetailsActivity;
 import com.petar.weather.ui.adapter.ForecastRecyclerAdapter;
+import com.petar.weather.ui.recycler.AListenerRecyclerItem;
+import com.petar.weather.ui.views.ForecastLoadingRecyclerItem;
 import com.petar.weather.ui.views.IHourlyForecastFragment;
 import com.petar.weather.util.Constants;
+import com.petar.weather.util.TimeUtil;
 
 import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class HourlyForecastFragment extends MvpLceViewStateFragment<RecyclerView, List<? extends AForecast>, IHourlyForecastFragment, HourlyForecastFragmentPresenter>
+public class HourlyForecastFragment extends MvpLceViewStateFragment<RecyclerView, List<? extends AListenerRecyclerItem>, IHourlyForecastFragment, HourlyForecastFragmentPresenter>
         implements IHourlyForecastFragment, ForecastActivity.IHourlyForecastFragmentListener, AForecast.IForecastListener {
 
     private Integer mId;
     private ForecastRecyclerAdapter mAdapter;
+    private ForecastLoadingRecyclerItem mLoadingRecyclerItem;
 
     // GENERAL FRAGMENT region
     public HourlyForecastFragment() {
@@ -69,9 +73,26 @@ public class HourlyForecastFragment extends MvpLceViewStateFragment<RecyclerView
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        mLoadingRecyclerItem = new ForecastLoadingRecyclerItem();
         mAdapter = new ForecastRecyclerAdapter();
-        contentView.setLayoutManager(new LinearLayoutManager(getContext()));
+        final LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
+        contentView.setLayoutManager(layoutManager);
         contentView.setAdapter(mAdapter);
+
+        contentView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                if (dy > 0) {
+                    int totalItemCount = layoutManager.getItemCount();
+                    // Starts to count from 0
+                    int visibleItemCount = layoutManager.findLastVisibleItemPosition() + 1;
+
+                    if (visibleItemCount == totalItemCount && !presenter.isLoading()) {
+                        presenter.loadForecastForDate(getContext(), mId, true);
+                    }
+                }
+            }
+        });
     }
 
     @Override
@@ -86,7 +107,7 @@ public class HourlyForecastFragment extends MvpLceViewStateFragment<RecyclerView
         super.setUserVisibleHint(isVisibleToUser);
 
         if (isVisibleToUser && mId != null && mAdapter.isEmpty()) {
-            presenter.loadForecast(getContext(), mId);
+            presenter.loadForecastForDate(getContext(), mId, false);
         }
     }
     // End of GENERAL FRAGMENT region
@@ -103,8 +124,8 @@ public class HourlyForecastFragment extends MvpLceViewStateFragment<RecyclerView
     }
 
     @Override
-    public void setData(List<? extends AForecast> data) {
-        for (AForecast current : data) {
+    public void setData(List<? extends AListenerRecyclerItem> data) {
+        for (AListenerRecyclerItem current : data) {
             current.setListener(this);
         }
 
@@ -117,14 +138,40 @@ public class HourlyForecastFragment extends MvpLceViewStateFragment<RecyclerView
     }
 
     @Override
-    public List<? extends AForecast> getData() {
+    public List<? extends AListenerRecyclerItem> getData() {
         return mAdapter != null ? mAdapter.getData() : null;
     }
 
     @NonNull
     @Override
-    public LceViewState<List<? extends AForecast>, IHourlyForecastFragment> createViewState() {
+    public LceViewState<List<? extends AListenerRecyclerItem>, IHourlyForecastFragment> createViewState() {
         return new RetainingLceViewState<>();
+    }
+
+    @Override
+    public void scrollToCurrentForecast() {
+        List<? extends AForecast> data = mAdapter.getForecastData();
+
+        for (int i = 0; i < data.size(); i++) {
+            int forecastHour = TimeUtil.getHoursTimeForISOString(
+                    data.get(i).getCreatedDate()
+            );
+
+            if (forecastHour > TimeUtil.getCurrentHoursTime()) {
+                contentView.smoothScrollToPosition(i);
+                break;
+            }
+        }
+    }
+
+    @Override
+    public void setLoadingRecyclerItem() {
+        mAdapter.addItem(mLoadingRecyclerItem);
+    }
+
+    @Override
+    public void removeLoadingRecyclerItem() {
+        mAdapter.removeItem(mLoadingRecyclerItem);
     }
     // End of MVP-LCE-VIEW-STATE-FRAGMENT region
 
@@ -135,7 +182,7 @@ public class HourlyForecastFragment extends MvpLceViewStateFragment<RecyclerView
         mId = id;
 
         if (getUserVisibleHint() && didIdChange) {
-            presenter.loadForecast(getContext(), id);
+            presenter.loadForecastForDate(getContext(), id, false);
         }
     }
     // End of ACTIVITY-FRAGMENT COMMUNICATION region

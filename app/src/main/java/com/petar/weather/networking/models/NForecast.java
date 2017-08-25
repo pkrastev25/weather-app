@@ -4,8 +4,7 @@ import android.os.Parcel;
 
 import com.google.gson.annotations.SerializedName;
 import com.petar.weather.logic.models.AForecast;
-
-import org.joda.time.DateTime;
+import com.petar.weather.util.Constants;
 
 /**
  * Created by User on 21.6.2017 г..
@@ -80,11 +79,6 @@ public class NForecast extends AForecast {
     }
 
     @Override
-    public void convertDateStringToTimestamp() {
-        mTimestamp = new DateTime(applicableDate).getMillis();
-    }
-
-    @Override
     public String getWeatherState() {
         return weatherStateName;
     }
@@ -97,12 +91,11 @@ public class NForecast extends AForecast {
      */
     @Override
     public int describeContents() {
-        return CONTENTS_FILE_DESCRIPTOR ;
+        return CONTENTS_FILE_DESCRIPTOR;
     }
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeLong(this.mTimestamp);
         dest.writeString(this.weatherStateName);
         dest.writeString(this.weatherStateAbbr);
         dest.writeString(this.created);
@@ -112,7 +105,6 @@ public class NForecast extends AForecast {
     }
 
     protected NForecast(Parcel in) {
-        this.mTimestamp = in.readLong();
         this.weatherStateName = in.readString();
         this.weatherStateAbbr = in.readString();
         this.created = in.readString();
@@ -132,4 +124,9 @@ public class NForecast extends AForecast {
             return new NForecast[size];
         }
     };
+
+    @Override
+    public int getViewType() {
+        return Constants.FORECAST_RECYCLER_ITEM;
+    }
 }

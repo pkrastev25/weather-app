@@ -29,7 +29,7 @@ public class PForecast implements Comparable<PForecast> {
     public PForecast(long keyDB, String date, String forecasts) {
         this.keyDB = keyDB;
         this.expireTime = TimeUtil.getCurrentTimeWithHourOffset(Constants.OFFSET_HOURS_FOR_FORECAST);
-        this.timestamp = TimeUtil.getTimeFromString(date);
+        this.timestamp = TimeUtil.getTimeFromAPIRequestFormatString(date);
         this.forecasts = forecasts;
     }
 

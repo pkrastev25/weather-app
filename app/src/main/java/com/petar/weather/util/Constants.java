@@ -23,6 +23,10 @@ public class Constants {
     public static final int FORECASTS_FOR_A_DAY = 8;
     public static final long FORECAST_WEEKLY_TIMESTAMP = Long.MAX_VALUE;
 
+    // Forecast recycler items
+    public static final int FORECAST_RECYCLER_ITEM = 0;
+    public static final int FORECAST_LOADING_RECYCLER_ITEM = 1;
+
     // View pager for fragments
     public static final int VIEW_PAGER_FRAGMENT_COUNT = 3;
     public static final int HOURLY_FORECAST_FRAGMENT_POSITION = 0;
@@ -42,5 +46,6 @@ public class Constants {
     // Time offsets
     public static final int OFFSET_MINUTES_FOR_LOCATION = 30;
     public static final int OFFSET_HOURS_FOR_FORECAST = 3;
+    public static final int OFFSET_DAYS_FOR_FORECAST = 6;
     public static final int OFFSET_DAYS_FOR_WEEKLY_FORECAST = 1;
 }
