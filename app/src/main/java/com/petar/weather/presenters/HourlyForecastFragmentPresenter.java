@@ -34,10 +34,10 @@ public class HourlyForecastFragmentPresenter extends MvpBasePresenter<IHourlyFor
         ).withTimeAtStartOfDay().getMillis();
     }
 
-    public void loadForecastForDate(final Context context, final int id, boolean hideLoadingView) {
+    public void loadForecastForDate(final Context context, final int id, final boolean pullToRefresh) {
         if (isViewAttached() && !mIsLoading && new DateTime(mCurrentForecastDate).withTimeAtStartOfDay().isBefore(mLimitForecastDate)) {
             mIsLoading = true;
-            getView().showLoading(hideLoadingView);
+            getView().showLoading(pullToRefresh);
             getView().removeLoadingRecyclerItem();
 
             AsyncTaskUtil.doInBackground(new AsyncTaskUtil.IAsyncTaskHelperListener<List<? extends AForecast>>() {
@@ -48,7 +48,8 @@ public class HourlyForecastFragmentPresenter extends MvpBasePresenter<IHourlyFor
                             id,
                             FormatUtil.dateRequestFormat(
                                     TimeUtil.convertDateToCalendarFromMillis(mCurrentForecastDate)
-                            )
+                            ),
+                            pullToRefresh
                     );
                 }
 
@@ -81,6 +82,12 @@ public class HourlyForecastFragmentPresenter extends MvpBasePresenter<IHourlyFor
                 }
             });
         }
+    }
+
+    public void loadForecastForToday(Context context, int id, boolean pullToRefresh) {
+        mCurrentForecastDate = TimeUtil.getCurrentTime();
+
+        loadForecastForDate(context, id, pullToRefresh);
     }
 
     public boolean isLoading() {

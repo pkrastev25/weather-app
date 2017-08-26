@@ -18,20 +18,17 @@ public class ForecastActivityPresenter extends MvpBasePresenter<IForecastActivit
 
     private ALocation mCurrentLocation;
 
-    public void processLocationCoordinates(final Context context, final Location location) {
+    public void processLocationCoordinates(final Context context, final Location location, final boolean pullToRefresh) {
         if (isViewAttached()) {
-            if (mCurrentLocation == null) {
-                getView().showLoading(true);
-            } else {
-                getView().showLoading(false);
-            }
+            getView().showLoading(pullToRefresh);
 
             AsyncTaskUtil.doInBackground(new AsyncTaskUtil.IAsyncTaskHelperListener<ALocation>() {
                 @Override
                 public ALocation onExecuteTask() throws Exception {
                     return DataLogic.getInstance().getCurrentLocation(
                             context,
-                            FormatUtil.coordinatesFormat(location)
+                            FormatUtil.coordinatesFormat(location),
+                            pullToRefresh
                     );
                 }
 
@@ -39,14 +36,12 @@ public class ForecastActivityPresenter extends MvpBasePresenter<IForecastActivit
                 public void onSuccess(ALocation result) {
                     if (isViewAttached()) {
                         getView().setData(result);
-
-                        ALocation temp = mCurrentLocation;
                         mCurrentLocation = result;
 
-                        if (temp == null) {
-                            getView().showContent();
-                        } else {
+                        if (pullToRefresh) {
                             getView().setShowContentState();
+                        } else {
+                            getView().showContent();
                         }
                     }
                     // TODO: Implement logic when we do not have near points

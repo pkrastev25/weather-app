@@ -51,15 +51,6 @@ public class ForecastActivity extends MvpLceViewStateActivity<ViewPager, ALocati
     }
 
     @Override
-    protected void onStart() {
-        super.onStart();
-
-        if (presenter.getCurrentLocation() == null) {
-            getLocation();
-        }
-    }
-
-    @Override
     protected void onDestroy() {
         super.onDestroy();
 
@@ -82,7 +73,9 @@ public class ForecastActivity extends MvpLceViewStateActivity<ViewPager, ALocati
 
     @Override
     public void loadData(boolean pullToRefresh) {
-
+        if (presenter.getCurrentLocation() == null) {
+            getLocation();
+        }
     }
 
     @Override
@@ -148,7 +141,7 @@ public class ForecastActivity extends MvpLceViewStateActivity<ViewPager, ALocati
         // 0,0 coordinates is where the Equator crosses the Greenwich meridian, sounds good for spotting out errors !
         if (location != null && location.getLatitude() != 0 && location.getLongitude() != 0) {
             mLocationManager.removeUpdates(this);
-            presenter.processLocationCoordinates(this, location);
+            presenter.processLocationCoordinates(this, location, false);
         }
     }
 

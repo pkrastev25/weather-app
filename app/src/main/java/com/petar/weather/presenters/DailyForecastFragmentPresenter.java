@@ -16,16 +16,17 @@ import java.util.List;
 
 public class DailyForecastFragmentPresenter extends MvpBasePresenter<IDailyForecastFragment> {
 
-    public void loadLocationForecast(final Context context, final int id) {
+    public void loadLocationForecast(final Context context, final int id, final boolean pullToRefresh) {
         if (isViewAttached()) {
-            getView().showLoading(false);
+            getView().showLoading(pullToRefresh);
 
             AsyncTaskUtil.doInBackground(new AsyncTaskUtil.IAsyncTaskHelperListener<List<? extends AForecast>>() {
                 @Override
                 public List<? extends AForecast> onExecuteTask() throws Exception {
                     return DataLogic.getInstance().getLocationWeeklyForecast(
                             context,
-                            id
+                            id,
+                            pullToRefresh
                     );
                 }
 

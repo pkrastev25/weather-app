@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -33,10 +34,11 @@ import java.util.List;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class DailyForecastFragment extends MvpLceViewStateFragment<RecyclerView, List<? extends AListenerRecyclerItem>, IDailyForecastFragment, DailyForecastFragmentPresenter>
-        implements IDailyForecastFragment, ForecastActivity.IDailyForecastFragmentListener, AForecast.IForecastListener {
+public class DailyForecastFragment extends MvpLceViewStateFragment<SwipeRefreshLayout, List<? extends AListenerRecyclerItem>, IDailyForecastFragment, DailyForecastFragmentPresenter>
+        implements IDailyForecastFragment, ForecastActivity.IDailyForecastFragmentListener, AForecast.IForecastListener, SwipeRefreshLayout.OnRefreshListener {
 
     private Integer mId;
+    private RecyclerView mRecyclerView;
     private ForecastRecyclerAdapter mAdapter;
 
     // GENERAL FRAGMENT region
@@ -62,6 +64,7 @@ public class DailyForecastFragment extends MvpLceViewStateFragment<RecyclerView,
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         FragmentDailyForecastBinding binding = DataBindingUtil.inflate(inflater, R.layout.fragment_daily_forecast, container, false);
         binding.setView(this);
+        mRecyclerView = binding.recycler;
 
         return binding.getRoot();
     }
@@ -71,8 +74,9 @@ public class DailyForecastFragment extends MvpLceViewStateFragment<RecyclerView,
         super.onViewCreated(view, savedInstanceState);
 
         mAdapter = new ForecastRecyclerAdapter();
-        contentView.setLayoutManager(new LinearLayoutManager(getContext()));
-        contentView.setAdapter(mAdapter);
+        contentView.setOnRefreshListener(this);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        mRecyclerView.setAdapter(mAdapter);
     }
 
     @Override
@@ -87,7 +91,7 @@ public class DailyForecastFragment extends MvpLceViewStateFragment<RecyclerView,
         super.setUserVisibleHint(isVisibleToUser);
 
         if (isVisibleToUser && mId != null && mAdapter.isEmpty()) {
-            presenter.loadLocationForecast(getContext(), mId);
+            presenter.loadLocationForecast(getContext(), mId, false);
         }
     }
     // End of GENERAL FRAGMENT region
@@ -100,12 +104,21 @@ public class DailyForecastFragment extends MvpLceViewStateFragment<RecyclerView,
 
     @Override
     public void loadData(boolean pullToRefresh) {
-
+        if (mId != null) {
+            presenter.loadLocationForecast(getContext(), mId, pullToRefresh);
+        }
     }
 
     @Override
     public void setData(List<? extends AListenerRecyclerItem> data) {
         mAdapter.setData(data);
+    }
+
+    @Override
+    public void showContent() {
+        super.showContent();
+
+        contentView.setRefreshing(false);
     }
 
     @Override
@@ -123,6 +136,11 @@ public class DailyForecastFragment extends MvpLceViewStateFragment<RecyclerView,
     public LceViewState<List<? extends AListenerRecyclerItem>, IDailyForecastFragment> createViewState() {
         return new RetainingLceViewState<>();
     }
+
+    @Override
+    public void onRefresh() {
+        loadData(true);
+    }
     // End of MVP-LCE-VIEW-STATE-FRAGMENT region
 
     // ACTIVITY-FRAGMENT COMMUNICATION region
@@ -132,7 +150,7 @@ public class DailyForecastFragment extends MvpLceViewStateFragment<RecyclerView,
         mId = id;
 
         if (getUserVisibleHint() && didIdChange) {
-            presenter.loadLocationForecast(getContext(), id);
+            presenter.loadLocationForecast(getContext(), id, false);
         }
     }
     // End of ACTIVITY-FRAGMENT COMMUNICATION region

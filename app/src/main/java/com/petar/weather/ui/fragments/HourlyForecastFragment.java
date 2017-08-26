@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -35,10 +36,11 @@ import java.util.List;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class HourlyForecastFragment extends MvpLceViewStateFragment<RecyclerView, List<? extends AListenerRecyclerItem>, IHourlyForecastFragment, HourlyForecastFragmentPresenter>
-        implements IHourlyForecastFragment, ForecastActivity.IHourlyForecastFragmentListener, AForecast.IForecastListener {
+public class HourlyForecastFragment extends MvpLceViewStateFragment<SwipeRefreshLayout, List<? extends AListenerRecyclerItem>, IHourlyForecastFragment, HourlyForecastFragmentPresenter>
+        implements IHourlyForecastFragment, ForecastActivity.IHourlyForecastFragmentListener, AForecast.IForecastListener, SwipeRefreshLayout.OnRefreshListener {
 
     private Integer mId;
+    private RecyclerView mRecyclerView;
     private ForecastRecyclerAdapter mAdapter;
     private ForecastLoadingRecyclerItem mLoadingRecyclerItem;
 
@@ -65,6 +67,7 @@ public class HourlyForecastFragment extends MvpLceViewStateFragment<RecyclerView
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         FragmentHourlyForecastBinding binding = DataBindingUtil.inflate(inflater, R.layout.fragment_hourly_forecast, container, false);
         binding.setView(this);
+        mRecyclerView = binding.recycler;
 
         return binding.getRoot();
     }
@@ -75,11 +78,12 @@ public class HourlyForecastFragment extends MvpLceViewStateFragment<RecyclerView
 
         mLoadingRecyclerItem = new ForecastLoadingRecyclerItem();
         mAdapter = new ForecastRecyclerAdapter();
+        contentView.setOnRefreshListener(this);
         final LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
-        contentView.setLayoutManager(layoutManager);
-        contentView.setAdapter(mAdapter);
+        mRecyclerView.setLayoutManager(layoutManager);
+        mRecyclerView.setAdapter(mAdapter);
 
-        contentView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+        mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 if (dy > 0) {
@@ -110,6 +114,11 @@ public class HourlyForecastFragment extends MvpLceViewStateFragment<RecyclerView
             presenter.loadForecastForDate(getContext(), mId, false);
         }
     }
+
+    @Override
+    public void onRefresh() {
+        loadData(true);
+    }
     // End of GENERAL FRAGMENT region
 
     // MVP-LCE-VIEW-STATE-FRAGMENT region
@@ -120,7 +129,9 @@ public class HourlyForecastFragment extends MvpLceViewStateFragment<RecyclerView
 
     @Override
     public void loadData(boolean pullToRefresh) {
-
+        if (mId != null) {
+            presenter.loadForecastForToday(getContext(), mId, pullToRefresh);
+        }
     }
 
     @Override
@@ -130,6 +141,13 @@ public class HourlyForecastFragment extends MvpLceViewStateFragment<RecyclerView
         }
 
         mAdapter.setData(data);
+    }
+
+    @Override
+    public void showContent() {
+        super.showContent();
+
+        contentView.setRefreshing(false);
     }
 
     @Override
@@ -158,7 +176,7 @@ public class HourlyForecastFragment extends MvpLceViewStateFragment<RecyclerView
             );
 
             if (forecastHour > TimeUtil.getCurrentHoursTime()) {
-                contentView.smoothScrollToPosition(i);
+                mRecyclerView.smoothScrollToPosition(i);
                 break;
             }
         }
