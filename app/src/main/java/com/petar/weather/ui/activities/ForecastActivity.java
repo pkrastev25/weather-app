@@ -26,9 +26,6 @@ import com.petar.weather.util.Constants;
 public class ForecastActivity extends MvpLceViewStateActivity<ViewPager, ALocation, IForecastActivity, ForecastActivityPresenter>
         implements IForecastActivity, IToolbarView, LocationListener {
 
-    // GENERAL ACTIVITY helpers
-    private ALocation mCurrentLocation;
-
     // TOOLBAR helpers
     private ObservableField<String> mCurrentLocationTitle;
 
@@ -57,7 +54,7 @@ public class ForecastActivity extends MvpLceViewStateActivity<ViewPager, ALocati
     protected void onStart() {
         super.onStart();
 
-        if (mCurrentLocation == null) {
+        if (presenter.getCurrentLocation() == null) {
             getLocation();
         }
     }
@@ -66,8 +63,10 @@ public class ForecastActivity extends MvpLceViewStateActivity<ViewPager, ALocati
     protected void onDestroy() {
         super.onDestroy();
 
-        mLocationManager.removeUpdates(this);
-        mLocationManager = null;
+        if (mLocationManager != null) {
+            mLocationManager.removeUpdates(this);
+            mLocationManager = null;
+        }
 
         mDailyForecastFragmentListener = null;
         mHourlyForecastFragmentListener = null;
@@ -88,7 +87,6 @@ public class ForecastActivity extends MvpLceViewStateActivity<ViewPager, ALocati
 
     @Override
     public void setData(ALocation current) {
-        mCurrentLocation = current;
         mCurrentLocationTitle.set(current.getTitle());
         onLocationFound(current.getId());
     }
@@ -102,19 +100,23 @@ public class ForecastActivity extends MvpLceViewStateActivity<ViewPager, ALocati
     public void showContent() {
         super.showContent();
 
-        mCurrentLocation = getData();
         mCurrentLocationTitle.set(getData().getTitle());
     }
 
     @Override
     public ALocation getData() {
-        return mCurrentLocation;
+        return presenter.getCurrentLocation();
     }
 
     @NonNull
     @Override
     public LceViewState<ALocation, IForecastActivity> createViewState() {
         return new RetainingLceViewState<>();
+    }
+
+    @Override
+    public void setShowContentState() {
+        viewState.setStateShowContent(getData());
     }
     // End of MVP-LCE-VIEW-STATE-ACTIVITY region
 
@@ -194,9 +196,11 @@ public class ForecastActivity extends MvpLceViewStateActivity<ViewPager, ALocati
         void onLocationFound(Integer id);
     }
 
-    public interface IDailyForecastFragmentListener extends IForecastFragmentListener {}
+    public interface IDailyForecastFragmentListener extends IForecastFragmentListener {
+    }
 
-    public interface IHourlyForecastFragmentListener extends IForecastFragmentListener {}
+    public interface IHourlyForecastFragmentListener extends IForecastFragmentListener {
+    }
 
     public void onLocationFound(Integer id) {
         if (mHourlyForecastFragmentListener != null) {

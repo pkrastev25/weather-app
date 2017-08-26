@@ -16,9 +16,15 @@ import com.petar.weather.util.FormatUtil;
 
 public class ForecastActivityPresenter extends MvpBasePresenter<IForecastActivity> {
 
+    private ALocation mCurrentLocation;
+
     public void processLocationCoordinates(final Context context, final Location location) {
         if (isViewAttached()) {
-            getView().showLoading(false);
+            if (mCurrentLocation == null) {
+                getView().showLoading(true);
+            } else {
+                getView().showLoading(false);
+            }
 
             AsyncTaskUtil.doInBackground(new AsyncTaskUtil.IAsyncTaskHelperListener<ALocation>() {
                 @Override
@@ -33,7 +39,15 @@ public class ForecastActivityPresenter extends MvpBasePresenter<IForecastActivit
                 public void onSuccess(ALocation result) {
                     if (isViewAttached()) {
                         getView().setData(result);
-                        getView().showContent();
+
+                        ALocation temp = mCurrentLocation;
+                        mCurrentLocation = result;
+
+                        if (temp == null) {
+                            getView().showContent();
+                        } else {
+                            getView().setShowContentState();
+                        }
                     }
                     // TODO: Implement logic when we do not have near points
                 }
@@ -44,5 +58,9 @@ public class ForecastActivityPresenter extends MvpBasePresenter<IForecastActivit
                 }
             });
         }
+    }
+
+    public ALocation getCurrentLocation() {
+        return mCurrentLocation;
     }
 }
