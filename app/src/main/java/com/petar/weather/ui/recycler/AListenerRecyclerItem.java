@@ -1,10 +1,12 @@
 package com.petar.weather.ui.recycler;
 
+import android.os.Parcelable;
+
 /**
  * Created by User on 20.8.2017 г..
  */
 
-public abstract class AListenerRecyclerItem<TListener extends IListener> {
+public abstract class AListenerRecyclerItem<TListener extends IListener> implements Parcelable {
 
     private TListener mListener;
 

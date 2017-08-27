@@ -26,6 +26,7 @@ public class Constants {
     // Forecast recycler items
     public static final int FORECAST_RECYCLER_ITEM = 0;
     public static final int FORECAST_LOADING_RECYCLER_ITEM = 1;
+    public static final int LOCATION_RECYCLER_ITEM = 2;
 
     // View pager for fragments
     public static final int VIEW_PAGER_FRAGMENT_COUNT = 3;
@@ -34,6 +35,7 @@ public class Constants {
 
     // Bundle keys
     public static final String FORECAST_DETAILS_KEY = "forecast.details.key";
+    public static final String LOCATION_FROM_SEARCH_KEY = "location.from.search.key";
 
     // DB specific
     public static final String DB_NAME = "com.petar.weather.persistence";

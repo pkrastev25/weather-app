@@ -20,6 +20,7 @@ import com.hannesdorfmann.mosby3.mvp.viewstate.lce.MvpLceViewStateFragment;
 import com.hannesdorfmann.mosby3.mvp.viewstate.lce.data.RetainingLceViewState;
 import com.petar.weather.R;
 import com.petar.weather.databinding.FragmentHourlyForecastBinding;
+import com.petar.weather.listeners.IForecastFragmentListener;
 import com.petar.weather.logic.models.AForecast;
 import com.petar.weather.presenters.HourlyForecastFragmentPresenter;
 import com.petar.weather.ui.activities.ForecastActivity;
@@ -44,6 +45,8 @@ public class HourlyForecastFragment extends MvpLceViewStateFragment<SwipeRefresh
     private ForecastRecyclerAdapter mAdapter;
     private ForecastLoadingRecyclerItem mLoadingRecyclerItem;
 
+    private IForecastFragmentListener mListener;
+
     // GENERAL FRAGMENT region
     public HourlyForecastFragment() {
         // Required empty public constructor
@@ -61,6 +64,7 @@ public class HourlyForecastFragment extends MvpLceViewStateFragment<SwipeRefresh
         super.onAttach(activity);
 
         ((ForecastActivity) activity).setHourlyForecastFragmentListener(this);
+        mListener = (IForecastFragmentListener) activity;
     }
 
     @Override
@@ -97,6 +101,10 @@ public class HourlyForecastFragment extends MvpLceViewStateFragment<SwipeRefresh
                 }
             }
         });
+
+        if (mListener != null) {
+            mListener.onFragmentCreated();
+        }
     }
 
     @Override
@@ -104,6 +112,7 @@ public class HourlyForecastFragment extends MvpLceViewStateFragment<SwipeRefresh
         super.onDestroy();
 
         ((ForecastActivity) getActivity()).setHourlyForecastFragmentListener(null);
+        mListener = null;
     }
 
     @Override

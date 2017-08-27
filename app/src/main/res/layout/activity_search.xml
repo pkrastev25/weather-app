@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <data>
+
+        <variable
+            name="view"
+            type="com.petar.weather.ui.activities.SearchActivity"/>
+    </data>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <android.support.v7.widget.SearchView
+            android:id="@+id/search_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:iconifiedByDefault="false"/>
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@id/search_view">
+
+            <!-- Content View -->
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/contentView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+
+            <!-- Loading View -->
+            <ProgressBar
+                android:id="@+id/loadingView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:indeterminate="true"/>
+
+            <!-- Error view -->
+            <TextView
+                android:id="@+id/errorView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+        </FrameLayout>
+
+    </RelativeLayout>
+</layout>

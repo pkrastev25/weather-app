@@ -2,17 +2,14 @@ package com.petar.weather.logic.models;
 
 import android.support.annotation.NonNull;
 
+import com.petar.weather.ui.recycler.AListenerRecyclerItem;
+import com.petar.weather.ui.recycler.IListener;
+
 /**
  * Created by User on 29.6.2017 г..
  */
 
-public abstract class ALocation implements Comparable<ALocation> {
-
-    protected ILocationListener mListener;
-
-    public void setListener(ILocationListener listener) {
-        mListener = listener;
-    }
+public abstract class ALocation extends AListenerRecyclerItem<ALocation.ILocationListener> implements Comparable<ALocation> {
 
     public abstract Integer getDistance();
 
@@ -32,12 +29,12 @@ public abstract class ALocation implements Comparable<ALocation> {
     }
 
     public void onItemClick() {
-        if (mListener != null) {
-            mListener.onItemClick(this);
+        if (getListener() != null) {
+            getListener().onItemClick(this);
         }
     }
 
-    public interface ILocationListener {
+    public interface ILocationListener extends IListener {
         void onItemClick(ALocation location);
     }
 }

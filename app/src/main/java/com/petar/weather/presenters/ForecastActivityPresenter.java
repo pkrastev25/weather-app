@@ -58,4 +58,8 @@ public class ForecastActivityPresenter extends MvpBasePresenter<IForecastActivit
     public ALocation getCurrentLocation() {
         return mCurrentLocation;
     }
+
+    public void setCurrentLocation(ALocation currentLocation) {
+        mCurrentLocation = currentLocation;
+    }
 }

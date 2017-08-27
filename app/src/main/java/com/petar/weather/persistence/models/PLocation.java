@@ -1,4 +1,6 @@
 package com.petar.weather.persistence.models;
+import android.os.Parcel;
+
 import com.petar.weather.logic.models.ALocation;
 import com.petar.weather.networking.models.NLocation;
 import com.petar.weather.util.Constants;
@@ -87,4 +89,48 @@ public class PLocation extends ALocation {
     public void setDistance(int distance) {
         this.distance = distance;
     }
+
+    @Override
+    public int getViewType() {
+        return Constants.LOCATION_RECYCLER_ITEM;
+    }
+
+    /**
+     * Based on https://stackoverflow.com/questions/4076946/parcelable-where-when-is-describecontents-used
+     *
+     * @return
+     */
+    @Override
+    public int describeContents() {
+        return CONTENTS_FILE_DESCRIPTOR;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeLong(this.keyDB);
+        dest.writeLong(this.expireTime);
+        dest.writeInt(this.idWOE);
+        dest.writeInt(this.distance);
+        dest.writeString(this.title);
+    }
+
+    protected PLocation(Parcel in) {
+        this.keyDB = in.readLong();
+        this.expireTime = in.readLong();
+        this.idWOE = in.readInt();
+        this.distance = in.readInt();
+        this.title = in.readString();
+    }
+
+    public static final Creator<PLocation> CREATOR = new Creator<PLocation>() {
+        @Override
+        public PLocation createFromParcel(Parcel source) {
+            return new PLocation(source);
+        }
+
+        @Override
+        public PLocation[] newArray(int size) {
+            return new PLocation[size];
+        }
+    };
 }
