@@ -3,7 +3,7 @@ package com.petar.weather.networking;
 import com.petar.weather.networking.models.NForecast;
 import com.petar.weather.networking.models.NLocation;
 import com.petar.weather.networking.models.NWeeklyForecast;
-import com.petar.weather.util.Constants;
+import com.petar.weather.app.Constants;
 
 import java.io.IOException;
 import java.util.List;

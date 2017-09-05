@@ -3,7 +3,7 @@ import android.os.Parcel;
 
 import com.petar.weather.logic.models.ALocation;
 import com.petar.weather.networking.models.NLocation;
-import com.petar.weather.util.Constants;
+import com.petar.weather.app.Constants;
 import com.petar.weather.util.TimeUtil;
 
 import org.greenrobot.greendao.annotation.Entity;
@@ -92,7 +92,7 @@ public class PLocation extends ALocation {
 
     @Override
     public int getViewType() {
-        return Constants.LOCATION_RECYCLER_ITEM;
+        return Constants.RecyclerItems.LOCATION_ITEM;
     }
 
     /**

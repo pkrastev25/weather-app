@@ -2,6 +2,7 @@ package com.petar.weather.util;
 
 import android.location.Location;
 
+import com.petar.weather.app.Constants;
 import com.petar.weather.logic.models.AForecast;
 
 import org.joda.time.DateTime;

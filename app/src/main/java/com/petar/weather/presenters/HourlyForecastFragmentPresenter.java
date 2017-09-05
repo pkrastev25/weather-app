@@ -7,7 +7,7 @@ import com.petar.weather.logic.DataLogic;
 import com.petar.weather.logic.models.AForecast;
 import com.petar.weather.ui.views.IHourlyForecastFragment;
 import com.petar.weather.util.AsyncTaskUtil;
-import com.petar.weather.util.Constants;
+import com.petar.weather.app.Constants;
 import com.petar.weather.util.FormatUtil;
 import com.petar.weather.util.TimeUtil;
 

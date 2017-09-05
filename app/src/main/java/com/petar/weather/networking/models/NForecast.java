@@ -4,7 +4,7 @@ import android.os.Parcel;
 
 import com.google.gson.annotations.SerializedName;
 import com.petar.weather.logic.models.AForecast;
-import com.petar.weather.util.Constants;
+import com.petar.weather.app.Constants;
 
 /**
  * Created by User on 21.6.2017 г..
@@ -127,6 +127,6 @@ public class NForecast extends AForecast {
 
     @Override
     public int getViewType() {
-        return Constants.FORECAST_RECYCLER_ITEM;
+        return Constants.RecyclerItems.FORECAST_ITEM;
     }
 }

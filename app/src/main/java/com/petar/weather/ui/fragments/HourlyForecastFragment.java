@@ -25,11 +25,11 @@ import com.petar.weather.logic.models.AForecast;
 import com.petar.weather.presenters.HourlyForecastFragmentPresenter;
 import com.petar.weather.ui.activities.ForecastActivity;
 import com.petar.weather.ui.activities.ForecastDetailsActivity;
-import com.petar.weather.ui.adapter.ForecastRecyclerAdapter;
+import com.petar.weather.ui.adapter.BaseRecyclerAdapter;
 import com.petar.weather.ui.recycler.AListenerRecyclerItem;
-import com.petar.weather.ui.views.ForecastLoadingRecyclerItem;
+import com.petar.weather.ui.recycler.LoadingRecyclerItem;
 import com.petar.weather.ui.views.IHourlyForecastFragment;
-import com.petar.weather.util.Constants;
+import com.petar.weather.app.Constants;
 import com.petar.weather.util.TimeUtil;
 
 import org.joda.time.DateTime;
@@ -44,8 +44,8 @@ public class HourlyForecastFragment extends MvpLceViewStateFragment<SwipeRefresh
 
     private Integer mId;
     private RecyclerView mRecyclerView;
-    private ForecastRecyclerAdapter mAdapter;
-    private ForecastLoadingRecyclerItem mLoadingRecyclerItem;
+    private BaseRecyclerAdapter mAdapter;
+    private LoadingRecyclerItem mLoadingRecyclerItem;
 
     private IForecastFragmentListener mListener;
 
@@ -82,8 +82,8 @@ public class HourlyForecastFragment extends MvpLceViewStateFragment<SwipeRefresh
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        mLoadingRecyclerItem = new ForecastLoadingRecyclerItem();
-        mAdapter = new ForecastRecyclerAdapter();
+        mLoadingRecyclerItem = new LoadingRecyclerItem();
+        mAdapter = new BaseRecyclerAdapter();
         contentView.setOnRefreshListener(this);
         final LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
         mRecyclerView.setLayoutManager(layoutManager);
@@ -202,7 +202,7 @@ public class HourlyForecastFragment extends MvpLceViewStateFragment<SwipeRefresh
         List<? extends AListenerRecyclerItem> data = mAdapter.getData();
 
         for (int i = 0; i < data.size(); i++) {
-            if (data.get(i).getViewType() == Constants.FORECAST_RECYCLER_ITEM) {
+            if (data.get(i).getViewType() == Constants.RecyclerItems.FORECAST_ITEM) {
                 int forecastHour = TimeUtil.getHoursTimeForISOString(
                         ((AForecast) data.get(i)).getCreatedDate()
                 );

@@ -16,9 +16,7 @@ import android.view.View;
 
 import com.petar.weather.R;
 import com.petar.weather.databinding.ActivityMainBinding;
-import com.petar.weather.util.Constants;
-
-import net.danlew.android.joda.JodaTimeAndroid;
+import com.petar.weather.app.Constants;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -27,8 +25,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        JodaTimeAndroid.init(this);
 
         ActivityMainBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
         binding.setView(this);

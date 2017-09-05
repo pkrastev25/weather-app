@@ -2,7 +2,7 @@ package com.petar.weather.persistence.models;
 
 import android.support.annotation.NonNull;
 
-import com.petar.weather.util.Constants;
+import com.petar.weather.app.Constants;
 import com.petar.weather.util.TimeUtil;
 
 import org.greenrobot.greendao.annotation.Entity;

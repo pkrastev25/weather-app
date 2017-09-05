@@ -2,6 +2,8 @@ package com.petar.weather.ui.recycler;
 
 import android.os.Parcelable;
 
+import com.petar.weather.app.Constants;
+
 /**
  * Created by User on 20.8.2017 г..
  */
@@ -18,5 +20,6 @@ public abstract class AListenerRecyclerItem<TListener extends IListener> impleme
         mListener = listener;
     }
 
+    @Constants.RecyclerItems
     public abstract int getViewType();
 }

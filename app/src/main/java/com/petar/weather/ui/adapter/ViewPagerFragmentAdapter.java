@@ -7,7 +7,7 @@ import android.support.v4.app.FragmentPagerAdapter;
 import com.petar.weather.ui.fragments.DailyForecastFragment;
 import com.petar.weather.ui.fragments.HourlyForecastFragment;
 import com.petar.weather.ui.fragments.SettingsFragment;
-import com.petar.weather.util.Constants;
+import com.petar.weather.app.Constants;
 
 /**
  * Created by User on 1.7.2017 г..
@@ -20,14 +20,16 @@ public class ViewPagerFragmentAdapter extends FragmentPagerAdapter {
     }
 
     @Override
-    public Fragment getItem(int position) {
+    public Fragment getItem(@Constants.ViewPagerFragmentPositions int position) {
         switch (position) {
-            case (Constants.HOURLY_FORECAST_FRAGMENT_POSITION):
+            case Constants.ViewPagerFragmentPositions.HOURLY_FORECAST:
                 return new HourlyForecastFragment();
-            case (Constants.DAILY_FORECAST_FRAGMENT_POSITION):
+            case Constants.ViewPagerFragmentPositions.DAILY_FORECAST:
                 return new DailyForecastFragment();
-            default:
+            case Constants.ViewPagerFragmentPositions.SETTINGS:
                 return new SettingsFragment();
+            default:
+                return null;
         }
     }
 

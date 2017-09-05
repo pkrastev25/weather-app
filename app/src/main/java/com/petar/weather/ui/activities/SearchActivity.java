@@ -15,10 +15,10 @@ import com.petar.weather.R;
 import com.petar.weather.databinding.ActivitySearchBinding;
 import com.petar.weather.logic.models.ALocation;
 import com.petar.weather.presenters.SearchActivityPresenter;
-import com.petar.weather.ui.adapter.LocationRecyclerAdapter;
+import com.petar.weather.ui.adapter.BaseRecyclerAdapter;
 import com.petar.weather.ui.recycler.AListenerRecyclerItem;
 import com.petar.weather.ui.views.ISearchActivity;
-import com.petar.weather.util.Constants;
+import com.petar.weather.app.Constants;
 
 import java.util.List;
 
@@ -26,7 +26,7 @@ public class SearchActivity extends MvpLceViewStateActivity<RecyclerView, List<?
         implements ISearchActivity, SearchView.OnQueryTextListener, ALocation.ILocationListener {
 
     private SearchView mSearchView;
-    private LocationRecyclerAdapter mAdapter;
+    private BaseRecyclerAdapter mAdapter;
 
     // GENERAL ACTIVITY region
     @Override
@@ -39,7 +39,7 @@ public class SearchActivity extends MvpLceViewStateActivity<RecyclerView, List<?
         mSearchView = binding.searchView;
         mSearchView.setOnQueryTextListener(this);
 
-        mAdapter = new LocationRecyclerAdapter();
+        mAdapter = new BaseRecyclerAdapter();
         contentView.setLayoutManager(new LinearLayoutManager(this));
         contentView.setAdapter(mAdapter);
     }

@@ -9,7 +9,7 @@ import android.os.Bundle;
 import com.petar.weather.R;
 import com.petar.weather.databinding.ActivityForecastDetailsBinding;
 import com.petar.weather.logic.models.AForecast;
-import com.petar.weather.util.Constants;
+import com.petar.weather.app.Constants;
 
 public class ForecastDetailsActivity extends AppCompatActivity {
 

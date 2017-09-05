@@ -1,5 +1,7 @@
 package com.petar.weather.util;
 
+import com.petar.weather.app.Constants;
+
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;

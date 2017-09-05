@@ -25,10 +25,10 @@ import com.petar.weather.logic.models.AForecast;
 import com.petar.weather.presenters.DailyForecastFragmentPresenter;
 import com.petar.weather.ui.activities.ForecastActivity;
 import com.petar.weather.ui.activities.ForecastDetailsActivity;
-import com.petar.weather.ui.adapter.ForecastRecyclerAdapter;
+import com.petar.weather.ui.adapter.BaseRecyclerAdapter;
 import com.petar.weather.ui.recycler.AListenerRecyclerItem;
 import com.petar.weather.ui.views.IDailyForecastFragment;
-import com.petar.weather.util.Constants;
+import com.petar.weather.app.Constants;
 
 import java.util.List;
 
@@ -40,7 +40,7 @@ public class DailyForecastFragment extends MvpLceViewStateFragment<SwipeRefreshL
 
     private Integer mId;
     private RecyclerView mRecyclerView;
-    private ForecastRecyclerAdapter mAdapter;
+    private BaseRecyclerAdapter mAdapter;
 
     private IForecastFragmentListener mListener;
 
@@ -70,7 +70,7 @@ public class DailyForecastFragment extends MvpLceViewStateFragment<SwipeRefreshL
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        mAdapter = new ForecastRecyclerAdapter();
+        mAdapter = new BaseRecyclerAdapter();
         contentView.setOnRefreshListener(this);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         mRecyclerView.setAdapter(mAdapter);

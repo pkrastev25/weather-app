@@ -13,7 +13,7 @@ import com.petar.weather.networking.models.NLocation;
 import com.petar.weather.persistence.PersistenceLogic;
 import com.petar.weather.persistence.models.PForecast;
 import com.petar.weather.persistence.models.PLocation;
-import com.petar.weather.util.Constants;
+import com.petar.weather.app.Constants;
 import com.petar.weather.util.ForecastUtil;
 import com.petar.weather.util.NetworkUtil;
 import com.petar.weather.util.TimeUtil;

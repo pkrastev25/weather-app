@@ -5,7 +5,7 @@
 
         <variable
             name="item"
-            type="com.petar.weather.ui.views.ForecastLoadingRecyclerItem"/>
+            type="com.petar.weather.ui.recycler.LoadingRecyclerItem"/>
     </data>
 
     <RelativeLayout

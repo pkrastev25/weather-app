@@ -22,7 +22,7 @@ import com.petar.weather.presenters.ForecastActivityPresenter;
 import com.petar.weather.ui.adapter.ViewPagerFragmentAdapter;
 import com.petar.weather.ui.views.IForecastActivity;
 import com.petar.weather.ui.views.IToolbarView;
-import com.petar.weather.util.Constants;
+import com.petar.weather.app.Constants;
 
 public class ForecastActivity extends MvpLceViewStateActivity<ViewPager, ALocation, IForecastActivity, ForecastActivityPresenter>
         implements IForecastActivity, IToolbarView, LocationListener, IForecastFragmentListener {

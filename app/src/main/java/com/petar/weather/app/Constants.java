@@ -1,4 +1,16 @@
-package com.petar.weather.util;
+package com.petar.weather.app;
+
+import android.support.annotation.IntDef;
+
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+
+import static com.petar.weather.app.Constants.RecyclerItems.FORECAST_ITEM;
+import static com.petar.weather.app.Constants.RecyclerItems.LOADING_ITEM;
+import static com.petar.weather.app.Constants.RecyclerItems.LOCATION_ITEM;
+import static com.petar.weather.app.Constants.ViewPagerFragmentPositions.DAILY_FORECAST;
+import static com.petar.weather.app.Constants.ViewPagerFragmentPositions.HOURLY_FORECAST;
+import static com.petar.weather.app.Constants.ViewPagerFragmentPositions.SETTINGS;
 
 /**
  * Created by User on 22.6.2017 г..
@@ -23,16 +35,6 @@ public class Constants {
     public static final int FORECASTS_FOR_A_DAY = 8;
     public static final long FORECAST_WEEKLY_TIMESTAMP = Long.MAX_VALUE;
 
-    // Forecast recycler items
-    public static final int FORECAST_RECYCLER_ITEM = 0;
-    public static final int FORECAST_LOADING_RECYCLER_ITEM = 1;
-    public static final int LOCATION_RECYCLER_ITEM = 2;
-
-    // View pager for fragments
-    public static final int VIEW_PAGER_FRAGMENT_COUNT = 3;
-    public static final int HOURLY_FORECAST_FRAGMENT_POSITION = 0;
-    public static final int DAILY_FORECAST_FRAGMENT_POSITION = 1;
-
     // Bundle keys
     public static final String FORECAST_DETAILS_KEY = "forecast.details.key";
     public static final String LOCATION_FROM_SEARCH_KEY = "location.from.search.key";
@@ -51,4 +53,34 @@ public class Constants {
     public static final int OFFSET_HOURS_FOR_FORECAST = 3;
     public static final int OFFSET_DAYS_FOR_FORECAST = 6;
     public static final int OFFSET_DAYS_FOR_WEEKLY_FORECAST = 1;
+
+    /**
+     * Based on http://blog.shamanland.com/2016/02/int-string-enum.html
+     */
+    @IntDef({
+            HOURLY_FORECAST,
+            DAILY_FORECAST,
+            SETTINGS
+    })
+    @Retention(RetentionPolicy.SOURCE)
+    public @interface ViewPagerFragmentPositions {
+        int HOURLY_FORECAST = 0;
+        int DAILY_FORECAST = 1;
+        int SETTINGS = 2;
+    }
+
+    // View pager for fragments
+    public static final int VIEW_PAGER_FRAGMENT_COUNT = 3;
+
+    @IntDef({
+            FORECAST_ITEM,
+            LOADING_ITEM,
+            LOCATION_ITEM
+    })
+    @Retention(RetentionPolicy.SOURCE)
+    public @interface RecyclerItems {
+        int FORECAST_ITEM = 0;
+        int LOADING_ITEM = 1;
+        int LOCATION_ITEM = 2;
+    }
 }

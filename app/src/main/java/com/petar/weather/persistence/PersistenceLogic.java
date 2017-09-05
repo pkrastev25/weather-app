@@ -9,7 +9,7 @@ import com.petar.weather.persistence.models.DaoMaster;
 import com.petar.weather.persistence.models.DaoSession;
 import com.petar.weather.persistence.models.PForecast;
 import com.petar.weather.persistence.models.PLocation;
-import com.petar.weather.util.Constants;
+import com.petar.weather.app.Constants;
 
 import java.util.Collections;
 import java.util.List;
