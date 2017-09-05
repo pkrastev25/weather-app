@@ -30,6 +30,7 @@ public abstract class ABaseRecyclerAdapter extends RecyclerView.Adapter<Recycler
     }
 
     public void setData(List<? extends AListenerRecyclerItem> data) {
+        mData.clear();
         mData.addAll(data);
         notifyDataSetChanged();
     }
@@ -38,12 +39,22 @@ public abstract class ABaseRecyclerAdapter extends RecyclerView.Adapter<Recycler
         return mData.isEmpty();
     }
 
+    public void addItems(List<? extends AListenerRecyclerItem> items) {
+        mData.addAll(items);
+        notifyDataSetChanged();
+    }
+
     public void addItem(AListenerRecyclerItem item) {
         mData.add(item);
     }
 
     public void removeItem(AListenerRecyclerItem item) {
         mData.remove(item);
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        return mData.get(position).getViewType();
     }
 
     public abstract RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType);

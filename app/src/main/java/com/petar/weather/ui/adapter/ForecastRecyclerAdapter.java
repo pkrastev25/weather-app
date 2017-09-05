@@ -23,11 +23,6 @@ import java.util.List;
 public class ForecastRecyclerAdapter extends ABaseRecyclerAdapter {
 
     @Override
-    public int getItemViewType(int position) {
-        return mData.get(position).getViewType();
-    }
-
-    @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view;
 
@@ -61,17 +56,5 @@ public class ForecastRecyclerAdapter extends ABaseRecyclerAdapter {
             default:
                 break;
         }
-    }
-
-    public List<? extends AForecast> getForecastData() {
-        List<AForecast> forecasts = new ArrayList<>();
-
-        for (AListenerRecyclerItem item : mData) {
-            if (item.getViewType() == Constants.FORECAST_RECYCLER_ITEM) {
-                forecasts.add((AForecast) item);
-            }
-        }
-
-        return forecasts;
     }
 }

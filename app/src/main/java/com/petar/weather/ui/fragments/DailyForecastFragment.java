@@ -17,7 +17,7 @@ import android.view.ViewGroup;
 
 import com.hannesdorfmann.mosby3.mvp.viewstate.lce.LceViewState;
 import com.hannesdorfmann.mosby3.mvp.viewstate.lce.MvpLceViewStateFragment;
-import com.hannesdorfmann.mosby3.mvp.viewstate.lce.data.RetainingLceViewState;
+import com.hannesdorfmann.mosby3.mvp.viewstate.lce.data.ParcelableListLceViewState;
 import com.petar.weather.R;
 import com.petar.weather.databinding.FragmentDailyForecastBinding;
 import com.petar.weather.listeners.IForecastFragmentListener;
@@ -47,13 +47,6 @@ public class DailyForecastFragment extends MvpLceViewStateFragment<SwipeRefreshL
     // GENERAL FRAGMENT region
     public DailyForecastFragment() {
         // Required empty public constructor
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-        setRetainInstance(true);
     }
 
     @Override
@@ -143,22 +136,24 @@ public class DailyForecastFragment extends MvpLceViewStateFragment<SwipeRefreshL
     @NonNull
     @Override
     public LceViewState<List<? extends AListenerRecyclerItem>, IDailyForecastFragment> createViewState() {
-        return new RetainingLceViewState<>();
+        return new ParcelableListLceViewState<>();
     }
+    // End of MVP-LCE-VIEW-STATE-FRAGMENT region
 
+    // SWIPE-TO-REFRESH region
     @Override
     public void onRefresh() {
         loadData(true);
     }
-    // End of MVP-LCE-VIEW-STATE-FRAGMENT region
+    // End of SWIPE-TO-REFRESH
 
     // ACTIVITY-FRAGMENT COMMUNICATION region
     @Override
-    public void onLocationFound(Integer id) {
-        boolean didIdChange = mId == null || !mId.equals(id);
+    public void onLocationFound(@NonNull Integer id) {
+        boolean didIdChange = !id.equals(mId);
         mId = id;
 
-        if (getUserVisibleHint() && didIdChange) {
+        if (didIdChange && presenter != null) {
             presenter.loadLocationForecast(getContext(), id, false);
         }
     }

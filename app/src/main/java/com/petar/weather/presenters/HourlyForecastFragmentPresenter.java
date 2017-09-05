@@ -93,4 +93,8 @@ public class HourlyForecastFragmentPresenter extends MvpBasePresenter<IHourlyFor
     public boolean isLoading() {
         return mIsLoading;
     }
+
+    public long getCurrentForecastDate() {
+        return mCurrentForecastDate;
+    }
 }

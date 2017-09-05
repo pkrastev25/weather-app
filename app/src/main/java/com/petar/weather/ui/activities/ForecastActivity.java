@@ -13,7 +13,7 @@ import android.support.v4.view.ViewPager;
 
 import com.hannesdorfmann.mosby3.mvp.viewstate.lce.LceViewState;
 import com.hannesdorfmann.mosby3.mvp.viewstate.lce.MvpLceViewStateActivity;
-import com.hannesdorfmann.mosby3.mvp.viewstate.lce.data.RetainingLceViewState;
+import com.hannesdorfmann.mosby3.mvp.viewstate.lce.data.ParcelableDataLceViewState;
 import com.petar.weather.R;
 import com.petar.weather.databinding.ActivityForecastBinding;
 import com.petar.weather.listeners.IForecastFragmentListener;
@@ -26,6 +26,8 @@ import com.petar.weather.util.Constants;
 
 public class ForecastActivity extends MvpLceViewStateActivity<ViewPager, ALocation, IForecastActivity, ForecastActivityPresenter>
         implements IForecastActivity, IToolbarView, LocationListener, IForecastFragmentListener {
+
+    private ALocation mCurrentLocation;
 
     // TOOLBAR helpers
     private ObservableField<String> mCurrentLocationTitle;
@@ -53,8 +55,7 @@ public class ForecastActivity extends MvpLceViewStateActivity<ViewPager, ALocati
         Bundle bundle = getIntent().getExtras();
 
         if (bundle != null) {
-            ALocation location = bundle.getParcelable(Constants.LOCATION_FROM_SEARCH_KEY);
-            presenter.setCurrentLocation(location);
+            mCurrentLocation = bundle.getParcelable(Constants.LOCATION_FROM_SEARCH_KEY);
         }
     }
 
@@ -62,7 +63,7 @@ public class ForecastActivity extends MvpLceViewStateActivity<ViewPager, ALocati
     protected void onResume() {
         super.onResume();
 
-        if (presenter.getCurrentLocation() != null) {
+        if (mCurrentLocation != null) {
             showContent();
         }
     }
@@ -90,13 +91,14 @@ public class ForecastActivity extends MvpLceViewStateActivity<ViewPager, ALocati
 
     @Override
     public void loadData(boolean pullToRefresh) {
-        if (presenter.getCurrentLocation() == null) {
+        if (mCurrentLocation == null) {
             getLocation();
         }
     }
 
     @Override
     public void setData(ALocation current) {
+        mCurrentLocation = current;
         mCurrentLocationTitle.set(current.getTitle());
         onLocationFound(current.getId());
     }
@@ -110,18 +112,20 @@ public class ForecastActivity extends MvpLceViewStateActivity<ViewPager, ALocati
     public void showContent() {
         super.showContent();
 
-        mCurrentLocationTitle.set(getData().getTitle());
+        if (mCurrentLocation != null) {
+            mCurrentLocationTitle.set(mCurrentLocation.getTitle());
+        }
     }
 
     @Override
     public ALocation getData() {
-        return presenter.getCurrentLocation();
+        return mCurrentLocation;
     }
 
     @NonNull
     @Override
     public LceViewState<ALocation, IForecastActivity> createViewState() {
-        return new RetainingLceViewState<>();
+        return new ParcelableDataLceViewState<>();
     }
 
     @Override
@@ -204,7 +208,7 @@ public class ForecastActivity extends MvpLceViewStateActivity<ViewPager, ALocati
 
     // ACTIVITY-FRAGMENT COMMUNICATION region
     private interface IForecastActivityListener {
-        void onLocationFound(Integer id);
+        void onLocationFound(@NonNull Integer id);
     }
 
     public interface IDailyForecastFragmentListener extends IForecastActivityListener {
@@ -235,8 +239,8 @@ public class ForecastActivity extends MvpLceViewStateActivity<ViewPager, ALocati
     // FRAGMENT-ACTIVITY COMMUNICATION region
     @Override
     public void onFragmentCreated() {
-        if (presenter.getCurrentLocation() != null) {
-            onLocationFound(presenter.getCurrentLocation().getId());
+        if (mCurrentLocation != null) {
+            onLocationFound(mCurrentLocation.getId());
         }
     }
     // End of FRAGMENT-ACTIVITY COMMUNICATION region

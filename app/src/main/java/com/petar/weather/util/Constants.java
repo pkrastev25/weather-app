@@ -36,6 +36,7 @@ public class Constants {
     // Bundle keys
     public static final String FORECAST_DETAILS_KEY = "forecast.details.key";
     public static final String LOCATION_FROM_SEARCH_KEY = "location.from.search.key";
+    public static final String RECYCLER_LOADING_ITEM_KEY = "recycler.loading.item.key";
 
     // DB specific
     public static final String DB_NAME = "com.petar.weather.persistence";

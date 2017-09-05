@@ -10,7 +10,7 @@ import android.support.v7.widget.SearchView;
 
 import com.hannesdorfmann.mosby3.mvp.viewstate.lce.LceViewState;
 import com.hannesdorfmann.mosby3.mvp.viewstate.lce.MvpLceViewStateActivity;
-import com.hannesdorfmann.mosby3.mvp.viewstate.lce.data.RetainingLceViewState;
+import com.hannesdorfmann.mosby3.mvp.viewstate.lce.data.ParcelableListLceViewState;
 import com.petar.weather.R;
 import com.petar.weather.databinding.ActivitySearchBinding;
 import com.petar.weather.logic.models.ALocation;
@@ -50,6 +50,7 @@ public class SearchActivity extends MvpLceViewStateActivity<RecyclerView, List<?
 
         mSearchView.setOnQueryTextListener(null);
         mSearchView = null;
+        mAdapter = null;
     }
     // End of GENERAL ACTIVITY region
 
@@ -66,7 +67,7 @@ public class SearchActivity extends MvpLceViewStateActivity<RecyclerView, List<?
 
     @Override
     public void setData(List<? extends AListenerRecyclerItem> data) {
-        for (AListenerRecyclerItem current: data) {
+        for (AListenerRecyclerItem current : data) {
             current.setListener(this);
         }
 
@@ -86,7 +87,7 @@ public class SearchActivity extends MvpLceViewStateActivity<RecyclerView, List<?
     @NonNull
     @Override
     public LceViewState<List<? extends AListenerRecyclerItem>, ISearchActivity> createViewState() {
-        return new RetainingLceViewState<>();
+        return new ParcelableListLceViewState<>();
     }
     // End of MVP-LCE-VIEW-STATE-ACTIVITY region
 

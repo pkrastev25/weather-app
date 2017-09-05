@@ -17,7 +17,7 @@ import android.view.ViewGroup;
 
 import com.hannesdorfmann.mosby3.mvp.viewstate.lce.LceViewState;
 import com.hannesdorfmann.mosby3.mvp.viewstate.lce.MvpLceViewStateFragment;
-import com.hannesdorfmann.mosby3.mvp.viewstate.lce.data.RetainingLceViewState;
+import com.hannesdorfmann.mosby3.mvp.viewstate.lce.data.ParcelableListLceViewState;
 import com.petar.weather.R;
 import com.petar.weather.databinding.FragmentHourlyForecastBinding;
 import com.petar.weather.listeners.IForecastFragmentListener;
@@ -31,6 +31,8 @@ import com.petar.weather.ui.views.ForecastLoadingRecyclerItem;
 import com.petar.weather.ui.views.IHourlyForecastFragment;
 import com.petar.weather.util.Constants;
 import com.petar.weather.util.TimeUtil;
+
+import org.joda.time.DateTime;
 
 import java.util.List;
 
@@ -105,6 +107,17 @@ public class HourlyForecastFragment extends MvpLceViewStateFragment<SwipeRefresh
         if (mListener != null) {
             mListener.onFragmentCreated();
         }
+
+        if (savedInstanceState != null) {
+            mLoadingRecyclerItem = savedInstanceState.getParcelable(Constants.RECYCLER_LOADING_ITEM_KEY);
+        }
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        outState.putParcelable(Constants.RECYCLER_LOADING_ITEM_KEY, mLoadingRecyclerItem);
     }
 
     @Override
@@ -123,12 +136,14 @@ public class HourlyForecastFragment extends MvpLceViewStateFragment<SwipeRefresh
             presenter.loadForecastForDate(getContext(), mId, false);
         }
     }
+    // End of GENERAL FRAGMENT region
 
+    // SWIPE-TO-REFRESH region
     @Override
     public void onRefresh() {
         loadData(true);
     }
-    // End of GENERAL FRAGMENT region
+    // End of SWIPE-TO-REFRESH region
 
     // MVP-LCE-VIEW-STATE-FRAGMENT region
     @Override
@@ -149,7 +164,14 @@ public class HourlyForecastFragment extends MvpLceViewStateFragment<SwipeRefresh
             current.setListener(this);
         }
 
-        mAdapter.setData(data);
+        DateTime comparableCurrentForecast = new DateTime(presenter.getCurrentForecastDate()).withTimeAtStartOfDay();
+        DateTime comparableToday = new DateTime().withTimeAtStartOfDay();
+
+        if (comparableCurrentForecast.equals(comparableToday)) {
+            mAdapter.setData(data);
+        } else {
+            mAdapter.addItems(data);
+        }
     }
 
     @Override
@@ -172,21 +194,23 @@ public class HourlyForecastFragment extends MvpLceViewStateFragment<SwipeRefresh
     @NonNull
     @Override
     public LceViewState<List<? extends AListenerRecyclerItem>, IHourlyForecastFragment> createViewState() {
-        return new RetainingLceViewState<>();
+        return new ParcelableListLceViewState<>();
     }
 
     @Override
     public void scrollToCurrentForecast() {
-        List<? extends AForecast> data = mAdapter.getForecastData();
+        List<? extends AListenerRecyclerItem> data = mAdapter.getData();
 
         for (int i = 0; i < data.size(); i++) {
-            int forecastHour = TimeUtil.getHoursTimeForISOString(
-                    data.get(i).getCreatedDate()
-            );
+            if (data.get(i).getViewType() == Constants.FORECAST_RECYCLER_ITEM) {
+                int forecastHour = TimeUtil.getHoursTimeForISOString(
+                        ((AForecast) data.get(i)).getCreatedDate()
+                );
 
-            if (forecastHour > TimeUtil.getCurrentHoursTime()) {
-                mRecyclerView.smoothScrollToPosition(i);
-                break;
+                if (forecastHour > TimeUtil.getCurrentHoursTime()) {
+                    mRecyclerView.smoothScrollToPosition(i);
+                    break;
+                }
             }
         }
     }
@@ -204,11 +228,11 @@ public class HourlyForecastFragment extends MvpLceViewStateFragment<SwipeRefresh
 
     // ACTIVITY-FRAGMENT COMMUNICATION region
     @Override
-    public void onLocationFound(Integer id) {
-        boolean didIdChange = mId == null || !mId.equals(id);
+    public void onLocationFound(@NonNull Integer id) {
+        boolean didIdChange = !id.equals(mId);
         mId = id;
 
-        if (getUserVisibleHint() && didIdChange) {
+        if (didIdChange && presenter != null) {
             presenter.loadForecastForDate(getContext(), id, false);
         }
     }
