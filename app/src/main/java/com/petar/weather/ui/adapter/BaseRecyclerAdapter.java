@@ -49,10 +49,12 @@ public class BaseRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
     public void addItem(AListenerRecyclerItem item) {
         mData.add(item);
+        notifyDataSetChanged();
     }
 
     public void removeItem(AListenerRecyclerItem item) {
         mData.remove(item);
+        notifyDataSetChanged();
     }
 
     @Override

@@ -10,4 +10,6 @@ import java.util.List;
  */
 
 public interface ISearchActivity extends MvpLceView<List<? extends AListenerRecyclerItem>> {
+
+    void showMessage(String message);
 }

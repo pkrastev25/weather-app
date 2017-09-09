@@ -9,5 +9,7 @@ import com.petar.weather.logic.models.ALocation;
 
 public interface IForecastActivity extends MvpLceView<ALocation> {
 
+    void showMessage(String message);
+
     void setShowContentState();
 }

@@ -1,16 +1,10 @@
 package com.petar.weather.app;
 
 import android.support.annotation.IntDef;
+import android.support.annotation.StringDef;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
-
-import static com.petar.weather.app.Constants.RecyclerItems.FORECAST_ITEM;
-import static com.petar.weather.app.Constants.RecyclerItems.LOADING_ITEM;
-import static com.petar.weather.app.Constants.RecyclerItems.LOCATION_ITEM;
-import static com.petar.weather.app.Constants.ViewPagerFragmentPositions.DAILY_FORECAST;
-import static com.petar.weather.app.Constants.ViewPagerFragmentPositions.HOURLY_FORECAST;
-import static com.petar.weather.app.Constants.ViewPagerFragmentPositions.SETTINGS;
 
 /**
  * Created by User on 22.6.2017 г..
@@ -42,7 +36,7 @@ public class Constants {
 
     // DB specific
     public static final String DB_NAME = "com.petar.weather.persistence";
-    public static final int DB_FORECAST_SIZE = 5;
+    public static final int DB_FORECAST_SIZE = 10;
 
     // DB keys
     public static final long DB_CURRENT_LOCATION_KEY = 0;
@@ -58,9 +52,9 @@ public class Constants {
      * Based on http://blog.shamanland.com/2016/02/int-string-enum.html
      */
     @IntDef({
-            HOURLY_FORECAST,
-            DAILY_FORECAST,
-            SETTINGS
+            ViewPagerFragmentPositions.HOURLY_FORECAST,
+            ViewPagerFragmentPositions.DAILY_FORECAST,
+            ViewPagerFragmentPositions.SETTINGS
     })
     @Retention(RetentionPolicy.SOURCE)
     public @interface ViewPagerFragmentPositions {
@@ -73,14 +67,28 @@ public class Constants {
     public static final int VIEW_PAGER_FRAGMENT_COUNT = 3;
 
     @IntDef({
-            FORECAST_ITEM,
-            LOADING_ITEM,
-            LOCATION_ITEM
+            RecyclerItems.FORECAST_ITEM,
+            RecyclerItems.LOADING_ITEM,
+            RecyclerItems.LOCATION_ITEM
     })
     @Retention(RetentionPolicy.SOURCE)
     public @interface RecyclerItems {
         int FORECAST_ITEM = 0;
         int LOADING_ITEM = 1;
         int LOCATION_ITEM = 2;
+    }
+
+    @StringDef({
+            ErrorHandling.NO_INTERNET_CONNECTION,
+            ErrorHandling.NO_RESULTS_FOR_REQUEST,
+            ErrorHandling.CANNOT_UPDATE_CACHED_DATA,
+            ErrorHandling.DEFAULT
+    })
+    @Retention(RetentionPolicy.SOURCE)
+    public @interface ErrorHandling {
+        String NO_INTERNET_CONNECTION = "NO_INTERNET_CONNECTION";
+        String NO_RESULTS_FOR_REQUEST = "NO_RESULTS_FOR_REQUEST";
+        String CANNOT_UPDATE_CACHED_DATA = "CANNOT_UPDATE_CACHED_DATA";
+        String DEFAULT = "DEFAULT";
     }
 }

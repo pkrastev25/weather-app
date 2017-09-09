@@ -14,6 +14,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.hannesdorfmann.mosby3.mvp.viewstate.lce.LceViewState;
 import com.hannesdorfmann.mosby3.mvp.viewstate.lce.MvpLceViewStateFragment;
@@ -29,6 +30,7 @@ import com.petar.weather.ui.adapter.BaseRecyclerAdapter;
 import com.petar.weather.ui.recycler.AListenerRecyclerItem;
 import com.petar.weather.ui.views.IDailyForecastFragment;
 import com.petar.weather.app.Constants;
+import com.petar.weather.util.ErrorHandlingUtil;
 
 import java.util.List;
 
@@ -125,7 +127,7 @@ public class DailyForecastFragment extends MvpLceViewStateFragment<SwipeRefreshL
 
     @Override
     protected String getErrorMessage(Throwable e, boolean pullToRefresh) {
-        return null;
+        return ErrorHandlingUtil.generateErrorText(getContext(), e);
     }
 
     @Override
@@ -137,6 +139,11 @@ public class DailyForecastFragment extends MvpLceViewStateFragment<SwipeRefreshL
     @Override
     public LceViewState<List<? extends AListenerRecyclerItem>, IDailyForecastFragment> createViewState() {
         return new ParcelableListLceViewState<>();
+    }
+
+    @Override
+    public void showMessage(String message) {
+        Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
     }
     // End of MVP-LCE-VIEW-STATE-FRAGMENT region
 

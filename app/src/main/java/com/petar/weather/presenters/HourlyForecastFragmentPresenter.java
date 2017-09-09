@@ -5,10 +5,13 @@ import android.content.Context;
 import com.hannesdorfmann.mosby3.mvp.MvpBasePresenter;
 import com.petar.weather.logic.DataLogic;
 import com.petar.weather.logic.models.AForecast;
+import com.petar.weather.persistence.PersistenceLogic;
 import com.petar.weather.ui.views.IHourlyForecastFragment;
 import com.petar.weather.util.AsyncTaskUtil;
 import com.petar.weather.app.Constants;
+import com.petar.weather.util.ErrorHandlingUtil;
 import com.petar.weather.util.FormatUtil;
+import com.petar.weather.util.NetworkUtil;
 import com.petar.weather.util.TimeUtil;
 
 import org.joda.time.DateTime;
@@ -37,6 +40,10 @@ public class HourlyForecastFragmentPresenter extends MvpBasePresenter<IHourlyFor
     public void loadForecastForDate(final Context context, final int id, final boolean pullToRefresh) {
         if (isViewAttached() && !mIsLoading && new DateTime(mCurrentForecastDate).withTimeAtStartOfDay().isBefore(mLimitForecastDate)) {
             mIsLoading = true;
+            final String dateRequestFormat = FormatUtil.dateRequestFormat(
+                    TimeUtil.convertDateToCalendarFromMillis(mCurrentForecastDate)
+            );
+
             getView().showLoading(pullToRefresh);
             getView().removeLoadingRecyclerItem();
 
@@ -46,9 +53,7 @@ public class HourlyForecastFragmentPresenter extends MvpBasePresenter<IHourlyFor
                     return DataLogic.getInstance().getLocationForecastForDate(
                             context,
                             id,
-                            FormatUtil.dateRequestFormat(
-                                    TimeUtil.convertDateToCalendarFromMillis(mCurrentForecastDate)
-                            ),
+                            dateRequestFormat,
                             pullToRefresh
                     );
                 }
@@ -56,20 +61,32 @@ public class HourlyForecastFragmentPresenter extends MvpBasePresenter<IHourlyFor
                 @Override
                 public void onSuccess(List<? extends AForecast> result) {
                     if (isViewAttached()) {
-                        getView().setData(result);
-                        getView().showContent();
+                        if (!NetworkUtil.isNetworkAvailable(context) && result == null) {
+                            getView().showError(new Throwable(Constants.ErrorHandling.NO_INTERNET_CONNECTION), pullToRefresh);
+                        } else if (result == null) {
+                            getView().showError(new Throwable(Constants.ErrorHandling.DEFAULT), pullToRefresh);
+                        } else if (result.isEmpty()) {
+                            getView().showError(new Throwable(Constants.ErrorHandling.NO_RESULTS_FOR_REQUEST), pullToRefresh);
+                        } else {
+                            getView().setData(result);
+                            getView().showContent();
 
-                        DateTime today = new DateTime().withTimeAtStartOfDay();
-                        DateTime forecastDate = new DateTime(mCurrentForecastDate).withTimeAtStartOfDay();
+                            if (PersistenceLogic.getInstance(context).shouldForecastDataUpdate(dateRequestFormat.hashCode(), id)) {
+                                getView().showMessage(ErrorHandlingUtil.generateErrorText(context, Constants.ErrorHandling.CANNOT_UPDATE_CACHED_DATA));
+                            }
 
-                        if (today.isEqual(forecastDate)) {
-                            getView().scrollToCurrentForecast();
-                        }
+                            DateTime today = new DateTime().withTimeAtStartOfDay();
+                            DateTime forecastDate = new DateTime(mCurrentForecastDate).withTimeAtStartOfDay();
 
-                        mCurrentForecastDate = TimeUtil.addDayOffsetToDate(mCurrentForecastDate, 1);
+                            if (today.isEqual(forecastDate)) {
+                                getView().scrollToCurrentForecast();
+                            }
 
-                        if (new DateTime(mCurrentForecastDate).withTimeAtStartOfDay().isBefore(mLimitForecastDate)) {
-                            getView().setLoadingRecyclerItem();
+                            mCurrentForecastDate = TimeUtil.addDayOffsetToDate(mCurrentForecastDate, 1);
+
+                            if (new DateTime(mCurrentForecastDate).withTimeAtStartOfDay().isBefore(mLimitForecastDate)) {
+                                getView().setLoadingRecyclerItem();
+                            }
                         }
                     }
 
@@ -78,6 +95,10 @@ public class HourlyForecastFragmentPresenter extends MvpBasePresenter<IHourlyFor
 
                 @Override
                 public void onError(Exception error) {
+                    if (isViewAttached()) {
+                        getView().showError(new Throwable(Constants.ErrorHandling.DEFAULT), pullToRefresh);
+                    }
+
                     mIsLoading = false;
                 }
             });

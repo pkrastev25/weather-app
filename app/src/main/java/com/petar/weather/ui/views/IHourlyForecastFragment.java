@@ -11,6 +11,8 @@ import java.util.List;
 
 public interface IHourlyForecastFragment extends MvpLceView<List<? extends AListenerRecyclerItem>> {
 
+    void showMessage(String message);
+
     void scrollToCurrentForecast();
 
     void setLoadingRecyclerItem();

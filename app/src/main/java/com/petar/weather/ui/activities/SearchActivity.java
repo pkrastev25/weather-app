@@ -7,6 +7,8 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
+import android.text.TextUtils;
+import android.widget.Toast;
 
 import com.hannesdorfmann.mosby3.mvp.viewstate.lce.LceViewState;
 import com.hannesdorfmann.mosby3.mvp.viewstate.lce.MvpLceViewStateActivity;
@@ -19,6 +21,7 @@ import com.petar.weather.ui.adapter.BaseRecyclerAdapter;
 import com.petar.weather.ui.recycler.AListenerRecyclerItem;
 import com.petar.weather.ui.views.ISearchActivity;
 import com.petar.weather.app.Constants;
+import com.petar.weather.util.ErrorHandlingUtil;
 
 import java.util.List;
 
@@ -26,6 +29,7 @@ public class SearchActivity extends MvpLceViewStateActivity<RecyclerView, List<?
         implements ISearchActivity, SearchView.OnQueryTextListener, ALocation.ILocationListener {
 
     private SearchView mSearchView;
+    private String mTypedText;
     private BaseRecyclerAdapter mAdapter;
 
     // GENERAL ACTIVITY region
@@ -62,7 +66,9 @@ public class SearchActivity extends MvpLceViewStateActivity<RecyclerView, List<?
 
     @Override
     public void loadData(boolean pullToRefresh) {
-        showContent();
+        if (!TextUtils.isEmpty(mTypedText)) {
+            presenter.processQuery(this, mTypedText, pullToRefresh);
+        }
     }
 
     @Override
@@ -76,7 +82,7 @@ public class SearchActivity extends MvpLceViewStateActivity<RecyclerView, List<?
 
     @Override
     protected String getErrorMessage(Throwable e, boolean pullToRefresh) {
-        return null;
+        return ErrorHandlingUtil.generateErrorText(this, e);
     }
 
     @Override
@@ -89,18 +95,24 @@ public class SearchActivity extends MvpLceViewStateActivity<RecyclerView, List<?
     public LceViewState<List<? extends AListenerRecyclerItem>, ISearchActivity> createViewState() {
         return new ParcelableListLceViewState<>();
     }
+
+    @Override
+    public void showMessage(String message) {
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+    }
     // End of MVP-LCE-VIEW-STATE-ACTIVITY region
 
     // SEARCH region
     @Override
     public boolean onQueryTextSubmit(String query) {
-        presenter.processQuery(query, false);
+        presenter.processQuery(this, query, false);
         return true;
     }
 
     @Override
     public boolean onQueryTextChange(String newText) {
-        return false;
+        mTypedText = newText;
+        return true;
     }
     // End of SEARCH region
 

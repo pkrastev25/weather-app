@@ -10,6 +10,7 @@ import android.location.LocationManager;
 import android.support.annotation.NonNull;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
+import android.widget.Toast;
 
 import com.hannesdorfmann.mosby3.mvp.viewstate.lce.LceViewState;
 import com.hannesdorfmann.mosby3.mvp.viewstate.lce.MvpLceViewStateActivity;
@@ -23,6 +24,7 @@ import com.petar.weather.ui.adapter.ViewPagerFragmentAdapter;
 import com.petar.weather.ui.views.IForecastActivity;
 import com.petar.weather.ui.views.IToolbarView;
 import com.petar.weather.app.Constants;
+import com.petar.weather.util.ErrorHandlingUtil;
 
 public class ForecastActivity extends MvpLceViewStateActivity<ViewPager, ALocation, IForecastActivity, ForecastActivityPresenter>
         implements IForecastActivity, IToolbarView, LocationListener, IForecastFragmentListener {
@@ -105,7 +107,7 @@ public class ForecastActivity extends MvpLceViewStateActivity<ViewPager, ALocati
 
     @Override
     protected String getErrorMessage(Throwable e, boolean pullToRefresh) {
-        return null;
+        return ErrorHandlingUtil.generateErrorText(this, e);
     }
 
     @Override
@@ -126,6 +128,11 @@ public class ForecastActivity extends MvpLceViewStateActivity<ViewPager, ALocati
     @Override
     public LceViewState<ALocation, IForecastActivity> createViewState() {
         return new ParcelableDataLceViewState<>();
+    }
+
+    @Override
+    public void showMessage(String message) {
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
     }
 
     @Override

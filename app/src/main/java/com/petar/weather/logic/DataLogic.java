@@ -16,7 +16,6 @@ import com.petar.weather.persistence.models.PLocation;
 import com.petar.weather.app.Constants;
 import com.petar.weather.util.ForecastUtil;
 import com.petar.weather.util.NetworkUtil;
-import com.petar.weather.util.TimeUtil;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
@@ -43,20 +42,32 @@ public class DataLogic {
         return sInstance;
     }
 
-    public List<? extends ALocation> getLocationQueryResult(String query) throws IOException {
-        return ApiLogic.getInstance().getLocationQueryResult(query);
+    public List<? extends ALocation> getLocationQueryResult(Context context, String query) throws IOException {
+        List<? extends ALocation> result = null;
+
+        if (NetworkUtil.isNetworkAvailable(context)) {
+            result = ApiLogic.getInstance().getLocationQueryResult(query);
+        }
+
+        return result;
     }
 
-    public List<? extends ALocation> getLocationQueryResultWithCoordinates(String coordinates) throws IOException {
-        return ApiLogic.getInstance().getLocationQueryResultWithCoordinates(coordinates);
+    public List<? extends ALocation> getLocationQueryResultWithCoordinates(Context context, String coordinates) throws Exception {
+        List<? extends ALocation> result = null;
+
+        if (NetworkUtil.isNetworkAvailable(context)) {
+            result = ApiLogic.getInstance().getLocationQueryResultWithCoordinates(coordinates);
+        }
+
+        return result;
     }
 
-    public ALocation getCurrentLocation(Context context, String coordinates, boolean useCache) throws IOException {
+    public ALocation getCurrentLocation(Context context, String coordinates, boolean makeRequest) throws IOException {
         PLocation cachedLocation = PersistenceLogic.getInstance(context).getLocation();
         NLocation currentLocation = null;
 
         if (NetworkUtil.isNetworkAvailable(context)) {
-            if (cachedLocation == null || useCache || cachedLocation.getExpireTime() < TimeUtil.getCurrentTime()) {
+            if (cachedLocation == null || makeRequest || PersistenceLogic.getInstance(context).shouldLocationDataUpdate()) {
                 List<NLocation> nearbyLocations = ApiLogic.getInstance().getLocationQueryResultWithCoordinates(coordinates);
 
                 if (nearbyLocations != null && !nearbyLocations.isEmpty()) {
@@ -72,17 +83,19 @@ public class DataLogic {
         return currentLocation == null ? cachedLocation : currentLocation;
     }
 
-    public List<? extends AForecast> getLocationWeeklyForecast(Context context, int id, boolean useCache) throws IOException {
+    public List<? extends AForecast> getLocationWeeklyForecast(Context context, int id, boolean makeRequest) throws IOException {
+        long keyDB = Constants.DB_WEEKLY_FORECAST_KEY;
         PForecast cachedForecast = PersistenceLogic.getInstance(context).getForecast(Constants.DB_WEEKLY_FORECAST_KEY);
         List<? extends AForecast> currentForecast = null;
 
         if (NetworkUtil.isNetworkAvailable(context)) {
-            if (cachedForecast == null || useCache || cachedForecast.getExpireTime() < TimeUtil.getCurrentTime()) {
+            if (cachedForecast == null || makeRequest || PersistenceLogic.getInstance(context).shouldForecastDataUpdate(keyDB, id)) {
                 IWeeklyForecast weekly = ApiLogic.getInstance().getLocationForecast(id);
 
                 if (weekly != null && !weekly.getForecast().isEmpty()) {
                     PersistenceLogic.getInstance(context).persistForecast(
-                            Constants.DB_WEEKLY_FORECAST_KEY,
+                            keyDB,
+                            id,
                             Constants.FORECAST_WEEKLY_TIMESTAMP,
                             currentForecast = weekly.getForecast()
                     );
@@ -90,7 +103,7 @@ public class DataLogic {
             }
         }
 
-        if (cachedForecast != null) {
+        if (currentForecast == null && cachedForecast != null && cachedForecast.getIdWOE() == id) {
             Type listType = new TypeToken<List<NForecast>>() {
             }.getType();
             currentForecast = new Gson().fromJson(cachedForecast.getForecasts(), listType);
@@ -99,13 +112,13 @@ public class DataLogic {
         return currentForecast;
     }
 
-    public List<? extends AForecast> getLocationForecastForDate(Context context, int id, String date, boolean useCache) throws IOException {
+    public List<? extends AForecast> getLocationForecastForDate(Context context, int id, String date, boolean makeRequest) throws IOException {
         long keyDB = date.hashCode();
         PForecast cachedForecast = PersistenceLogic.getInstance(context).getForecast(keyDB);
         List<? extends AForecast> currentForecast = null;
 
         if (NetworkUtil.isNetworkAvailable(context)) {
-            if (cachedForecast == null || useCache || cachedForecast.getExpireTime() < TimeUtil.getCurrentTime()) {
+            if (cachedForecast == null || makeRequest || PersistenceLogic.getInstance(context).shouldForecastDataUpdate(keyDB, id)) {
                 currentForecast = ApiLogic.getInstance().getLocationForecastForDate(id, date);
 
                 if (currentForecast != null) {
@@ -113,6 +126,7 @@ public class DataLogic {
 
                     PersistenceLogic.getInstance(context).persistForecast(
                             keyDB,
+                            id,
                             date,
                             currentForecast
                     );
@@ -120,7 +134,7 @@ public class DataLogic {
             }
         }
 
-        if (cachedForecast != null) {
+        if (currentForecast == null && cachedForecast != null && cachedForecast.getIdWOE() == id) {
             Type listType = new TypeToken<List<NForecast>>() {
             }.getType();
             currentForecast = new Gson().fromJson(cachedForecast.getForecasts(), listType);
