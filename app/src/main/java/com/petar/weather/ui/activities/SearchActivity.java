@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
-import android.text.TextUtils;
 import android.widget.Toast;
 
 import com.hannesdorfmann.mosby3.mvp.viewstate.lce.LceViewState;
@@ -66,9 +65,7 @@ public class SearchActivity extends MvpLceViewStateActivity<RecyclerView, List<?
 
     @Override
     public void loadData(boolean pullToRefresh) {
-        if (!TextUtils.isEmpty(mTypedText)) {
-            presenter.processQuery(this, mTypedText, pullToRefresh);
-        }
+        presenter.processQuery(this, mTypedText, pullToRefresh);
     }
 
     @Override
@@ -120,8 +117,9 @@ public class SearchActivity extends MvpLceViewStateActivity<RecyclerView, List<?
     @Override
     public void onItemClick(ALocation location) {
         Intent intent = new Intent(this, ForecastActivity.class);
-        intent.putExtra(Constants.LOCATION_FROM_SEARCH_KEY, location);
+        intent.putExtra(Constants.BUNDLE_LOCATION_FROM_SEARCH_KEY, location);
         startActivity(intent);
+        finish();
     }
     // End of ACTIVITY-LOCATION COMMUNICATION region
 }

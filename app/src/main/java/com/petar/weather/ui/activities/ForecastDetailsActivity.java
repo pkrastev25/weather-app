@@ -26,7 +26,7 @@ public class ForecastDetailsActivity extends AppCompatActivity {
         Bundle bundle = getIntent().getExtras();
 
         if (bundle != null) {
-            AForecast forecast = bundle.getParcelable(Constants.FORECAST_DETAILS_KEY);
+            AForecast forecast = bundle.getParcelable(Constants.BUNDLE_FORECAST_DETAILS_KEY);
             mForecast.set(forecast);
         }
     }

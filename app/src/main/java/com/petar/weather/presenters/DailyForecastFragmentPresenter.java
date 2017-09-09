@@ -20,7 +20,7 @@ import java.util.List;
 
 public class DailyForecastFragmentPresenter extends MvpBasePresenter<IDailyForecastFragment> {
 
-    public void loadLocationForecast(final Context context, final int id, final boolean pullToRefresh) {
+    public void loadLocationForecast(final Context context, final int idWOE, final boolean pullToRefresh) {
         if (isViewAttached()) {
             getView().showLoading(pullToRefresh);
 
@@ -29,7 +29,7 @@ public class DailyForecastFragmentPresenter extends MvpBasePresenter<IDailyForec
                 public List<? extends AForecast> onExecuteTask() throws Exception {
                     return DataLogic.getInstance().getLocationWeeklyForecast(
                             context,
-                            id,
+                            idWOE,
                             pullToRefresh
                     );
                 }
@@ -47,7 +47,7 @@ public class DailyForecastFragmentPresenter extends MvpBasePresenter<IDailyForec
                             getView().setData(result);
                             getView().showContent();
 
-                            if (PersistenceLogic.getInstance(context).shouldForecastDataUpdate(Constants.DB_WEEKLY_FORECAST_KEY, id)) {
+                            if (PersistenceLogic.getInstance(context).shouldForecastDataUpdate(Constants.DB_WEEKLY_FORECAST_KEY, idWOE)) {
                                 getView().showMessage(ErrorHandlingUtil.generateErrorText(context, Constants.ErrorHandling.CANNOT_UPDATE_CACHED_DATA));
                             }
                         }

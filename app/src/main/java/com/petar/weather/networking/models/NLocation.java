@@ -29,7 +29,7 @@ public class NLocation extends ALocation {
     }
 
     @Override
-    public Integer getId() {
+    public Integer getIdWOE() {
         return woeid;
     }
 

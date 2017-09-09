@@ -37,10 +37,19 @@ public class HourlyForecastFragmentPresenter extends MvpBasePresenter<IHourlyFor
         ).withTimeAtStartOfDay().getMillis();
     }
 
-    public void loadForecastForDate(final Context context, final int id, final boolean pullToRefresh) {
+    public void loadNextForecast(Context context, int idWOE, boolean pullToRefresh) {
+        loadForecast(context, idWOE, pullToRefresh, true);
+    }
+
+    public void loadForecastForToday(Context context, int idWOE, boolean pullToRefresh) {
+        mCurrentForecastDate = TimeUtil.getCurrentTime();
+        loadForecast(context, idWOE, pullToRefresh, false);
+    }
+
+    private void loadForecast(final Context context, final int idWOE, final boolean pullToRefresh, final boolean isNextForecast) {
         if (isViewAttached() && !mIsLoading && new DateTime(mCurrentForecastDate).withTimeAtStartOfDay().isBefore(mLimitForecastDate)) {
             mIsLoading = true;
-            final String dateRequestFormat = FormatUtil.dateRequestFormat(
+            final String dateRequestFormat = FormatUtil.formatDateRequest(
                     TimeUtil.convertDateToCalendarFromMillis(mCurrentForecastDate)
             );
 
@@ -52,7 +61,7 @@ public class HourlyForecastFragmentPresenter extends MvpBasePresenter<IHourlyFor
                 public List<? extends AForecast> onExecuteTask() throws Exception {
                     return DataLogic.getInstance().getLocationForecastForDate(
                             context,
-                            id,
+                            idWOE,
                             dateRequestFormat,
                             pullToRefresh
                     );
@@ -68,10 +77,15 @@ public class HourlyForecastFragmentPresenter extends MvpBasePresenter<IHourlyFor
                         } else if (result.isEmpty()) {
                             getView().showError(new Throwable(Constants.ErrorHandling.NO_RESULTS_FOR_REQUEST), pullToRefresh);
                         } else {
-                            getView().setData(result);
+                            if (isNextForecast) {
+                                getView().addNextForecast(result);
+                            } else {
+                                getView().setData(result);
+                            }
+
                             getView().showContent();
 
-                            if (PersistenceLogic.getInstance(context).shouldForecastDataUpdate(dateRequestFormat.hashCode(), id)) {
+                            if (PersistenceLogic.getInstance(context).shouldForecastDataUpdate(dateRequestFormat.hashCode(), idWOE)) {
                                 getView().showMessage(ErrorHandlingUtil.generateErrorText(context, Constants.ErrorHandling.CANNOT_UPDATE_CACHED_DATA));
                             }
 
@@ -105,17 +119,7 @@ public class HourlyForecastFragmentPresenter extends MvpBasePresenter<IHourlyFor
         }
     }
 
-    public void loadForecastForToday(Context context, int id, boolean pullToRefresh) {
-        mCurrentForecastDate = TimeUtil.getCurrentTime();
-
-        loadForecastForDate(context, id, pullToRefresh);
-    }
-
     public boolean isLoading() {
         return mIsLoading;
-    }
-
-    public long getCurrentForecastDate() {
-        return mCurrentForecastDate;
     }
 }

@@ -15,7 +15,7 @@ public abstract class ALocation extends AListenerRecyclerItem<ALocation.ILocatio
 
     public abstract String getTitle();
 
-    public abstract Integer getId();
+    public abstract Integer getIdWOE();
 
     @Override
     public int compareTo(@NonNull ALocation o) {

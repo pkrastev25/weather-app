@@ -9,7 +9,6 @@ import com.petar.weather.logic.DataLogic;
 import com.petar.weather.logic.models.ALocation;
 import com.petar.weather.ui.views.ISearchActivity;
 import com.petar.weather.util.AsyncTaskUtil;
-import com.petar.weather.util.ErrorHandlingUtil;
 import com.petar.weather.util.NetworkUtil;
 
 import java.util.List;
@@ -24,14 +23,22 @@ public class SearchActivityPresenter extends MvpBasePresenter<ISearchActivity> {
     private boolean mIsLoading;
 
     public void processQuery(Context context, String query, boolean pullToRefresh) {
-        if (TextUtils.isEmpty(query)) {
-            // TODO: Show no input error
-        } else if (query.contains(COMMA_SYMBOL)) {
-            // TODO: Add a regex for the coordinates
-            processCoordinatesQuery(context, query, pullToRefresh);
-        } else {
-            // TODO: Add a regex check for characters only
-            processStringQuery(context, query, pullToRefresh);
+        if (isViewAttached()) {
+            if (TextUtils.isEmpty(query)) {
+                getView().showError(new Throwable(Constants.ErrorHandling.NO_SEARCH_INPUT), pullToRefresh);
+            } else if (query.contains(COMMA_SYMBOL)) {
+                if (Constants.REGEX_COORDINATES.matcher(query).matches()) {
+                    getView().showError(new Throwable(), pullToRefresh);
+                } else {
+                    processCoordinatesQuery(context, query, pullToRefresh);
+                }
+            } else {
+                if (Constants.REGEX_CITY_NAME.matcher(query).matches()) {
+                    getView().showError(new Throwable(), pullToRefresh);
+                } else {
+                    processStringQuery(context, query, pullToRefresh);
+                }
+            }
         }
     }
 

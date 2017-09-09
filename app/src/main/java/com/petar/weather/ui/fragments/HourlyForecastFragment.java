@@ -34,8 +34,6 @@ import com.petar.weather.app.Constants;
 import com.petar.weather.util.ErrorHandlingUtil;
 import com.petar.weather.util.TimeUtil;
 
-import org.joda.time.DateTime;
-
 import java.util.List;
 
 /**
@@ -44,7 +42,7 @@ import java.util.List;
 public class HourlyForecastFragment extends MvpLceViewStateFragment<SwipeRefreshLayout, List<? extends AListenerRecyclerItem>, IHourlyForecastFragment, HourlyForecastFragmentPresenter>
         implements IHourlyForecastFragment, ForecastActivity.IHourlyForecastFragmentListener, AForecast.IForecastListener, SwipeRefreshLayout.OnRefreshListener {
 
-    private Integer mId;
+    private Integer mIdWOE;
     private RecyclerView mRecyclerView;
     private BaseRecyclerAdapter mAdapter;
     private LoadingRecyclerItem mLoadingRecyclerItem;
@@ -100,7 +98,7 @@ public class HourlyForecastFragment extends MvpLceViewStateFragment<SwipeRefresh
                     int visibleItemCount = layoutManager.findLastVisibleItemPosition() + 1;
 
                     if (visibleItemCount == totalItemCount && !presenter.isLoading()) {
-                        presenter.loadForecastForDate(getContext(), mId, true);
+                        presenter.loadNextForecast(getContext(), mIdWOE, true);
                     }
                 }
             }
@@ -111,7 +109,7 @@ public class HourlyForecastFragment extends MvpLceViewStateFragment<SwipeRefresh
         }
 
         if (savedInstanceState != null) {
-            mLoadingRecyclerItem = savedInstanceState.getParcelable(Constants.RECYCLER_LOADING_ITEM_KEY);
+            mLoadingRecyclerItem = savedInstanceState.getParcelable(Constants.BUNDLE_RECYCLER_LOADING_ITEM_KEY);
         }
     }
 
@@ -119,7 +117,7 @@ public class HourlyForecastFragment extends MvpLceViewStateFragment<SwipeRefresh
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
 
-        outState.putParcelable(Constants.RECYCLER_LOADING_ITEM_KEY, mLoadingRecyclerItem);
+        outState.putParcelable(Constants.BUNDLE_RECYCLER_LOADING_ITEM_KEY, mLoadingRecyclerItem);
     }
 
     @Override
@@ -128,15 +126,6 @@ public class HourlyForecastFragment extends MvpLceViewStateFragment<SwipeRefresh
 
         ((ForecastActivity) getActivity()).setHourlyForecastFragmentListener(null);
         mListener = null;
-    }
-
-    @Override
-    public void setUserVisibleHint(boolean isVisibleToUser) {
-        super.setUserVisibleHint(isVisibleToUser);
-
-        if (isVisibleToUser && mId != null && mAdapter.isEmpty()) {
-            presenter.loadForecastForDate(getContext(), mId, false);
-        }
     }
     // End of GENERAL FRAGMENT region
 
@@ -155,8 +144,8 @@ public class HourlyForecastFragment extends MvpLceViewStateFragment<SwipeRefresh
 
     @Override
     public void loadData(boolean pullToRefresh) {
-        if (mId != null) {
-            presenter.loadForecastForToday(getContext(), mId, pullToRefresh);
+        if (mIdWOE != null) {
+            presenter.loadForecastForToday(getContext(), mIdWOE, pullToRefresh);
         }
     }
 
@@ -166,14 +155,7 @@ public class HourlyForecastFragment extends MvpLceViewStateFragment<SwipeRefresh
             current.setListener(this);
         }
 
-        DateTime comparableCurrentForecast = new DateTime(presenter.getCurrentForecastDate()).withTimeAtStartOfDay();
-        DateTime comparableToday = new DateTime().withTimeAtStartOfDay();
-
-        if (comparableCurrentForecast.equals(comparableToday)) {
-            mAdapter.setData(data);
-        } else {
-            mAdapter.addItems(data);
-        }
+        mAdapter.setData(data);
     }
 
     @Override
@@ -202,6 +184,15 @@ public class HourlyForecastFragment extends MvpLceViewStateFragment<SwipeRefresh
     @Override
     public void showMessage(String message) {
         Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void addNextForecast(List<? extends AListenerRecyclerItem> data) {
+        for (AListenerRecyclerItem current : data) {
+            current.setListener(this);
+        }
+
+        mAdapter.addItems(data);
     }
 
     @Override
@@ -235,12 +226,12 @@ public class HourlyForecastFragment extends MvpLceViewStateFragment<SwipeRefresh
 
     // ACTIVITY-FRAGMENT COMMUNICATION region
     @Override
-    public void onLocationFound(@NonNull Integer id) {
-        boolean didIdChange = !id.equals(mId);
-        mId = id;
+    public void onLocationFound(@NonNull Integer idWOE) {
+        boolean didIdChange = !idWOE.equals(mIdWOE);
+        mIdWOE = idWOE;
 
         if (didIdChange && presenter != null) {
-            presenter.loadForecastForDate(getContext(), id, false);
+            presenter.loadForecastForToday(getContext(), idWOE, false);
         }
     }
     // End of ACTIVITY-FRAGMENT COMMUNICATION region
@@ -249,7 +240,7 @@ public class HourlyForecastFragment extends MvpLceViewStateFragment<SwipeRefresh
     @Override
     public void onItemClick(AForecast forecast) {
         Intent intent = new Intent(getActivity(), ForecastDetailsActivity.class);
-        intent.putExtra(Constants.FORECAST_DETAILS_KEY, forecast);
+        intent.putExtra(Constants.BUNDLE_FORECAST_DETAILS_KEY, forecast);
         startActivity(intent);
     }
     // End of FRAGMENT-FORECAST COMMUNICATION region

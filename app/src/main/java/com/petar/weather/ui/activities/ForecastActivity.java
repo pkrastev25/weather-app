@@ -1,17 +1,18 @@
 package com.petar.weather.ui.activities;
 
-import android.content.Context;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.databinding.ObservableField;
 import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
 import android.support.annotation.NonNull;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.widget.Toast;
 
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.hannesdorfmann.mosby3.mvp.viewstate.lce.LceViewState;
 import com.hannesdorfmann.mosby3.mvp.viewstate.lce.MvpLceViewStateActivity;
 import com.hannesdorfmann.mosby3.mvp.viewstate.lce.data.ParcelableDataLceViewState;
@@ -19,6 +20,7 @@ import com.petar.weather.R;
 import com.petar.weather.databinding.ActivityForecastBinding;
 import com.petar.weather.listeners.IForecastFragmentListener;
 import com.petar.weather.logic.models.ALocation;
+import com.petar.weather.persistence.PersistenceLogic;
 import com.petar.weather.presenters.ForecastActivityPresenter;
 import com.petar.weather.ui.adapter.ViewPagerFragmentAdapter;
 import com.petar.weather.ui.views.IForecastActivity;
@@ -27,15 +29,15 @@ import com.petar.weather.app.Constants;
 import com.petar.weather.util.ErrorHandlingUtil;
 
 public class ForecastActivity extends MvpLceViewStateActivity<ViewPager, ALocation, IForecastActivity, ForecastActivityPresenter>
-        implements IForecastActivity, IToolbarView, LocationListener, IForecastFragmentListener {
+        implements IForecastActivity, IToolbarView, IForecastFragmentListener, OnSuccessListener<Location>, OnFailureListener {
 
     private ALocation mCurrentLocation;
 
+    // LOCATION helpers
+    private FusedLocationProviderClient mFusedLocationProviderClient;
+
     // TOOLBAR helpers
     private ObservableField<String> mCurrentLocationTitle;
-
-    // LOCATION helpers
-    private LocationManager mLocationManager;
 
     // ACTIVITY-FRAGMENT COMMUNICATION helpers
     private IDailyForecastFragmentListener mDailyForecastFragmentListener;
@@ -53,20 +55,20 @@ public class ForecastActivity extends MvpLceViewStateActivity<ViewPager, ALocati
         contentView.setAdapter(fragmentAdapter);
 
         mCurrentLocationTitle = new ObservableField<>();
+        mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
 
         Bundle bundle = getIntent().getExtras();
 
         if (bundle != null) {
-            mCurrentLocation = bundle.getParcelable(Constants.LOCATION_FROM_SEARCH_KEY);
+            mCurrentLocation = bundle.getParcelable(Constants.BUNDLE_LOCATION_FROM_SEARCH_KEY);
         }
-    }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
+        if (mCurrentLocation == null && !PersistenceLogic.getInstance(this).shouldLocationDataUpdate()) {
+            mCurrentLocation = PersistenceLogic.getInstance(this).getLocation();
+        }
 
         if (mCurrentLocation != null) {
-            showContent();
+            mCurrentLocationTitle.set(mCurrentLocation.getTitle());
         }
     }
 
@@ -74,11 +76,7 @@ public class ForecastActivity extends MvpLceViewStateActivity<ViewPager, ALocati
     protected void onDestroy() {
         super.onDestroy();
 
-        if (mLocationManager != null) {
-            mLocationManager.removeUpdates(this);
-            mLocationManager = null;
-        }
-
+        mFusedLocationProviderClient = null;
         mDailyForecastFragmentListener = null;
         mHourlyForecastFragmentListener = null;
     }
@@ -94,7 +92,9 @@ public class ForecastActivity extends MvpLceViewStateActivity<ViewPager, ALocati
     @Override
     public void loadData(boolean pullToRefresh) {
         if (mCurrentLocation == null) {
-            getLocation();
+            findLocation();
+        } else {
+            showContent();
         }
     }
 
@@ -102,21 +102,12 @@ public class ForecastActivity extends MvpLceViewStateActivity<ViewPager, ALocati
     public void setData(ALocation current) {
         mCurrentLocation = current;
         mCurrentLocationTitle.set(current.getTitle());
-        onLocationFound(current.getId());
+        onLocationFound(current.getIdWOE());
     }
 
     @Override
     protected String getErrorMessage(Throwable e, boolean pullToRefresh) {
         return ErrorHandlingUtil.generateErrorText(this, e);
-    }
-
-    @Override
-    public void showContent() {
-        super.showContent();
-
-        if (mCurrentLocation != null) {
-            mCurrentLocationTitle.set(mCurrentLocation.getTitle());
-        }
     }
 
     @Override
@@ -149,7 +140,7 @@ public class ForecastActivity extends MvpLceViewStateActivity<ViewPager, ALocati
 
     @Override
     public void onFindCurrentLocationClick() {
-        getLocation();
+        findLocation();
     }
 
     @Override
@@ -159,63 +150,54 @@ public class ForecastActivity extends MvpLceViewStateActivity<ViewPager, ALocati
 
     @Override
     public void onSearchClick() {
-        Intent intent = new Intent(this, SearchActivity.class);
-        startActivity(intent);
+        startActivity(
+                new Intent(this, SearchActivity.class)
+        );
     }
     // End of TOOLBAR section
 
     // LOCATION region
-    @Override
-    public void onLocationChanged(Location location) {
-        // 0,0 coordinates is where the Equator crosses the Greenwich meridian, sounds good for spotting out errors !
-        if (location != null && location.getLatitude() != 0 && location.getLongitude() != 0) {
-            mLocationManager.removeUpdates(this);
-            presenter.processLocationCoordinates(this, location, false);
-        }
-    }
-
-    @Override
-    public void onStatusChanged(String provider, int status, Bundle extras) {
-        // Do nothing, for now..
-    }
-
-    @Override
-    public void onProviderEnabled(String provider) {
-        getLocation();
-    }
-
-    @Override
-    public void onProviderDisabled(String provider) {
-        requestPermissions();
-    }
-
-    private void getLocation() {
+    private void findLocation() {
         mCurrentLocationTitle.set(getResources().getString(R.string.toolbar_location_hint));
 
-        mLocationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-
         try {
-            // TODO: Include the GPS provider as well
-            mLocationManager.requestLocationUpdates(
-                    LocationManager.NETWORK_PROVIDER,
-                    Constants.MIN_TIME_LOCATION_UPDATE,
-                    Constants.MIN_DISTANCE_LOCATION_UPDATE,
-                    this
-            );
+            mFusedLocationProviderClient.getLastLocation()
+                    .addOnSuccessListener(this)
+                    .addOnFailureListener(this);
         } catch (SecurityException e) {
+            e.printStackTrace();
             requestPermissions();
         }
     }
 
     private void requestPermissions() {
-        Intent intent = new Intent(this, MainActivity.class);
-        startActivity(intent);
+        startActivity(
+                new Intent(this, MainActivity.class)
+        );
+        finish();
+    }
+
+    @Override
+    public void onSuccess(Location location) {
+        if (location != null) {
+            presenter.processLocationCoordinates(this, location, false);
+        } else {
+            // TODO: Implement logic for actually fetching the current location !!!
+            // TODO: Showing this error is not enough
+            showError(new Throwable(Constants.ErrorHandling.DEFAULT), false);
+        }
+    }
+
+    @Override
+    public void onFailure(@NonNull Exception e) {
+        e.printStackTrace();
+        showError(new Throwable(Constants.ErrorHandling.DEFAULT), false);
     }
     // End of LOCATION region
 
     // ACTIVITY-FRAGMENT COMMUNICATION region
     private interface IForecastActivityListener {
-        void onLocationFound(@NonNull Integer id);
+        void onLocationFound(@NonNull Integer idWOE);
     }
 
     public interface IDailyForecastFragmentListener extends IForecastActivityListener {
@@ -224,13 +206,13 @@ public class ForecastActivity extends MvpLceViewStateActivity<ViewPager, ALocati
     public interface IHourlyForecastFragmentListener extends IForecastActivityListener {
     }
 
-    public void onLocationFound(Integer id) {
+    public void onLocationFound(Integer idWOE) {
         if (mHourlyForecastFragmentListener != null) {
-            mHourlyForecastFragmentListener.onLocationFound(id);
+            mHourlyForecastFragmentListener.onLocationFound(idWOE);
         }
 
         if (mDailyForecastFragmentListener != null) {
-            mDailyForecastFragmentListener.onLocationFound(id);
+            mDailyForecastFragmentListener.onLocationFound(idWOE);
         }
     }
 
@@ -247,7 +229,7 @@ public class ForecastActivity extends MvpLceViewStateActivity<ViewPager, ALocati
     @Override
     public void onFragmentCreated() {
         if (mCurrentLocation != null) {
-            onLocationFound(mCurrentLocation.getId());
+            onLocationFound(mCurrentLocation.getIdWOE());
         }
     }
     // End of FRAGMENT-ACTIVITY COMMUNICATION region

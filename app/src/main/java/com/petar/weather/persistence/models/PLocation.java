@@ -23,7 +23,7 @@ public class PLocation extends ALocation {
     @Id
     private long keyDB;
     private long expireTime;
-    private int idWOE;
+    private Integer idWOE;
     private int distance;
     private String title;
 
@@ -31,7 +31,7 @@ public class PLocation extends ALocation {
     public PLocation(NLocation location) {
         keyDB = Constants.DB_CURRENT_LOCATION_KEY;
         expireTime = TimeUtil.getCurrentTimeWithMinuteOffset(Constants.OFFSET_MINUTES_FOR_LOCATION);
-        idWOE = location.getId();
+        idWOE = location.getIdWOE();
         distance = location.getDistance();
         title = location.getTitle();
     }
@@ -49,8 +49,7 @@ public class PLocation extends ALocation {
         return title;
     }
 
-    @Override
-    public Integer getId() {
+    public Integer getIdWOE() {
         return idWOE;
     }
 
@@ -70,11 +69,7 @@ public class PLocation extends ALocation {
         this.expireTime = expireTime;
     }
 
-    public int getIdWOE() {
-        return this.idWOE;
-    }
-
-    public void setIdWOE(int idWOE) {
+    public void setIdWOE(Integer idWOE) {
         this.idWOE = idWOE;
     }
 

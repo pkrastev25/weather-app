@@ -6,14 +6,10 @@
     <!-- Alert dialogs -->
     <string name="alert_dialog_header_warning">Warning!</string>
     <string name="alert_dialog_text_warning">In order for this app to work properly, you must allow the location permissions. The application cannot work without them!</string>
-    <string name="alert_dialog_header_enable_location">"Enable location"</string>
-    <string name="alert_dialog_text_enable_location">Your Locations Settings is set to \'Off\'.\nPlease Enable Location to use this app</string>
 
     <!-- Buttons -->
     <string name="button_ok">OK</string>
     <string name="button_close_app">Close App</string>
-    <string name="button_location_settings">Location Settings</string>
-    <string name="button_cancel">Cancel</string>
 
     <!-- Toolbar -->
     <string name="toolbar_location_hint">Searching for your current location…</string>
@@ -25,5 +21,7 @@
     <string name="error_no_internet_connection">Please, enable your internet connection!</string>
     <string name="error_no_results_for_request">There are no results for your query!</string>
     <string name="error_cannot_update_cached_data">The data you are seeing is outdated! Enable your internet connection!</string>
+    <string name="error_no_search_input">Please enter a name of a location or coordinates (comma separated latitude and longitude, e.g. "36.96,-122.02").</string>
+    <string name="error_wrong_search_input">The input you have entered is wrong! Please try again!</string>
     <string name="error_default">Something went wrong?! Try again!</string>
 </resources>

@@ -19,6 +19,10 @@ public class ErrorHandlingUtil {
                 return context.getString(R.string.error_no_results_for_request);
             case Constants.ErrorHandling.CANNOT_UPDATE_CACHED_DATA:
                 return context.getString(R.string.error_cannot_update_cached_data);
+            case Constants.ErrorHandling.NO_SEARCH_INPUT:
+                return context.getString(R.string.error_no_search_input);
+            case Constants.ErrorHandling.WRONG_SEARCH_INPUT:
+                return context.getString(R.string.error_wrong_search_input);
             case Constants.ErrorHandling.DEFAULT:
             default:
                 return context.getString(R.string.error_default);

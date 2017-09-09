@@ -13,6 +13,8 @@ public interface IHourlyForecastFragment extends MvpLceView<List<? extends AList
 
     void showMessage(String message);
 
+    void addNextForecast(List<? extends AListenerRecyclerItem> data);
+
     void scrollToCurrentForecast();
 
     void setLoadingRecyclerItem();

@@ -40,7 +40,7 @@ import java.util.List;
 public class DailyForecastFragment extends MvpLceViewStateFragment<SwipeRefreshLayout, List<? extends AListenerRecyclerItem>, IDailyForecastFragment, DailyForecastFragmentPresenter>
         implements IDailyForecastFragment, ForecastActivity.IDailyForecastFragmentListener, AForecast.IForecastListener, SwipeRefreshLayout.OnRefreshListener {
 
-    private Integer mId;
+    private Integer mIdWOE;
     private RecyclerView mRecyclerView;
     private BaseRecyclerAdapter mAdapter;
 
@@ -89,15 +89,6 @@ public class DailyForecastFragment extends MvpLceViewStateFragment<SwipeRefreshL
         ((ForecastActivity) getActivity()).setDailyForecastFragmentListener(null);
         mListener = null;
     }
-
-    @Override
-    public void setUserVisibleHint(boolean isVisibleToUser) {
-        super.setUserVisibleHint(isVisibleToUser);
-
-        if (isVisibleToUser && mId != null && mAdapter.isEmpty()) {
-            presenter.loadLocationForecast(getContext(), mId, false);
-        }
-    }
     // End of GENERAL FRAGMENT region
 
     // MVP-LCE-VIEW-STATE-FRAGMENT region
@@ -108,8 +99,8 @@ public class DailyForecastFragment extends MvpLceViewStateFragment<SwipeRefreshL
 
     @Override
     public void loadData(boolean pullToRefresh) {
-        if (mId != null) {
-            presenter.loadLocationForecast(getContext(), mId, pullToRefresh);
+        if (mIdWOE != null) {
+            presenter.loadLocationForecast(getContext(), mIdWOE, pullToRefresh);
         }
     }
 
@@ -156,12 +147,12 @@ public class DailyForecastFragment extends MvpLceViewStateFragment<SwipeRefreshL
 
     // ACTIVITY-FRAGMENT COMMUNICATION region
     @Override
-    public void onLocationFound(@NonNull Integer id) {
-        boolean didIdChange = !id.equals(mId);
-        mId = id;
+    public void onLocationFound(@NonNull Integer idWOE) {
+        boolean didIdChange = !idWOE.equals(mIdWOE);
+        mIdWOE = idWOE;
 
         if (didIdChange && presenter != null) {
-            presenter.loadLocationForecast(getContext(), id, false);
+            presenter.loadLocationForecast(getContext(), idWOE, false);
         }
     }
     // End of ACTIVITY-FRAGMENT COMMUNICATION region
@@ -170,7 +161,7 @@ public class DailyForecastFragment extends MvpLceViewStateFragment<SwipeRefreshL
     @Override
     public void onItemClick(AForecast forecast) {
         Intent intent = new Intent(getActivity(), ForecastDetailsActivity.class);
-        intent.putExtra(Constants.FORECAST_DETAILS_KEY, forecast);
+        intent.putExtra(Constants.BUNDLE_FORECAST_DETAILS_KEY, forecast);
         startActivity(intent);
     }
     // End of FRAGMENT-FORECAST COMMUNICATION region

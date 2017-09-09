@@ -32,7 +32,7 @@ public class ForecastActivityPresenter extends MvpBasePresenter<IForecastActivit
                 public ALocation onExecuteTask() throws Exception {
                     return DataLogic.getInstance().getCurrentLocation(
                             context,
-                            FormatUtil.coordinatesFormat(location),
+                            FormatUtil.formatCoordinates(location),
                             pullToRefresh
                     );
                 }
