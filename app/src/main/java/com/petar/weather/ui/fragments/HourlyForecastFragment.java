@@ -55,13 +55,6 @@ public class HourlyForecastFragment extends MvpLceViewStateFragment<SwipeRefresh
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-        setRetainInstance(true);
-    }
-
-    @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
 
@@ -137,6 +130,7 @@ public class HourlyForecastFragment extends MvpLceViewStateFragment<SwipeRefresh
     // End of SWIPE-TO-REFRESH region
 
     // MVP-LCE-VIEW-STATE-FRAGMENT region
+    @NonNull
     @Override
     public HourlyForecastFragmentPresenter createPresenter() {
         return new HourlyForecastFragmentPresenter();

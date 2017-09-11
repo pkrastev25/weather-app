@@ -25,23 +25,23 @@ public class NForecast extends AForecast {
     @SerializedName("applicable_date")
     private String applicableDate;
     @SerializedName("min_temp")
-    private Double minTemp;
+    private double minTemp;
     @SerializedName("max_temp")
-    private Double maxTemp;
+    private double maxTemp;
     @SerializedName("the_temp")
-    private Double theTemp;
+    private double theTemp;
     @SerializedName("wind_speed")
-    private Double windSpeed;
+    private double windSpeed;
     @SerializedName("wind_direction")
-    private Double windDirection;
+    private double windDirection;
     @SerializedName("air_pressure")
-    private Double airPressure;
+    private double airPressure;
     @SerializedName("humidity")
-    private Integer humidity;
+    private int humidity;
     @SerializedName("visibility")
-    private Object visibility;
+    private double visibility;
     @SerializedName("predictability")
-    private Integer predictability;
+    private int predictability;
 
     public Long getId() {
         return id;
@@ -69,13 +69,38 @@ public class NForecast extends AForecast {
     }
 
     @Override
-    public Double getMaxTemp() {
+    public double getWindSpeed() {
+        return windSpeed;
+    }
+
+    @Override
+    public double getWindDirection() {
+        return windDirection;
+    }
+
+    @Override
+    public String getWindDirectionCompass() {
+        return windDirectionCompass;
+    }
+
+    @Override
+    public double getMaxTemp() {
         return maxTemp;
     }
 
     @Override
-    public Double getMinTemp() {
+    public double getMinTemp() {
         return minTemp;
+    }
+
+    @Override
+    public double getAirPressure() {
+        return airPressure;
+    }
+
+    @Override
+    public double getHumidity() {
+        return humidity;
     }
 
     @Override
@@ -84,11 +109,14 @@ public class NForecast extends AForecast {
     }
 
 
-    /**
-     * Based on https://stackoverflow.com/questions/4076946/parcelable-where-when-is-describecontents-used
-     *
-     * @return
-     */
+    @Override
+    public int getViewType() {
+        return Constants.RecyclerItems.FORECAST_ITEM;
+    }
+
+    public NForecast() {
+    }
+
     @Override
     public int describeContents() {
         return CONTENTS_FILE_DESCRIPTOR;
@@ -96,21 +124,39 @@ public class NForecast extends AForecast {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
+        dest.writeValue(this.id);
         dest.writeString(this.weatherStateName);
         dest.writeString(this.weatherStateAbbr);
+        dest.writeString(this.windDirectionCompass);
         dest.writeString(this.created);
         dest.writeString(this.applicableDate);
-        dest.writeValue(this.minTemp);
-        dest.writeValue(this.maxTemp);
+        dest.writeDouble(this.minTemp);
+        dest.writeDouble(this.maxTemp);
+        dest.writeDouble(this.theTemp);
+        dest.writeDouble(this.windSpeed);
+        dest.writeDouble(this.windDirection);
+        dest.writeDouble(this.airPressure);
+        dest.writeInt(this.humidity);
+        dest.writeDouble(this.visibility);
+        dest.writeInt(this.predictability);
     }
 
     protected NForecast(Parcel in) {
+        this.id = (Long) in.readValue(Long.class.getClassLoader());
         this.weatherStateName = in.readString();
         this.weatherStateAbbr = in.readString();
+        this.windDirectionCompass = in.readString();
         this.created = in.readString();
         this.applicableDate = in.readString();
-        this.minTemp = (Double) in.readValue(Double.class.getClassLoader());
-        this.maxTemp = (Double) in.readValue(Double.class.getClassLoader());
+        this.minTemp = in.readDouble();
+        this.maxTemp = in.readDouble();
+        this.theTemp = in.readDouble();
+        this.windSpeed = in.readDouble();
+        this.windDirection = in.readDouble();
+        this.airPressure = in.readDouble();
+        this.humidity = in.readInt();
+        this.visibility = in.readDouble();
+        this.predictability = in.readInt();
     }
 
     public static final Creator<NForecast> CREATOR = new Creator<NForecast>() {
@@ -124,9 +170,4 @@ public class NForecast extends AForecast {
             return new NForecast[size];
         }
     };
-
-    @Override
-    public int getViewType() {
-        return Constants.RecyclerItems.FORECAST_ITEM;
-    }
 }

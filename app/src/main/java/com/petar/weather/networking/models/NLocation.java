@@ -9,7 +9,7 @@ import com.petar.weather.app.Constants;
 public class NLocation extends ALocation {
 
     @SerializedName("distance")
-    private Integer distance;
+    private int distance;
     @SerializedName("title")
     private String title;
     @SerializedName("location_type")
@@ -19,7 +19,7 @@ public class NLocation extends ALocation {
     @SerializedName("latt_long")
     private String lattLong;
 
-    public Integer getDistance() {
+    public int getDistance() {
         return distance;
     }
 

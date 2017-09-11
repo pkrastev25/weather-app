@@ -12,7 +12,7 @@ import org.joda.time.DateTime;
  * Created by User on 24.6.2017 г..
  */
 
-public abstract class AForecast extends AListenerRecyclerItem<AForecast.IForecastListener> implements Comparable<AForecast>, Parcelable {
+public abstract class AForecast extends AListenerRecyclerItem<AForecast.IForecastListener> implements Comparable<AForecast> {
 
     public abstract String getWeatherState();
 
@@ -22,9 +22,19 @@ public abstract class AForecast extends AListenerRecyclerItem<AForecast.IForecas
 
     public abstract String getImageType();
 
-    public abstract Double getMaxTemp();
+    public abstract double getWindSpeed();
 
-    public abstract Double getMinTemp();
+    public abstract double getWindDirection();
+
+    public abstract String getWindDirectionCompass();
+
+    public abstract double getMaxTemp();
+
+    public abstract double getMinTemp();
+
+    public abstract double getAirPressure();
+
+    public abstract double getHumidity();
 
     @Override
     public int compareTo(@NonNull AForecast o) {

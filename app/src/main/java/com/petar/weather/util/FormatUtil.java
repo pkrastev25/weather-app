@@ -68,10 +68,38 @@ public class FormatUtil {
         }
     }
 
+    public static String formatWindSpeed(double windSpeed) {
+        return String.format(
+                Constants.FORMAT_WIND_SPEED,
+                String.format(Locale.getDefault(), Constants.FORMAT_DOUBLE_VALUES_PRECISION, windSpeed)
+        );
+    }
+
+    public static String formatWindDirection(double windDirection) {
+        return String.format(
+                Constants.FORMAT_WIND_DIRECTION,
+                String.format(Locale.getDefault(), Constants.FORMAT_DOUBLE_VALUES_PRECISION, windDirection)
+        );
+    }
+
     public static String formatTemperature(double temp) {
         return String.format(
                 Constants.FORMAT_TEMPERATURE_C,
                 String.valueOf(Math.round(temp))
+        );
+    }
+
+    public static String formatAirPressure(double airPressure) {
+        return String.format(
+                Constants.FORMAT_AIR_PRESSURE,
+                String.format(Locale.getDefault(), Constants.FORMAT_DOUBLE_VALUES_PRECISION, airPressure)
+        );
+    }
+
+    public static String formatHumidity(double humidity) {
+        return String.format(
+                Constants.FORMAT_HUMIDITY,
+                String.format(Locale.getDefault(), Constants.FORMAT_DOUBLE_VALUES_PRECISION, humidity)
         );
     }
 }

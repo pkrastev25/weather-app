@@ -24,8 +24,13 @@ public class Constants {
     public static final String FORMAT_COORDINATES = "%s,%s";
     public static final String FORMAT_DISTANCE_M = "%s m";
     public static final String FORMAT_DISTANCE_KM = "%s km";
-    public static final String FORMAT_TEMPERATURE_C = "%s C";
+    public static final String FORMAT_TEMPERATURE_C = "%s\u00b0C";
     public static final String FORMAT_TIME_AND_DATE = "%s %s";
+    public static final String FORMAT_AIR_PRESSURE = "%s mbar";
+    public static final String FORMAT_WIND_SPEED = "%s mph";
+    public static final String FORMAT_WIND_DIRECTION = "%s\u00b0";
+    public static final String FORMAT_HUMIDITY = "%s%%";
+    public static final String FORMAT_DOUBLE_VALUES_PRECISION = "%.2f";
     // End of FORMATS region
 
     // REGEX region

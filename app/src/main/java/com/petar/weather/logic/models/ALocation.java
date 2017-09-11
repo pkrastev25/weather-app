@@ -11,7 +11,7 @@ import com.petar.weather.ui.recycler.IListener;
 
 public abstract class ALocation extends AListenerRecyclerItem<ALocation.ILocationListener> implements Comparable<ALocation> {
 
-    public abstract Integer getDistance();
+    public abstract int getDistance();
 
     public abstract String getTitle();
 

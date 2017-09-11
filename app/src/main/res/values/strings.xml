@@ -13,6 +13,16 @@
 
     <!-- Toolbar -->
     <string name="toolbar_location_hint">Searching for your current location…</string>
+    
+    <!-- Forecast -->
+    <string name="forecast_wind_speed">Wind speed</string>
+    <string name="forecast_wind_direction">Wind direction</string>
+    <string name="forecast_wind_direction_compass">Wind direction compass</string>
+    <string name="forecast_min_temperature">Min</string>
+    <string name="forecast_max_temperature">Max</string>
+    <string name="forecast_air_pressure">Air pressure</string>
+    <string name="forecast_humidity">Humidity</string>
+    <string name="forecast_accuracy">Accuracy</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>

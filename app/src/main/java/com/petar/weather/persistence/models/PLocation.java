@@ -40,7 +40,7 @@ public class PLocation extends ALocation {
     }
 
     @Override
-    public Integer getDistance() {
+    public int getDistance() {
         return distance;
     }
 
