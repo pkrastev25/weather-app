@@ -41,12 +41,18 @@ public class Constants {
     // ANIMATIONS region
     public static final float ANIMATION_ALPHA_SPLASH_SCREEN_START = 0.2f;
     public static final float ANIMATION_ALPHA_SPLASH_SCREEN_END = 1f;
-    public static final int ANIMATION_ALPHA_SPLASH_SCREEN_DURATION = 3000;
+    public static final int ANIMATION_ALPHA_SPLASH_SCREEN_DURATION = 2_000;
     // End of ANIMATIONS region
 
     // PERMISSIONS region
     public static final int PERMISSION_REQUEST_CODE_ACCESS_FINE_LOCATION = 0;
     // End of PERMISSIONS region
+
+    // LOCATION region
+    public static final int LOCATION_UPDATE_INTERVAL_MILLIS = 10_000;
+    public static final int LOCATION_FASTEST_UPDATE_INTERVAL_MILLIS = 5_000;
+    public static final int LOCATION_REQUEST_CHECK_SETTINGS = 0;
+    // End of LOCATION region
 
     // FORECAST region
     public static final int FORECASTS_FOR_A_DAY = 8;
@@ -129,6 +135,6 @@ public class Constants {
     }
 
     // GENERAL (common sense) region
-    public static final int GENERAL_METERS_INTO_KILOMETER = 1000;
+    public static final int GENERAL_METERS_INTO_KILOMETER = 1_000;
     // End of GENERAL (common sense) region
 }

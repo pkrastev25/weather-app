@@ -22,10 +22,23 @@ public class ForecastActivityPresenter extends MvpBasePresenter<IForecastActivit
 
     private boolean mIsLoading;
 
-    public void processLocationCoordinates(final Context context, final Location location, final boolean pullToRefresh) {
+    public void onLocationTaskStatusChange(boolean isTaskStarted) {
+        if (isViewAttached() && isTaskStarted) {
+            getView().showLoading(getView().getCurrentLocationShown() != null);
+        }
+    }
+
+    public void processLocationCoordinates(final Context context, final Location location) {
         if (isViewAttached() && !mIsLoading) {
             mIsLoading = true;
-            getView().showLoading(pullToRefresh);
+
+            /*
+             * Behaves the same way like pull-to-refresh!
+             * In this application, pull-to-refresh can only be invoked
+             * if the user is already seeing some data.
+             */
+            final boolean isCurrentLocationSet = getView().getCurrentLocationShown() != null;
+            getView().showLoading(isCurrentLocationSet);
 
             AsyncTaskUtil.doInBackground(new AsyncTaskUtil.IAsyncTaskHelperListener<ALocation>() {
                 @Override
@@ -33,7 +46,7 @@ public class ForecastActivityPresenter extends MvpBasePresenter<IForecastActivit
                     return DataLogic.getInstance().getCurrentLocation(
                             context,
                             FormatUtil.formatCoordinates(location),
-                            pullToRefresh
+                            isCurrentLocationSet
                     );
                 }
 
@@ -41,15 +54,14 @@ public class ForecastActivityPresenter extends MvpBasePresenter<IForecastActivit
                 public void onSuccess(ALocation result) {
                     if (isViewAttached()) {
                         if (!NetworkUtil.isNetworkAvailable(context) && result == null) {
-                            getView().showError(new Throwable(Constants.ErrorHandling.NO_INTERNET_CONNECTION), pullToRefresh);
+                            getView().showError(new Throwable(Constants.ErrorHandling.NO_INTERNET_CONNECTION), isCurrentLocationSet);
                         } else if (result == null) {
-                            getView().showError(new Throwable(Constants.ErrorHandling.DEFAULT), pullToRefresh);
+                            getView().showError(new Throwable(Constants.ErrorHandling.DEFAULT), isCurrentLocationSet);
                         } else {
-                            getView().setData(result);
-
-                            if (pullToRefresh) {
-                                getView().setShowContentState();
+                            if (result.equals(getView().getCurrentLocationShown()) && isCurrentLocationSet) {
+                                getView().onLocationDidNotChange();
                             } else {
+                                getView().setData(result);
                                 getView().showContent();
                             }
 
@@ -65,7 +77,7 @@ public class ForecastActivityPresenter extends MvpBasePresenter<IForecastActivit
                 @Override
                 public void onError(Exception error) {
                     if (isViewAttached()) {
-                        getView().showError(new Throwable(Constants.ErrorHandling.DEFAULT), pullToRefresh);
+                        getView().showError(new Throwable(Constants.ErrorHandling.DEFAULT), isCurrentLocationSet);
                     }
 
                     mIsLoading = false;

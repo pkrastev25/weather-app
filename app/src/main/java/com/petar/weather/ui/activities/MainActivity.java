@@ -80,8 +80,8 @@ public class MainActivity extends AppCompatActivity implements Animation.Animati
         final AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
         builder.setCancelable(false)
-                .setTitle(R.string.alert_dialog_header_warning)
-                .setMessage(R.string.alert_dialog_text_warning)
+                .setTitle(R.string.alert_dialog_location_permissions_header)
+                .setMessage(R.string.alert_dialog_location_permissions_text)
                 .setPositiveButton(R.string.button_ok, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {

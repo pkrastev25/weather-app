@@ -11,5 +11,7 @@ public interface IForecastActivity extends MvpLceView<ALocation> {
 
     void showMessage(String message);
 
-    void setShowContentState();
+    ALocation getCurrentLocationShown();
+
+    void onLocationDidNotChange();
 }

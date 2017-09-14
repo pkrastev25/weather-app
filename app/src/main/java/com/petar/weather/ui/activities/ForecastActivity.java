@@ -1,18 +1,33 @@
 package com.petar.weather.ui.activities;
 
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentSender;
 import android.databinding.DataBindingUtil;
 import android.databinding.ObservableField;
-import android.location.Location;
+import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.widget.Toast;
 
+import com.google.android.gms.common.api.ApiException;
+import com.google.android.gms.common.api.CommonStatusCodes;
+import com.google.android.gms.common.api.ResolvableApiException;
 import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationCallback;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.LocationSettingsRequest;
+import com.google.android.gms.location.LocationSettingsResponse;
+import com.google.android.gms.location.SettingsClient;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.hannesdorfmann.mosby3.mvp.viewstate.lce.LceViewState;
 import com.hannesdorfmann.mosby3.mvp.viewstate.lce.MvpLceViewStateActivity;
 import com.hannesdorfmann.mosby3.mvp.viewstate.lce.data.ParcelableDataLceViewState;
@@ -29,12 +44,16 @@ import com.petar.weather.app.Constants;
 import com.petar.weather.util.ErrorHandlingUtil;
 
 public class ForecastActivity extends MvpLceViewStateActivity<ViewPager, ALocation, IForecastActivity, ForecastActivityPresenter>
-        implements IForecastActivity, IToolbarView, IForecastFragmentListener, OnSuccessListener<Location>, OnFailureListener {
+        implements IForecastActivity, IToolbarView, IForecastFragmentListener, OnSuccessListener<LocationSettingsResponse>, OnFailureListener, OnCompleteListener<LocationSettingsResponse> {
 
     private ALocation mCurrentLocation;
 
     // LOCATION helpers
+    private LocationRequest mLocationRequest;
     private FusedLocationProviderClient mFusedLocationProviderClient;
+    private LocationCallback mLocationCallback;
+    private boolean mRequestingLocationUpdates;
+    private boolean mIsTaskStarted;
 
     // TOOLBAR helpers
     private ObservableField<String> mCurrentLocationTitle;
@@ -56,6 +75,18 @@ public class ForecastActivity extends MvpLceViewStateActivity<ViewPager, ALocati
 
         mCurrentLocationTitle = new ObservableField<>();
         mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
+        mLocationCallback = new LocationCallback() {
+            @Override
+            public void onLocationResult(LocationResult locationResult) {
+                super.onLocationResult(locationResult);
+
+                if (locationResult.getLastLocation() != null) {
+                    mRequestingLocationUpdates = false;
+                    mFusedLocationProviderClient.removeLocationUpdates(this);
+                    presenter.processLocationCoordinates(ForecastActivity.this, locationResult.getLastLocation());
+                }
+            }
+        };
 
         Bundle bundle = getIntent().getExtras();
 
@@ -73,10 +104,28 @@ public class ForecastActivity extends MvpLceViewStateActivity<ViewPager, ALocati
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+
+        if (mCurrentLocation == null && mRequestingLocationUpdates) {
+            findLocation();
+        }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+        mFusedLocationProviderClient.removeLocationUpdates(mLocationCallback);
+    }
+
+    @Override
     protected void onDestroy() {
         super.onDestroy();
 
         mFusedLocationProviderClient = null;
+        mLocationCallback = null;
+        mLocationRequest = null;
         mDailyForecastFragmentListener = null;
         mHourlyForecastFragmentListener = null;
     }
@@ -107,6 +156,8 @@ public class ForecastActivity extends MvpLceViewStateActivity<ViewPager, ALocati
 
     @Override
     protected String getErrorMessage(Throwable e, boolean pullToRefresh) {
+        mCurrentLocationTitle.set(getString(R.string.toolbar_location_not_found));
+
         return ErrorHandlingUtil.generateErrorText(this, e);
     }
 
@@ -127,7 +178,13 @@ public class ForecastActivity extends MvpLceViewStateActivity<ViewPager, ALocati
     }
 
     @Override
-    public void setShowContentState() {
+    public ALocation getCurrentLocationShown() {
+        return mCurrentLocation;
+    }
+
+    @Override
+    public void onLocationDidNotChange() {
+        mCurrentLocationTitle.set(mCurrentLocation.getTitle());
         viewState.setStateShowContent(getData());
     }
     // End of MVP-LCE-VIEW-STATE-ACTIVITY region
@@ -158,14 +215,33 @@ public class ForecastActivity extends MvpLceViewStateActivity<ViewPager, ALocati
 
     // LOCATION region
     private void findLocation() {
+        mRequestingLocationUpdates = true;
         mCurrentLocationTitle.set(getResources().getString(R.string.toolbar_location_hint));
 
+        if (mLocationRequest == null) {
+            mLocationRequest = new LocationRequest();
+            mLocationRequest.setInterval(Constants.LOCATION_UPDATE_INTERVAL_MILLIS);
+            mLocationRequest.setFastestInterval(Constants.LOCATION_FASTEST_UPDATE_INTERVAL_MILLIS);
+            mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+        }
+
+        if (!mIsTaskStarted) {
+            mIsTaskStarted = true;
+            presenter.onLocationTaskStatusChange(true);
+
+            LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder()
+                    .addLocationRequest(mLocationRequest);
+            SettingsClient client = LocationServices.getSettingsClient(this);
+            Task<LocationSettingsResponse> mTask = client.checkLocationSettings(builder.build());
+            mTask.addOnSuccessListener(this).addOnFailureListener(this).addOnCompleteListener(this);
+        }
+    }
+
+    @Override
+    public void onSuccess(LocationSettingsResponse locationSettingsResponse) {
         try {
-            mFusedLocationProviderClient.getLastLocation()
-                    .addOnSuccessListener(this)
-                    .addOnFailureListener(this);
+            mFusedLocationProviderClient.requestLocationUpdates(mLocationRequest, mLocationCallback, null);
         } catch (SecurityException e) {
-            e.printStackTrace();
             requestPermissions();
         }
     }
@@ -178,20 +254,78 @@ public class ForecastActivity extends MvpLceViewStateActivity<ViewPager, ALocati
     }
 
     @Override
-    public void onSuccess(Location location) {
-        if (location != null) {
-            presenter.processLocationCoordinates(this, location, false);
-        } else {
-            // TODO: Implement logic for actually fetching the current location !!!
-            // TODO: Showing this error is not enough
-            showError(new Throwable(Constants.ErrorHandling.DEFAULT), false);
+    public void onFailure(@NonNull Exception e) {
+        try {
+            int statusCode = ((ApiException) e).getStatusCode();
+
+            switch (statusCode) {
+                case CommonStatusCodes.RESOLUTION_REQUIRED:
+                    ResolvableApiException resolvable = (ResolvableApiException) e;
+                    resolvable.startResolutionForResult(ForecastActivity.this, Constants.LOCATION_REQUEST_CHECK_SETTINGS);
+                    break;
+                default:
+                    handleGeneralError(true);
+                    break;
+            }
+        } catch (IntentSender.SendIntentException | ClassCastException e1) {
+            handleGeneralError(true);
         }
     }
 
     @Override
-    public void onFailure(@NonNull Exception e) {
-        e.printStackTrace();
+    public void onComplete(@NonNull Task<LocationSettingsResponse> task) {
+        mIsTaskStarted = false;
+        presenter.onLocationTaskStatusChange(false);
+    }
+
+    private void handleGeneralError(boolean showDialog) {
+        mRequestingLocationUpdates = false;
+        mFusedLocationProviderClient.removeLocationUpdates(mLocationCallback);
+        mCurrentLocationTitle.set(getString(R.string.toolbar_location_not_found));
         showError(new Throwable(Constants.ErrorHandling.DEFAULT), false);
+
+        if (showDialog) {
+            showEnableSettingsDialog();
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (requestCode) {
+            case Constants.LOCATION_REQUEST_CHECK_SETTINGS:
+                if (resultCode == Activity.RESULT_OK) {
+                    findLocation();
+                } else {
+                    handleGeneralError(false);
+                }
+                break;
+            default:
+                super.onActivityResult(requestCode, resultCode, data);
+                break;
+        }
+    }
+
+    private void showEnableSettingsDialog() {
+        final AlertDialog.Builder dialog = new AlertDialog.Builder(this);
+        // TODO: Add a custom implementation that links to the corresponding settings
+        dialog.setTitle(R.string.alert_dialog_location_not_found_header)
+                .setMessage(R.string.alert_dialog_location_not_found_text)
+                .setPositiveButton(R.string.button_settings, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        startActivity(
+                                new Intent(Settings.ACTION_SETTINGS)
+                        );
+                    }
+                })
+                .setNegativeButton(R.string.button_cancel, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+
+        dialog.show();
     }
     // End of LOCATION region
 

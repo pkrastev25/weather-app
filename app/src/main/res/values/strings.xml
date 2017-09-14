@@ -4,15 +4,20 @@
     <string name="splash_screen_text">This is a sample splash screen text!</string>
 
     <!-- Alert dialogs -->
-    <string name="alert_dialog_header_warning">Warning!</string>
-    <string name="alert_dialog_text_warning">In order for this app to work properly, you must allow the location permissions. The application cannot work without them!</string>
+    <string name="alert_dialog_location_permissions_header">Warning</string>
+    <string name="alert_dialog_location_permissions_text">In order for this app to work properly, you must allow the location permissions. The application cannot work without them!</string>
+    <string name="alert_dialog_location_not_found_header">Cannot find current location</string>
+    <string name="alert_dialog_location_not_found_text">Make sure that there is a valid Cell Network, Airplane Mode is \'OFF\', Location Service is \'ON\' and there is a Network Connection!</string>
 
     <!-- Buttons -->
     <string name="button_ok">OK</string>
     <string name="button_close_app">Close App</string>
+    <string name="button_settings">Settings</string>
+    <string name="button_cancel">Cancel</string>
 
     <!-- Toolbar -->
     <string name="toolbar_location_hint">Searching for your current location…</string>
+    <string name="toolbar_location_not_found">@string/alert_dialog_location_not_found_header</string>
     
     <!-- Forecast -->
     <string name="forecast_wind_speed">Wind speed</string>
