@@ -30,7 +30,7 @@ public class PLocation extends ALocation {
     @Keep
     public PLocation(NLocation location) {
         keyDB = Constants.DB_CURRENT_LOCATION_KEY;
-        expireTime = TimeUtil.getCurrentTimeWithMinuteOffset(Constants.OFFSET_MINUTES_FOR_LOCATION);
+        expireTime = TimeUtil.getCurrentTimeWithOffset(Constants.LOCATION_TIME_OFFSET_FOR_CACHED_DATA_MILLIS);
         idWOE = location.getIdWOE();
         distance = location.getDistance();
         title = location.getTitle();

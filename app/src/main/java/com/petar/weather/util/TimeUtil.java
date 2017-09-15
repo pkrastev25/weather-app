@@ -14,62 +14,84 @@ import java.util.Locale;
  */
 public class TimeUtil {
 
-    public static Long getCurrentTimeWithMinuteOffset(int offset) {
-        DateTime updateTime = new DateTime();
-        updateTime = updateTime.plusMinutes(offset);
-
-        return updateTime.getMillis();
-    }
-
-    public static Long getCurrentTimeWithHourOffset(int offset) {
-        DateTime updateTime = new DateTime();
-        updateTime = updateTime.plusHours(offset);
-
-        return updateTime.getMillis();
-    }
-
-    public static Long getCurrentTimeWithDayOffset(int offset) {
-        DateTime updateTime = new DateTime();
-        updateTime = updateTime.plusDays(offset);
-
-        return updateTime.getMillis();
-    }
-
-    public static Long getCurrentTime() {
-        DateTime today = new DateTime();
-
-        return today.getMillis();
-    }
-
-    public static Long getTimeFromAPIRequestFormatString(String date) {
-        DateTimeFormatter formatter = DateTimeFormat.forPattern(Constants.API_DATE_REQUEST_FORMAT);
-        DateTime time = new DateTime(formatter.parseDateTime(date));
-
-        return time.getMillis();
+    public static long getCurrentTime() {
+        return new DateTime().getMillis();
     }
 
     public static int getCurrentHoursTime() {
-        DateTime now = new DateTime();
+        return new DateTime().getHourOfDay();
+    }
 
-        return now.getHourOfDay();
+    public static long getCurrentTimeWithOffset(long offset) {
+        return new DateTime().plus(offset).getMillis();
+    }
+
+    public static long convertDateFromISOString(String date) {
+        return new DateTime(date).getMillis();
+    }
+
+    public static long getTimeFromAPIRequestFormatString(String date) {
+        DateTimeFormatter formatter = DateTimeFormat.forPattern(Constants.API_DATE_REQUEST_FORMAT);
+
+        return new DateTime(formatter.parseDateTime(date)).getMillis();
     }
 
     public static int getHoursTimeForISOString(String date) {
-        DateTime time = new DateTime(date);
-
-        return time.getHourOfDay();
+        return new DateTime(date).getHourOfDay();
     }
 
-    public static Calendar convertDateToCalendarFromMillis(Long millis) {
-        DateTime date = new DateTime(millis);
-
-        return date.toCalendar(Locale.getDefault());
+    public static Calendar convertDateToCalendarFromMillis(long millis) {
+        return new DateTime(millis).toCalendar(Locale.getDefault());
     }
 
-    public static Long addDayOffsetToDate(Long date, int offset) {
-        DateTime time = new DateTime(date);
-        time = time.plusDays(offset);
+    public static long addTimeOffsetToDate(long date, long offset) {
+        return new DateTime(date).plus(offset).getMillis();
+    }
 
-        return time.getMillis();
+    public static long subtractTimeOffsetFromDate(long date, long offset) {
+        return new DateTime(date).minus(offset).getMillis();
+    }
+
+    public static int compareDates(long aDate, long bDate) {
+        DateTime dateA = new DateTime(aDate).withTimeAtStartOfDay();
+        DateTime dateB = new DateTime(bDate).withTimeAtStartOfDay();
+
+        return dateA.compareTo(dateB);
+    }
+
+    public static int compareDates(String aDate, String bDate) {
+        return compareDates(new DateTime(aDate).getMillis(), new DateTime(bDate).getMillis());
+    }
+
+    public static int compareTodayWithDate(long aDate) {
+        DateTime today = new DateTime().withTimeAtStartOfDay();
+        DateTime dateA = new DateTime(aDate).withTimeAtStartOfDay();
+
+        return today.compareTo(dateA);
+    }
+
+    public static int compareTodayWithDate(String aDate) {
+        return compareTodayWithDate(new DateTime(aDate).getMillis());
+    }
+
+    public static boolean isDateToday(long aDate) {
+        DateTime today = new DateTime().withTimeAtStartOfDay();
+        DateTime dateA = new DateTime(aDate).withTimeAtStartOfDay();
+
+        return dateA.isEqual(today);
+    }
+
+    public static boolean isDateBeforeDate(long aDate, long bDate) {
+        DateTime dateA = new DateTime(aDate).withTimeAtStartOfDay();
+        DateTime dateB = new DateTime(bDate).withTimeAtStartOfDay();
+
+        return dateA.isBefore(dateB);
+    }
+
+    public static boolean areDatesTheSameDate(long aDate, long bDate) {
+        DateTime dateA = new DateTime(aDate).withTimeAtStartOfDay();
+        DateTime dateB = new DateTime(bDate).withTimeAtStartOfDay();
+
+        return dateA.isEqual(dateB);
     }
 }

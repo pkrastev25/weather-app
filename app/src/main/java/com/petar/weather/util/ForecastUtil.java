@@ -1,9 +1,10 @@
 package com.petar.weather.util;
 
+import android.content.Context;
+
+import com.petar.weather.R;
 import com.petar.weather.app.Constants;
 import com.petar.weather.logic.models.AForecast;
-
-import org.joda.time.DateTime;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -11,6 +12,7 @@ import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by User on 23.6.2017 г..
@@ -30,10 +32,7 @@ public class ForecastUtil {
         Collections.sort(data);
         mForecastHoursContainer = new HashSet<>(Constants.FORECASTS_FOR_A_DAY);
 
-        DateTime today = new DateTime().withTimeAtStartOfDay();
-        DateTime forecastDate = new DateTime(data.get(0).getApplicableDate()).withTimeAtStartOfDay();
-
-        int comparison = today.compareTo(forecastDate);
+        int comparison = TimeUtil.compareTodayWithDate(data.get(0).getApplicableDate());
 
         if (comparison == 1) {
             result = extractDataForThePast(data);
@@ -51,11 +50,11 @@ public class ForecastUtil {
 
     private static List<? extends AForecast> extractDataForTheFuture(List<? extends AForecast> data) {
         List<AForecast> result = new ArrayList<>();
-        DateTime date = new DateTime(data.get(0).getCreatedDate());
+        long date = TimeUtil.convertDateFromISOString(data.get(0).getCreatedDate());
 
         while (mForecastHoursContainer.size() != Constants.FORECASTS_FOR_A_DAY) {
-            result.addAll(extractDataForDate(data, date.getMillis()));
-            date = date.minusDays(1);
+            result.addAll(extractDataForDate(data, date));
+            date = TimeUtil.subtractTimeOffsetFromDate(date, TimeUnit.DAYS.toMillis(1));
         }
 
         /*
@@ -66,16 +65,10 @@ public class ForecastUtil {
         Collections.sort(result, new Comparator<AForecast>() {
             @Override
             public int compare(AForecast one, AForecast another) {
-                int oneHourAttribute = new DateTime(one.getCreatedDate()).getHourOfDay();
-                int anotherHourAttribute = new DateTime(another.getCreatedDate()).getHourOfDay();
+                Integer oneHourAttribute = TimeUtil.getHoursTimeForISOString(one.getCreatedDate());
+                Integer anotherHourAttribute = TimeUtil.getHoursTimeForISOString(another.getCreatedDate());
 
-                if (oneHourAttribute > anotherHourAttribute) {
-                    return 1;
-                } else if (oneHourAttribute < anotherHourAttribute) {
-                    return -1;
-                } else {
-                    return 0;
-                }
+                return oneHourAttribute.compareTo(anotherHourAttribute);
             }
         });
 
@@ -83,17 +76,16 @@ public class ForecastUtil {
     }
 
     private static List<? extends AForecast> extractDataForThePast(List<? extends AForecast> data) {
-        long mostRecentDate = new DateTime(data.get(0).getApplicableDate()).getMillis();
-        return extractDataForDate(data, mostRecentDate);
+        return extractDataForDate(data, TimeUtil.convertDateFromISOString(data.get(0).getApplicableDate()));
     }
 
     private static List<? extends AForecast> extractDataForThePresent(List<? extends AForecast> data) {
         List<AForecast> result = new ArrayList<>();
-        DateTime today = new DateTime();
+        long today = TimeUtil.getCurrentTime();
 
         while (mForecastHoursContainer.size() != Constants.FORECASTS_FOR_A_DAY) {
-            result.addAll(extractDataForDate(data, today.getMillis()));
-            today = today.minusDays(1);
+            result.addAll(extractDataForDate(data, today));
+            today = TimeUtil.subtractTimeOffsetFromDate(today, TimeUnit.DAYS.toMillis(1));
         }
 
         /*
@@ -104,31 +96,24 @@ public class ForecastUtil {
         Collections.sort(result, new Comparator<AForecast>() {
             @Override
             public int compare(AForecast one, AForecast another) {
-                int oneHourAttribute = new DateTime(one.getCreatedDate()).getHourOfDay();
-                int anotherHourAttribute = new DateTime(another.getCreatedDate()).getHourOfDay();
+                Integer oneHourAttribute = TimeUtil.getHoursTimeForISOString(one.getCreatedDate());
+                Integer anotherHourAttribute = TimeUtil.getHoursTimeForISOString(another.getCreatedDate());
 
-                if (oneHourAttribute > anotherHourAttribute) {
-                    return 1;
-                } else if (oneHourAttribute < anotherHourAttribute) {
-                    return -1;
-                } else {
-                    return 0;
-                }
+                return oneHourAttribute.compareTo(anotherHourAttribute);
             }
         });
 
         return result;
     }
 
-    private static List<? extends AForecast> extractDataForDate(List<? extends AForecast> data, long timestamp) {
+    private static List<? extends AForecast> extractDataForDate(List<? extends AForecast> data, long date) {
         List<AForecast> result = new ArrayList<>();
-        DateTime compareDate = new DateTime(timestamp).withTimeAtStartOfDay();
 
         for (AForecast entry : data) {
-            DateTime entryDate = new DateTime(entry.getCreatedDate());
-            int hours = entryDate.getHourOfDay();
+            long entryDate = TimeUtil.convertDateFromISOString(entry.getCreatedDate());
+            int hours = TimeUtil.getHoursTimeForISOString(entry.getCreatedDate());
 
-            if (compareDate.isEqual(entryDate.withTimeAtStartOfDay()) && !mForecastHoursContainer.contains(hours)) {
+            if (TimeUtil.areDatesTheSameDate(date, entryDate) && !mForecastHoursContainer.contains(hours)) {
                 mForecastHoursContainer.add(hours);
                 result.add(entry);
 
@@ -139,5 +124,31 @@ public class ForecastUtil {
         }
 
         return result;
+    }
+
+    public static String generateTextForWeatherStateSummary(Context context, @Constants.APIWeatherStateSummary String weatherState) {
+        switch (weatherState) {
+            case Constants.APIWeatherStateSummary.SNOW:
+                return context.getString(R.string.forecast_state_snow);
+            case Constants.APIWeatherStateSummary.SLEET:
+                return context.getString(R.string.forecast_state_sleet);
+            case Constants.APIWeatherStateSummary.HAIL:
+                return context.getString(R.string.forecast_state_hail);
+            case Constants.APIWeatherStateSummary.THUNDERSTORM:
+                return context.getString(R.string.forecast_state_thunderstorm);
+            case Constants.APIWeatherStateSummary.HEAVY_RAIN:
+                return context.getString(R.string.forecast_state_heavy_rain);
+            case Constants.APIWeatherStateSummary.LIGHT_RAIN:
+                return context.getString(R.string.forecast_state_light_rain);
+            case Constants.APIWeatherStateSummary.SHOWERS:
+                return context.getString(R.string.forecast_state_showers);
+            case Constants.APIWeatherStateSummary.HEAVY_CLOUD:
+                return context.getString(R.string.forecast_state_heavy_cloud);
+            case Constants.APIWeatherStateSummary.LIGHT_CLOUD:
+                return context.getString(R.string.forecast_state_light_cloud);
+            case Constants.APIWeatherStateSummary.CLEAR:
+            default:
+                return context.getString(R.string.forecast_state_clear);
+        }
     }
 }

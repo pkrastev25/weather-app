@@ -32,8 +32,8 @@ public class ApiLogic {
 
     private ApiLogic() {
         final OkHttpClient client = new OkHttpClient.Builder()
-                .readTimeout(Constants.API_REQUEST_TIMEOUT_IN_SECONDS, TimeUnit.SECONDS)
-                .connectTimeout(Constants.API_REQUEST_TIMEOUT_IN_SECONDS, TimeUnit.SECONDS)
+                .readTimeout(Constants.API_REQUEST_TIMEOUT_MILLIS, TimeUnit.MILLISECONDS)
+                .connectTimeout(Constants.API_REQUEST_TIMEOUT_MILLIS, TimeUnit.MILLISECONDS)
                 .build();
 
         mApi = new Retrofit.Builder()
@@ -65,7 +65,7 @@ public class ApiLogic {
     }
 
     // TODO: Rework this
-    public String getPNGImageUrl(String type) {
+    public String getPNGImageUrl(@Constants.APIWeatherStateSummary String type) {
         return Constants.API_BASE_URL + String.format(Constants.API_IMAGE_PNG, type);
     }
 }

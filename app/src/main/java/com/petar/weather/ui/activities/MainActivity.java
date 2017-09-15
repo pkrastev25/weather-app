@@ -36,7 +36,7 @@ public class MainActivity extends AppCompatActivity implements Animation.Animati
                 Constants.ANIMATION_ALPHA_SPLASH_SCREEN_START,
                 Constants.ANIMATION_ALPHA_SPLASH_SCREEN_END
         );
-        mAnimation.setDuration(Constants.ANIMATION_ALPHA_SPLASH_SCREEN_DURATION);
+        mAnimation.setDuration(Constants.ANIMATION_ALPHA_SPLASH_SCREEN_DURATION_MILLIS);
         mAnimation.setAnimationListener(this);
         mSplashScreen.setAnimation(mAnimation);
     }

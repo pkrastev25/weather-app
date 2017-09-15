@@ -1,12 +1,12 @@
 package com.petar.weather.logic.models;
 
-import android.os.Parcelable;
 import android.support.annotation.NonNull;
 
+import com.petar.weather.app.Constants;
 import com.petar.weather.ui.recycler.AListenerRecyclerItem;
 import com.petar.weather.ui.recycler.IListener;
+import com.petar.weather.util.TimeUtil;
 
-import org.joda.time.DateTime;
 
 /**
  * Created by User on 24.6.2017 г..
@@ -16,10 +16,14 @@ public abstract class AForecast extends AListenerRecyclerItem<AForecast.IForecas
 
     public abstract String getWeatherState();
 
+    @Constants.APIWeatherStateSummary
+    public abstract String getWeatherStateSummary();
+
     public abstract String getCreatedDate();
 
     public abstract String getApplicableDate();
 
+    @Constants.APIWeatherStateSummary
     public abstract String getImageType();
 
     public abstract double getWindSpeed();
@@ -38,16 +42,7 @@ public abstract class AForecast extends AListenerRecyclerItem<AForecast.IForecas
 
     @Override
     public int compareTo(@NonNull AForecast o) {
-        long timestamp = new DateTime(getApplicableDate()).getMillis();
-        long oTimestamp = new DateTime(o.getApplicableDate()).getMillis();
-
-        if (timestamp > oTimestamp) {
-            return 1;
-        } else if (timestamp < oTimestamp) {
-            return -1;
-        } else {
-            return 0;
-        }
+        return TimeUtil.compareDates(getApplicableDate(), o.getApplicableDate());
     }
 
     public void onItemClick() {

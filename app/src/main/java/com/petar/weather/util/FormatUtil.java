@@ -5,11 +5,10 @@ import android.location.Location;
 import com.petar.weather.app.Constants;
 import com.petar.weather.logic.models.AForecast;
 
-import org.joda.time.DateTime;
-
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.Locale;
 
 /**
@@ -38,13 +37,13 @@ public class FormatUtil {
     }
 
     public static String formatForecastDate(AForecast forecast) {
-        DateTime applicableDate = new DateTime(forecast.getApplicableDate());
-        DateTime created = new DateTime(forecast.getCreatedDate());
+        long applicableDate = TimeUtil.convertDateFromISOString(forecast.getApplicableDate());
+        long created = TimeUtil.convertDateFromISOString(forecast.getCreatedDate());
 
         return String.format(
                 Constants.FORMAT_TIME_AND_DATE,
-                TIME_SHOW_FORMAT.format(created.toDate()),
-                DATE_SHOW_FORMAT.format(applicableDate.toDate())
+                TIME_SHOW_FORMAT.format(new Date(created)),
+                DATE_SHOW_FORMAT.format(new Date(applicableDate))
         );
     }
 

@@ -20,17 +20,33 @@
     <string name="toolbar_location_not_found">@string/alert_dialog_location_not_found_header</string>
     
     <!-- Forecast -->
-    <string name="forecast_wind_speed">Wind speed</string>
-    <string name="forecast_wind_direction">Wind direction</string>
-    <string name="forecast_wind_direction_compass">Wind direction compass</string>
-    <string name="forecast_min_temperature">Min</string>
-    <string name="forecast_max_temperature">Max</string>
-    <string name="forecast_air_pressure">Air pressure</string>
-    <string name="forecast_humidity">Humidity</string>
-    <string name="forecast_accuracy">Accuracy</string>
+    <string name="forecast_details_wind_speed">Wind speed</string>
+    <string name="forecast_details_wind_direction">Wind direction</string>
+    <string name="forecast_details_wind_direction_compass">Wind direction compass</string>
+    <string name="forecast_details_min_temperature">Min</string>
+    <string name="forecast_details_max_temperature">Max</string>
+    <string name="forecast_details_air_pressure">Air pressure</string>
+    <string name="forecast_details_humidity">Humidity</string>
+    <string name="forecast_details_accuracy">Accuracy</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="forecast_state_snow">Stay warm!</string>
+    <string name="forecast_state_sleet">Stay safe!</string>
+    <string name="forecast_state_hail">Stay safe!</string>
+    <string name="forecast_state_thunderstorm">Stay safe!</string>
+    <string name="forecast_state_heavy_rain">Stay dry!</string>
+    <string name="forecast_state_light_rain">Stay dry!</string>
+    <string name="forecast_state_showers">Stay dry!</string>
+    <string name="forecast_state_heavy_cloud">Stay positive!</string>
+    <string name="forecast_state_light_cloud">Stay positive!</string>
+    <string name="forecast_state_clear">Enjoy the weather!</string>
+
+    <!-- Settings -->
+    <string name="settings_enable_notifications">Receive notifications</string>
+    <string name="settings_enable_notifications_helper_text">By enabling notifications, the app will give you hints about the current weather conditions every 3 hours. The location will automatically be updated, as well as the weather conditions. For most accurate results, make sure that the location settings are \'ON\' and there is a network connection.</string>
+
+    <!-- Notifications -->
+    <string name="notifications_error_title">Cannot determine forecast for your current location</string>
+    <string name="notifications_error_text">In order to get accurate forecast hints, make sure that the location settings are \'ON\' and there is a network connection.</string>
 
     <!-- Error handling text -->
     <string name="error_no_internet_connection">Please, enable your internet connection!</string>

@@ -35,7 +35,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="start"
-                android:text="@string/forecast_wind_speed"/>
+                android:text="@string/forecast_details_wind_speed"/>
 
             <TextView
                 android:layout_width="match_parent"
@@ -47,7 +47,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="start"
-                android:text="@string/forecast_wind_direction"/>
+                android:text="@string/forecast_details_wind_direction"/>
 
             <TextView
                 android:layout_width="match_parent"
@@ -59,7 +59,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="start"
-                android:text="@string/forecast_wind_direction_compass"/>
+                android:text="@string/forecast_details_wind_direction_compass"/>
 
             <TextView
                 android:layout_width="match_parent"
@@ -71,7 +71,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="start"
-                android:text="@string/forecast_max_temperature"/>
+                android:text="@string/forecast_details_max_temperature"/>
 
             <TextView
                 android:layout_width="match_parent"
@@ -83,7 +83,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="start"
-                android:text="@string/forecast_min_temperature"/>
+                android:text="@string/forecast_details_min_temperature"/>
 
             <TextView
                 android:layout_width="match_parent"
@@ -95,7 +95,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="start"
-                android:text="@string/forecast_air_pressure"/>
+                android:text="@string/forecast_details_air_pressure"/>
 
             <TextView
                 android:layout_width="match_parent"
@@ -107,7 +107,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="start"
-                android:text="@string/forecast_humidity"/>
+                android:text="@string/forecast_details_humidity"/>
 
             <TextView
                 android:layout_width="match_parent"

@@ -2,23 +2,18 @@ package com.petar.weather.logic;
 
 import android.content.Context;
 
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import com.petar.weather.logic.models.AForecast;
 import com.petar.weather.logic.models.ALocation;
 import com.petar.weather.logic.models.IWeeklyForecast;
 import com.petar.weather.networking.ApiLogic;
-import com.petar.weather.networking.models.NForecast;
 import com.petar.weather.networking.models.NLocation;
 import com.petar.weather.persistence.PersistenceLogic;
-import com.petar.weather.persistence.models.PForecast;
 import com.petar.weather.persistence.models.PLocation;
 import com.petar.weather.app.Constants;
 import com.petar.weather.util.ForecastUtil;
 import com.petar.weather.util.NetworkUtil;
 
 import java.io.IOException;
-import java.lang.reflect.Type;
 import java.util.Collections;
 import java.util.List;
 
@@ -83,19 +78,19 @@ public class DataLogic {
         return currentLocation == null ? cachedLocation : currentLocation;
     }
 
-    public List<? extends AForecast> getLocationWeeklyForecast(Context context, int id, boolean makeRequest) throws IOException {
+    public List<? extends AForecast> getLocationWeeklyForecast(Context context, int idWOE, boolean makeRequest) throws IOException {
         long keyDB = Constants.DB_WEEKLY_FORECAST_KEY;
-        PForecast cachedForecast = PersistenceLogic.getInstance(context).getForecast(Constants.DB_WEEKLY_FORECAST_KEY);
+        List<? extends AForecast> cachedForecast = PersistenceLogic.getInstance(context).getForecast(Constants.DB_WEEKLY_FORECAST_KEY, idWOE);
         List<? extends AForecast> currentForecast = null;
 
         if (NetworkUtil.isNetworkAvailable(context)) {
-            if (cachedForecast == null || makeRequest || PersistenceLogic.getInstance(context).shouldForecastDataUpdate(keyDB, id)) {
-                IWeeklyForecast weekly = ApiLogic.getInstance().getLocationForecast(id);
+            if (cachedForecast == null || makeRequest || PersistenceLogic.getInstance(context).shouldForecastDataUpdate(keyDB, idWOE)) {
+                IWeeklyForecast weekly = ApiLogic.getInstance().getLocationForecast(idWOE);
 
                 if (weekly != null && !weekly.getForecast().isEmpty()) {
                     PersistenceLogic.getInstance(context).persistForecast(
                             keyDB,
-                            id,
+                            idWOE,
                             Constants.FORECAST_WEEKLY_TIMESTAMP,
                             currentForecast = weekly.getForecast()
                     );
@@ -103,30 +98,24 @@ public class DataLogic {
             }
         }
 
-        if (currentForecast == null && cachedForecast != null && cachedForecast.getIdWOE() == id) {
-            Type listType = new TypeToken<List<NForecast>>() {
-            }.getType();
-            currentForecast = new Gson().fromJson(cachedForecast.getForecasts(), listType);
-        }
-
-        return currentForecast;
+        return currentForecast == null ? cachedForecast : currentForecast;
     }
 
-    public List<? extends AForecast> getLocationForecastForDate(Context context, int id, String date, boolean makeRequest) throws IOException {
+    public List<? extends AForecast> getLocationForecastForDate(Context context, int idWOE, String date, boolean makeRequest) throws IOException {
         long keyDB = date.hashCode();
-        PForecast cachedForecast = PersistenceLogic.getInstance(context).getForecast(keyDB);
+        List<? extends AForecast> cachedForecast = PersistenceLogic.getInstance(context).getForecast(keyDB, idWOE);
         List<? extends AForecast> currentForecast = null;
 
         if (NetworkUtil.isNetworkAvailable(context)) {
-            if (cachedForecast == null || makeRequest || PersistenceLogic.getInstance(context).shouldForecastDataUpdate(keyDB, id)) {
-                currentForecast = ApiLogic.getInstance().getLocationForecastForDate(id, date);
+            if (cachedForecast == null || makeRequest || PersistenceLogic.getInstance(context).shouldForecastDataUpdate(keyDB, idWOE)) {
+                currentForecast = ApiLogic.getInstance().getLocationForecastForDate(idWOE, date);
 
                 if (currentForecast != null) {
                     currentForecast = ForecastUtil.extractData(currentForecast);
 
                     PersistenceLogic.getInstance(context).persistForecast(
                             keyDB,
-                            id,
+                            idWOE,
                             date,
                             currentForecast
                     );
@@ -134,12 +123,6 @@ public class DataLogic {
             }
         }
 
-        if (currentForecast == null && cachedForecast != null && cachedForecast.getIdWOE() == id) {
-            Type listType = new TypeToken<List<NForecast>>() {
-            }.getType();
-            currentForecast = new Gson().fromJson(cachedForecast.getForecasts(), listType);
-        }
-
-        return currentForecast;
+        return currentForecast == null ? cachedForecast : currentForecast;
     }
 }

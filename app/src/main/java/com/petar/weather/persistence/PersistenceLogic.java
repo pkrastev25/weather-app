@@ -3,7 +3,9 @@ package com.petar.weather.persistence;
 import android.content.Context;
 
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.petar.weather.logic.models.AForecast;
+import com.petar.weather.networking.models.NForecast;
 import com.petar.weather.networking.models.NLocation;
 import com.petar.weather.persistence.models.DaoMaster;
 import com.petar.weather.persistence.models.DaoSession;
@@ -12,6 +14,7 @@ import com.petar.weather.persistence.models.PLocation;
 import com.petar.weather.app.Constants;
 import com.petar.weather.util.TimeUtil;
 
+import java.lang.reflect.Type;
 import java.util.Collections;
 import java.util.List;
 
@@ -32,7 +35,7 @@ public class PersistenceLogic {
     }
 
     private PersistenceLogic(Context context) {
-        DaoMaster.DevOpenHelper helper = new DaoMaster.DevOpenHelper(context, Constants.DB_NAME, null);
+        DaoMaster.DevOpenHelper helper = new DaoMaster.DevOpenHelper(context, Constants.DB_PERSISTENCE_LOGIC_NAME, null);
         DaoMaster master = new DaoMaster(helper.getWritableDatabase());
         mDaoSession = master.newSession();
     }
@@ -64,8 +67,18 @@ public class PersistenceLogic {
         );
     }
 
-    public PForecast getForecast(long keyDB) {
-        return mDaoSession.getPForecastDao().load(keyDB);
+    public List<NForecast> getForecast(long keyDB, int idWOE) {
+        PForecast cachedForecast = mDaoSession.getPForecastDao().load(keyDB);
+
+        if (cachedForecast != null && cachedForecast.getIdWOE() == idWOE) {
+            Type listType = new TypeToken<List<NForecast>>() {
+
+            }.getType();
+
+            return new Gson().fromJson(cachedForecast.getForecasts(), listType);
+        }
+
+        return null;
     }
 
     private void monitorForecastDBSize() {
@@ -90,7 +103,7 @@ public class PersistenceLogic {
     }
 
     public boolean shouldForecastDataUpdate(long keyDB, long id) {
-        PForecast cachedForecast = getForecast(keyDB);
+        PForecast cachedForecast = mDaoSession.getPForecastDao().load(keyDB);
 
         if (cachedForecast == null) {
             return true;

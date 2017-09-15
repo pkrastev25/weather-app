@@ -5,6 +5,7 @@ import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
 import com.petar.weather.R;
+import com.petar.weather.app.Constants;
 import com.petar.weather.networking.ApiLogic;
 
 /**
@@ -14,7 +15,7 @@ import com.petar.weather.networking.ApiLogic;
 public class ImageViewBindings {
 
     @BindingAdapter("imageUrl")
-    public static void loadImage(ImageView view, String type) {
+    public static void loadImage(ImageView view, @Constants.APIWeatherStateSummary String type) {
         Glide.with(view.getContext()).load(
                 ApiLogic.getInstance().getPNGImageUrl(type)
         ).error(R.mipmap.ic_launcher).into(view);

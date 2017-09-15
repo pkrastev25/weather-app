@@ -108,6 +108,11 @@ public class NForecast extends AForecast {
         return weatherStateName;
     }
 
+    @Override
+    public String getWeatherStateSummary() {
+        return weatherStateAbbr;
+    }
+
 
     @Override
     public int getViewType() {

@@ -14,9 +14,8 @@ import com.petar.weather.util.FormatUtil;
 import com.petar.weather.util.NetworkUtil;
 import com.petar.weather.util.TimeUtil;
 
-import org.joda.time.DateTime;
-
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by User on 1.7.2017 г..
@@ -32,9 +31,7 @@ public class HourlyForecastFragmentPresenter extends MvpBasePresenter<IHourlyFor
         super();
 
         mCurrentForecastDate = TimeUtil.getCurrentTime();
-        mLimitForecastDate = new DateTime(
-                TimeUtil.getCurrentTimeWithDayOffset(Constants.OFFSET_DAYS_FOR_FORECAST)
-        ).withTimeAtStartOfDay().getMillis();
+        mLimitForecastDate = TimeUtil.getCurrentTimeWithOffset(Constants.API_HOURLY_FORECAST_LIMIT_MILLIS);
     }
 
     public void loadNextForecast(Context context, int idWOE, boolean pullToRefresh) {
@@ -47,14 +44,14 @@ public class HourlyForecastFragmentPresenter extends MvpBasePresenter<IHourlyFor
     }
 
     private void loadForecast(final Context context, final int idWOE, final boolean pullToRefresh, final boolean isNextForecast) {
-        if (isViewAttached() && !mIsLoading && new DateTime(mCurrentForecastDate).withTimeAtStartOfDay().isBefore(mLimitForecastDate)) {
+        if (isViewAttached() && !mIsLoading && TimeUtil.isDateBeforeDate(mCurrentForecastDate, mLimitForecastDate)) {
             mIsLoading = true;
             final String dateRequestFormat = FormatUtil.formatDateRequest(
                     TimeUtil.convertDateToCalendarFromMillis(mCurrentForecastDate)
             );
 
             getView().showLoading(pullToRefresh);
-            getView().removeLoadingRecyclerItem();
+            getView().setLoadingRecyclerItem();
 
             AsyncTaskUtil.doInBackground(new AsyncTaskUtil.IAsyncTaskHelperListener<List<? extends AForecast>>() {
                 @Override
@@ -89,17 +86,14 @@ public class HourlyForecastFragmentPresenter extends MvpBasePresenter<IHourlyFor
                                 getView().showMessage(ErrorHandlingUtil.generateErrorText(context, Constants.ErrorHandling.CANNOT_UPDATE_CACHED_DATA));
                             }
 
-                            DateTime today = new DateTime().withTimeAtStartOfDay();
-                            DateTime forecastDate = new DateTime(mCurrentForecastDate).withTimeAtStartOfDay();
-
-                            if (today.isEqual(forecastDate)) {
+                            if (TimeUtil.isDateToday(mCurrentForecastDate)) {
                                 getView().scrollToCurrentForecast();
                             }
 
-                            mCurrentForecastDate = TimeUtil.addDayOffsetToDate(mCurrentForecastDate, 1);
+                            mCurrentForecastDate = TimeUtil.addTimeOffsetToDate(mCurrentForecastDate, TimeUnit.DAYS.toMillis(1));
 
-                            if (new DateTime(mCurrentForecastDate).withTimeAtStartOfDay().isBefore(mLimitForecastDate)) {
-                                getView().setLoadingRecyclerItem();
+                            if (TimeUtil.isDateBeforeDate(mCurrentForecastDate, mLimitForecastDate) || TimeUtil.areDatesTheSameDate(mCurrentForecastDate, mLimitForecastDate)) {
+                                getView().removeLoadingRecyclerItem();
                             }
                         }
                     }

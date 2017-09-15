@@ -161,6 +161,8 @@ public class HourlyForecastFragment extends MvpLceViewStateFragment<SwipeRefresh
 
     @Override
     protected String getErrorMessage(Throwable e, boolean pullToRefresh) {
+        removeLoadingRecyclerItem();
+
         return ErrorHandlingUtil.generateErrorText(getContext(), e);
     }
 
