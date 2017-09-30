@@ -14,19 +14,29 @@ import com.petar.weather.util.NetworkUtil;
 import java.util.List;
 
 /**
- * Created by User on 27.8.2017 г..
+ * Contains the business logic for the {@link com.petar.weather.ui.activities.SearchActivity}.
+ *
+ * @author Petar Krastev
+ * @version 1.0
+ * @since 27.8.2017
  */
-
 public class SearchActivityPresenter extends MvpBasePresenter<ISearchActivity> {
 
-    private static final String COMMA_SYMBOL = ",";
     private boolean mIsLoading;
 
+    /**
+     * Provides error detection and handling for the input. Calls {@link #processStringQuery(Context, String, boolean)}
+     * for a string input or {@link #processCoordinatesQuery(Context, String, boolean)} for coordinates input.
+     *
+     * @param context       {@link Context} reference
+     * @param query         Either a string location or coordinates in the form of {@link Constants#FORMAT_COORDINATES}
+     * @param pullToRefresh True if the request is made from a pull-to-refresh view, false otherwise
+     */
     public void processQuery(Context context, String query, boolean pullToRefresh) {
         if (isViewAttached()) {
             if (TextUtils.isEmpty(query)) {
                 getView().showError(new Throwable(Constants.ErrorHandling.NO_SEARCH_INPUT), pullToRefresh);
-            } else if (query.contains(COMMA_SYMBOL)) {
+            } else if (query.contains(Constants.GENERAL_COMMA_SYMBOL)) {
                 if (Constants.REGEX_COORDINATES.matcher(query).matches()) {
                     getView().showError(new Throwable(), pullToRefresh);
                 } else {
@@ -42,6 +52,14 @@ public class SearchActivityPresenter extends MvpBasePresenter<ISearchActivity> {
         }
     }
 
+    /**
+     * Performs an API request for the given query location. Manipulates the view accordingly in
+     * each step. Provides error detection and handling for the result.
+     *
+     * @param context       {@link Context} reference
+     * @param query         The location query of interest
+     * @param pullToRefresh True if the request is made from a pull-to-refresh view, false otherwise
+     */
     private void processStringQuery(final Context context, final String query, final boolean pullToRefresh) {
         if (isViewAttached() && !mIsLoading) {
             getView().showLoading(pullToRefresh);
@@ -59,7 +77,7 @@ public class SearchActivityPresenter extends MvpBasePresenter<ISearchActivity> {
                 @Override
                 public void onSuccess(List<? extends ALocation> result) {
                     if (isViewAttached()) {
-                        if (!NetworkUtil.isNetworkAvailable(context) && result == null) {
+                        if (!NetworkUtil.isNetworkConnected(context) && result == null) {
                             getView().showError(new Throwable(Constants.ErrorHandling.NO_INTERNET_CONNECTION), pullToRefresh);
                         } else if (result == null) {
                             getView().showError(new Throwable(Constants.ErrorHandling.DEFAULT), pullToRefresh);
@@ -86,6 +104,14 @@ public class SearchActivityPresenter extends MvpBasePresenter<ISearchActivity> {
         }
     }
 
+    /**
+     * Performs an API request for the given coordinates of a location. Manipulates the view accordingly in
+     * each step. Provides error detection and handling for the result.
+     *
+     * @param context       {@link Context} reference
+     * @param query         Coordinates in the form of {@link Constants#FORMAT_COORDINATES}
+     * @param pullToRefresh True if the request is made from a pull-to-refresh view, false otherwise
+     */
     private void processCoordinatesQuery(final Context context, final String query, final boolean pullToRefresh) {
         if (isViewAttached() && !mIsLoading) {
             getView().showLoading(pullToRefresh);
@@ -103,7 +129,7 @@ public class SearchActivityPresenter extends MvpBasePresenter<ISearchActivity> {
                 @Override
                 public void onSuccess(List<? extends ALocation> result) {
                     if (isViewAttached()) {
-                        if (!NetworkUtil.isNetworkAvailable(context) && result == null) {
+                        if (!NetworkUtil.isNetworkConnected(context) && result == null) {
                             getView().showError(new Throwable(Constants.ErrorHandling.NO_INTERNET_CONNECTION), pullToRefresh);
                         } else if (result == null) {
                             getView().showError(new Throwable(Constants.ErrorHandling.DEFAULT), pullToRefresh);

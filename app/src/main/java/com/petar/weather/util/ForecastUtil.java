@@ -15,13 +15,25 @@ import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 /**
- * Created by User on 23.6.2017 г..
+ * Helper used to handle all manipulations with {@link AForecast}.
+ *
+ * @author Petar Krastev
+ * @version 1.0
+ * @since 23.6.2017
  */
-
 public class ForecastUtil {
 
     private static Set<Integer> mForecastHoursContainer;
 
+    /**
+     * Since the API provides multiple data points for a given forecast, this implementation
+     * filters out only the most accurate and relevant points. Out of all data points,
+     * into consideration are taken only the ones with the most recent dates. The end result
+     * is sorted in ascended order.
+     *
+     * @param data All the data points for a given forecast
+     * @return The most accurate forecast data
+     */
     public static List<? extends AForecast> extractData(List<? extends AForecast> data) {
         List<? extends AForecast> result = new ArrayList<>();
 
@@ -48,6 +60,16 @@ public class ForecastUtil {
         return result;
     }
 
+    /**
+     * Extracts the most accurate data points from the forecast data set. Starts by finding the
+     * most recent forecast date from the data set, then extracts all forecast points. If the points
+     * are not equal to {@link Constants#FORECASTS_FOR_A_DAY}, subtracts a day from the most recent date and
+     * repeats the process. A call to {@link #extractDataForDate(List, long)} is used to realize
+     * this implementation.
+     *
+     * @param data All the data points for a given forecast
+     * @return The most accurate forecast data
+     */
     private static List<? extends AForecast> extractDataForTheFuture(List<? extends AForecast> data) {
         List<AForecast> result = new ArrayList<>();
         long date = TimeUtil.convertDateFromISOString(data.get(0).getCreatedDate());
@@ -75,17 +97,36 @@ public class ForecastUtil {
         return result;
     }
 
+    /**
+     * Extracts the most accurate data points from the forecast data set. Starts by finding the
+     * most recent forecast date from the data set, then extracts all forecast points. Since the
+     * date is in the past, we can be assured that the extracted data points are the most
+     * accurate ones.
+     *
+     * @param data All the data points for a given forecast
+     * @return The most accurate forecast data
+     */
     private static List<? extends AForecast> extractDataForThePast(List<? extends AForecast> data) {
         return extractDataForDate(data, TimeUtil.convertDateFromISOString(data.get(0).getApplicableDate()));
     }
 
+    /**
+     * Extracts the most accurate data points from the forecast data set. Starts by finding the
+     * most recent forecast date from the data set, then extracts all forecast points. If the points
+     * are not equal to {@link Constants#FORECASTS_FOR_A_DAY}, subtracts a day from the most recent date
+     * and repeats the process. A call to {@link #extractDataForDate(List, long)} is used to realize
+     * this implementation.
+     *
+     * @param data All the data points for a given forecast
+     * @return The most accurate forecast data
+     */
     private static List<? extends AForecast> extractDataForThePresent(List<? extends AForecast> data) {
         List<AForecast> result = new ArrayList<>();
-        long today = TimeUtil.getCurrentTime();
+        long date = TimeUtil.getCurrentTime();
 
         while (mForecastHoursContainer.size() != Constants.FORECASTS_FOR_A_DAY) {
-            result.addAll(extractDataForDate(data, today));
-            today = TimeUtil.subtractTimeOffsetFromDate(today, TimeUnit.DAYS.toMillis(1));
+            result.addAll(extractDataForDate(data, date));
+            date = TimeUtil.subtractTimeOffsetFromDate(date, TimeUnit.DAYS.toMillis(1));
         }
 
         /*
@@ -106,6 +147,14 @@ public class ForecastUtil {
         return result;
     }
 
+    /**
+     * Extracts all forecast data points for the given date. It may happen that the end
+     * result does not equal {@link Constants#FORECASTS_FOR_A_DAY}!
+     *
+     * @param data All the data points for a given forecast
+     * @param date The date for which the forecasts should be filtered
+     * @return The most accurate forecast data
+     */
     private static List<? extends AForecast> extractDataForDate(List<? extends AForecast> data, long date) {
         List<AForecast> result = new ArrayList<>();
 
@@ -126,6 +175,13 @@ public class ForecastUtil {
         return result;
     }
 
+    /**
+     * Generates appropriate text for the weather state which will be displayed to the user.
+     *
+     * @param context      {@link Context} reference
+     * @param weatherState The weather state, one of type {@link com.petar.weather.app.Constants.APIWeatherStateSummary}
+     * @return Helper text
+     */
     public static String generateTextForWeatherStateSummary(Context context, @Constants.APIWeatherStateSummary String weatherState) {
         switch (weatherState) {
             case Constants.APIWeatherStateSummary.SNOW:

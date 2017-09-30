@@ -6,10 +6,20 @@ import com.petar.weather.ui.recycler.AListenerRecyclerItem;
 import java.util.List;
 
 /**
- * Created by User on 8.7.2017 г..
+ * The mediator between {@link com.petar.weather.ui.fragments.DailyForecastFragment} and
+ * {@link com.petar.weather.presenters.DailyForecastFragmentPresenter}. All methods here
+ * are exposed to the presenter.
+ *
+ * @author Petar Krastev
+ * @version 1.0
+ * @since 8.7.2017
  */
-
 public interface IDailyForecastFragment extends MvpLceView<List<? extends AListenerRecyclerItem>> {
 
-    void showMessage(String message);
+    /**
+     * Shows a message to the user in the form of a {@link android.widget.Toast}.
+     *
+     * @param message The message to be shown
+     */
+    void showToastMessage(String message);
 }

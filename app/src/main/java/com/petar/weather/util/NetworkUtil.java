@@ -5,12 +5,22 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 
 /**
- * Created by User on 18.7.2017 г..
+ * Helper class for managing the network state.
+ *
+ * @author Petar Krastev
+ * @version 1.0
+ * @since 18.7.2017
  */
-
 public class NetworkUtil {
 
-    public static boolean isNetworkAvailable(Context context) {
+    /**
+     * Makes a check if currently the device is connected to an internet connection.
+     * Note, it does not check if there is internet on the connection!
+     *
+     * @param context {@link Context} reference
+     * @return True if a connection is established, false otherwise
+     */
+    public static boolean isNetworkConnected(Context context) {
         try {
             ConnectivityManager manager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
             NetworkInfo activeNetwork = manager.getActiveNetworkInfo();

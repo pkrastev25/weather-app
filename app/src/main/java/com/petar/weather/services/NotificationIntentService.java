@@ -22,13 +22,17 @@ import java.io.IOException;
 import java.util.List;
 
 /**
- * Created by User on 14.9.2017 г..
+ * An {@link IntentService} responsible for building notifications about the
+ * current weather conditions.
+ *
+ * @author Petar Krastev
+ * @version 1.0
+ * @since 14.9.2017
  */
-
 public class NotificationIntentService extends IntentService {
 
     /**
-     * Creates an IntentService.  Invoked by your subclass's constructor.
+     * Creates an IntentService. Invoked by your subclass's constructor.
      *
      * @param name Used to name the worker thread, important only for debugging.
      */
@@ -36,10 +40,21 @@ public class NotificationIntentService extends IntentService {
         super(name);
     }
 
+    /**
+     * Default constructor.
+     */
     public NotificationIntentService() {
         super(NotificationIntentService.class.getSimpleName());
     }
 
+    /**
+     * Retrieves the hourly forecast for the current location either from the database
+     * or by performing an API request, if needed. Finds the most relevant forecast for
+     * the current time and displays it as a notification. If the process failed, displays
+     * a notification with a helper text.
+     *
+     * @param intent Ignored
+     */
     @Override
     protected void onHandleIntent(@Nullable Intent intent) {
         ALocation cachedLocation = PersistenceLogic.getInstance(this).getLocation();
@@ -53,7 +68,7 @@ public class NotificationIntentService extends IntentService {
             long forecastKeyDB = requestDateFormat.hashCode();
 
             try {
-                forecasts = DataLogic.getInstance().getLocationForecastForDate(this, cachedLocation.getIdWOE(), requestDateFormat, true);
+                forecasts = DataLogic.getInstance().getLocationHourlyForecastForDate(this, cachedLocation.getIdWOE(), requestDateFormat, true);
             } catch (IOException e) {
                 forecasts = PersistenceLogic.getInstance(this).getForecast(forecastKeyDB, cachedLocation.getIdWOE());
             }
@@ -81,6 +96,12 @@ public class NotificationIntentService extends IntentService {
         buildErrorNotification();
     }
 
+    /**
+     * Builds a notification with the forecast for the current time. Adds
+     * a text for the current weather state.
+     *
+     * @param forecast The forecast for the current time
+     */
     private void buildForecastNotification(AForecast forecast) {
         NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this);
 
@@ -102,6 +123,10 @@ public class NotificationIntentService extends IntentService {
         notificationManager.notify(Constants.NOTIFICATION_NOTIFY_ID, notificationBuilder.build());
     }
 
+    /**
+     * Builds a notification with a helper text explaining the user why the application
+     * cannot find the forecast for the current time.
+     */
     private void buildErrorNotification() {
         NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this);
 

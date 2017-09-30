@@ -10,11 +10,19 @@ import com.petar.weather.ui.fragments.SettingsFragment;
 import com.petar.weather.app.Constants;
 
 /**
- * Created by User on 1.7.2017 г..
+ * Base {@link FragmentPagerAdapter} for the {@link com.petar.weather.app.Constants.ViewPagerFragmentPositions}.
+ *
+ * @author Petar Krastev
+ * @version 1.0
+ * @since 1.7.2017
  */
-
 public class ViewPagerFragmentAdapter extends FragmentPagerAdapter {
 
+    /**
+     * Initializes the {@link ViewPagerFragmentAdapter}.
+     *
+     * @param fm {@link FragmentManager} used by the adapter
+     */
     public ViewPagerFragmentAdapter(FragmentManager fm) {
         super(fm);
     }

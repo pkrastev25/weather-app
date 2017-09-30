@@ -1,4 +1,5 @@
 package com.petar.weather.persistence.models;
+
 import android.os.Parcel;
 
 import com.petar.weather.logic.models.ALocation;
@@ -12,9 +13,12 @@ import org.greenrobot.greendao.annotation.Keep;
 import org.greenrobot.greendao.annotation.Generated;
 
 /**
- * Created by User on 18.7.2017 г..
+ * Persistence model for a location.
+ *
+ * @author Petar Krastev
+ * @version 1.0
+ * @since 18.7.2017
  */
-
 @Entity(
         generateConstructors = false
 )
@@ -27,6 +31,11 @@ public class PLocation extends ALocation {
     private int distance;
     private String title;
 
+    /**
+     * Initialize a new object.
+     *
+     * @param location {@link NLocation} to be persisted
+     */
     @Keep
     public PLocation(NLocation location) {
         keyDB = Constants.DB_CURRENT_LOCATION_KEY;
@@ -90,10 +99,13 @@ public class PLocation extends ALocation {
         return Constants.RecyclerItems.LOCATION_ITEM;
     }
 
+    // --------------------------------------------------------
+    // PARCELABLE region
+    // --------------------------------------------------------
+
     /**
-     * Based on https://stackoverflow.com/questions/4076946/parcelable-where-when-is-describecontents-used
-     *
-     * @return
+     * @return {@link #CONTENTS_FILE_DESCRIPTOR}
+     * @see <a href="https://stackoverflow.com/questions/4076946/parcelable-where-when-is-describecontents-used">https://stackoverflow.com/questions/4076946/parcelable-where-when-is-describecontents-used</a>
      */
     @Override
     public int describeContents() {

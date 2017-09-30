@@ -24,6 +24,15 @@ import com.petar.weather.util.ErrorHandlingUtil;
 
 import java.util.List;
 
+/**
+ * Provides functionality for searching for any location. The location can be of
+ * a type string name or in the form of coordinates. Shows results based on
+ * the location query.
+ *
+ * @author Petar Krastev
+ * @version 1.0
+ * @since 28.8.2017
+ */
 public class SearchActivity extends MvpLceViewStateActivity<RecyclerView, List<? extends AListenerRecyclerItem>, ISearchActivity, SearchActivityPresenter>
         implements ISearchActivity, SearchView.OnQueryTextListener, ALocation.ILocationListener {
 
@@ -31,7 +40,10 @@ public class SearchActivity extends MvpLceViewStateActivity<RecyclerView, List<?
     private String mTypedText;
     private BaseRecyclerAdapter mAdapter;
 
+    // --------------------------------------------------------
     // GENERAL ACTIVITY region
+    // --------------------------------------------------------
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,9 +67,15 @@ public class SearchActivity extends MvpLceViewStateActivity<RecyclerView, List<?
         mSearchView = null;
         mAdapter = null;
     }
-    // End of GENERAL ACTIVITY region
 
+    // --------------------------------------------------------
+    // End of GENERAL ACTIVITY region
+    // --------------------------------------------------------
+
+    // --------------------------------------------------------
     // MVP-LCE-VIEW-STATE-ACTIVITY region
+    // --------------------------------------------------------
+
     @Override
     public SearchActivityPresenter createPresenter() {
         return new SearchActivityPresenter();
@@ -93,13 +111,14 @@ public class SearchActivity extends MvpLceViewStateActivity<RecyclerView, List<?
         return new ParcelableListLceViewState<>();
     }
 
-    @Override
-    public void showMessage(String message) {
-        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
-    }
+    // --------------------------------------------------------
     // End of MVP-LCE-VIEW-STATE-ACTIVITY region
+    // --------------------------------------------------------
 
+    // --------------------------------------------------------
     // SEARCH region
+    // --------------------------------------------------------
+
     @Override
     public boolean onQueryTextSubmit(String query) {
         presenter.processQuery(this, query, false);
@@ -111,15 +130,24 @@ public class SearchActivity extends MvpLceViewStateActivity<RecyclerView, List<?
         mTypedText = newText;
         return true;
     }
-    // End of SEARCH region
 
+    // --------------------------------------------------------
+    // End of SEARCH region
+    // --------------------------------------------------------
+
+    // --------------------------------------------------------
     // ACTIVITY-LOCATION COMMUNICATION region
+    // --------------------------------------------------------
+
     @Override
-    public void onItemClick(ALocation location) {
+    public void onLocationChosen(ALocation location) {
         Intent intent = new Intent(this, ForecastActivity.class);
         intent.putExtra(Constants.BUNDLE_LOCATION_FROM_SEARCH_KEY, location);
         startActivity(intent);
         finish();
     }
+
+    // --------------------------------------------------------
     // End of ACTIVITY-LOCATION COMMUNICATION region
+    // --------------------------------------------------------
 }

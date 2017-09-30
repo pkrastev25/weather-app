@@ -19,10 +19,23 @@ import com.petar.weather.R;
 import com.petar.weather.databinding.ActivityMainBinding;
 import com.petar.weather.app.Constants;
 
+/**
+ * Main entry point of the application. Displays a splash screen, checks if the
+ * user has enabled location permissions for this application, asks him if needed.
+ * Navigates to the {@link ForecastActivity} if the permissions are fulfilled.
+ *
+ * @author Petar Krastev
+ * @version 1.0
+ * @since 22.6.2017
+ */
 public class MainActivity extends AppCompatActivity implements Animation.AnimationListener {
 
     private View mSplashScreen;
     private AlphaAnimation mAnimation;
+
+    // --------------------------------------------------------
+    // GENERAL-ACTIVITY region
+    // --------------------------------------------------------
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +63,17 @@ public class MainActivity extends AppCompatActivity implements Animation.Animati
         mAnimation = null;
     }
 
+    // --------------------------------------------------------
+    // End of GENERAL-ACTIVITY region
+    // --------------------------------------------------------
+
+    // --------------------------------------------------------
+    // PERMISSIONS region
+    // --------------------------------------------------------
+
+    /**
+     * Makes a check for the location permissions.
+     */
     private void checkPermissions() {
         if (arePermissionsAllowed()) {
             navigateToForecastActivity();
@@ -58,12 +82,22 @@ public class MainActivity extends AppCompatActivity implements Animation.Animati
         }
     }
 
+    /**
+     * Makes a check if the user already gave location permissions.
+     *
+     * @return True if the permissions are granted, false otherwise
+     */
     private boolean arePermissionsAllowed() {
         return ContextCompat.checkSelfPermission(
                 this, Manifest.permission.ACCESS_FINE_LOCATION
         ) == PackageManager.PERMISSION_GRANTED;
     }
 
+    /**
+     * Requests the location permissions from the user. Displays a dialog in which the user
+     * can decide whether or not to grant them. If already declined, it will display another
+     * dialog stating that the app cannot be used without the location permissions.
+     */
     private void onRequestPermissions() {
         if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.ACCESS_FINE_LOCATION)) {
             showExplanationDialog();
@@ -76,6 +110,10 @@ public class MainActivity extends AppCompatActivity implements Animation.Animati
         }
     }
 
+    /**
+     * Shows a dialog to the user explaining that this application cannot be used
+     * without location permissions.
+     */
     private void showExplanationDialog() {
         final AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
@@ -113,12 +151,23 @@ public class MainActivity extends AppCompatActivity implements Animation.Animati
         }
     }
 
+    /**
+     * Navigates to {@link ForecastActivity}.
+     */
     public void navigateToForecastActivity() {
         startActivity(
                 new Intent(this, ForecastActivity.class)
         );
         finish();
     }
+
+    // --------------------------------------------------------
+    // End of PERMISSIONS region
+    // --------------------------------------------------------
+
+    // --------------------------------------------------------
+    // ANIMATION region
+    // --------------------------------------------------------
 
     @Override
     public void onAnimationStart(Animation animation) {
@@ -134,4 +183,8 @@ public class MainActivity extends AppCompatActivity implements Animation.Animati
     public void onAnimationRepeat(Animation animation) {
         // Do nothing, for now...
     }
+
+    // --------------------------------------------------------
+    // End of ANIMATION region
+    // --------------------------------------------------------
 }

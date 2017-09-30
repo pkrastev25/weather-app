@@ -9,15 +9,28 @@ import com.petar.weather.app.Constants;
 import com.petar.weather.networking.ApiLogic;
 
 /**
- * Created by User on 8.7.2017 г..
+ * Contains all bindings related to {@link ImageView}.
+ *
+ * @author Petar Krastev
+ * @version 1.0
+ * @since 8.7.2017
  */
-
 public class ImageViewBindings {
 
-    @BindingAdapter("imageUrl")
+    /**
+     * Loads the specified image resource using {@link Glide}. Provides a
+     * error placeholder if the image resource could not be loaded.
+     *
+     * @param view The view in which the image resource will be loaded
+     * @param type The type of resource that must be loaded, must be one of {@link com.petar.weather.app.Constants.APIWeatherStateSummary}
+     */
+    @BindingAdapter({"app:imageUrl"})
     public static void loadImage(ImageView view, @Constants.APIWeatherStateSummary String type) {
-        Glide.with(view.getContext()).load(
-                ApiLogic.getInstance().getPNGImageUrl(type)
-        ).error(R.mipmap.ic_launcher).into(view);
+        Glide.with(view.getContext())
+                .load(
+                        ApiLogic.getInstance().getPNGImageUrl(type)
+                )
+                .error(R.mipmap.ic_launcher)
+                .into(view);
     }
 }

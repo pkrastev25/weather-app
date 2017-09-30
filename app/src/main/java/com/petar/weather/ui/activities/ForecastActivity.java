@@ -33,6 +33,8 @@ import com.hannesdorfmann.mosby3.mvp.viewstate.lce.MvpLceViewStateActivity;
 import com.hannesdorfmann.mosby3.mvp.viewstate.lce.data.ParcelableDataLceViewState;
 import com.petar.weather.R;
 import com.petar.weather.databinding.ActivityForecastBinding;
+import com.petar.weather.listeners.IForecastActivityForDailyForecastFragmentListener;
+import com.petar.weather.listeners.IForecastActivityForHourlyForecastFragmentListener;
 import com.petar.weather.listeners.IForecastFragmentListener;
 import com.petar.weather.logic.models.ALocation;
 import com.petar.weather.persistence.PersistenceLogic;
@@ -43,9 +45,20 @@ import com.petar.weather.ui.views.IToolbarView;
 import com.petar.weather.app.Constants;
 import com.petar.weather.util.ErrorHandlingUtil;
 
-public class ForecastActivity extends MvpLceViewStateActivity<ViewPager, ALocation, IForecastActivity, ForecastActivityPresenter>
+/**
+ * Main activity for the forecast state. Renders a toolbar and a view pager
+ * with the different forecast types, as well as settings. Contains logic for finding
+ * the current location.
+ *
+ * @author Petar Krastev
+ * @version 1.0
+ * @since 23.6.2017
+ */
+public class ForecastActivity
+        extends MvpLceViewStateActivity<ViewPager, ALocation, IForecastActivity, ForecastActivityPresenter>
         implements IForecastActivity, IToolbarView, IForecastFragmentListener, OnSuccessListener<LocationSettingsResponse>, OnFailureListener, OnCompleteListener<LocationSettingsResponse> {
 
+    // Current location
     private ALocation mCurrentLocation;
 
     // LOCATION helpers
@@ -59,10 +72,13 @@ public class ForecastActivity extends MvpLceViewStateActivity<ViewPager, ALocati
     private ObservableField<String> mCurrentLocationTitle;
 
     // ACTIVITY-FRAGMENT COMMUNICATION helpers
-    private IDailyForecastFragmentListener mDailyForecastFragmentListener;
-    private IHourlyForecastFragmentListener mHourlyForecastFragmentListener;
+    private IForecastActivityForDailyForecastFragmentListener mDailyForecastFragmentListener;
+    private IForecastActivityForHourlyForecastFragmentListener mHourlyForecastFragmentListener;
 
+    // --------------------------------------------------------
     // GENERAL ACTIVITY region
+    // --------------------------------------------------------
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -88,12 +104,14 @@ public class ForecastActivity extends MvpLceViewStateActivity<ViewPager, ALocati
             }
         };
 
+        // The user might want to know the forecast for another location
         Bundle bundle = getIntent().getExtras();
 
         if (bundle != null) {
             mCurrentLocation = bundle.getParcelable(Constants.BUNDLE_LOCATION_FROM_SEARCH_KEY);
         }
 
+        // Do not start the location finding logic if it was enabled recently
         if (mCurrentLocation == null && !PersistenceLogic.getInstance(this).shouldLocationDataUpdate()) {
             mCurrentLocation = PersistenceLogic.getInstance(this).getLocation();
         }
@@ -107,6 +125,7 @@ public class ForecastActivity extends MvpLceViewStateActivity<ViewPager, ALocati
     protected void onResume() {
         super.onResume();
 
+        // Resume location updates, if they were running before the application was paused
         if (mCurrentLocation == null && mRequestingLocationUpdates) {
             findLocation();
         }
@@ -116,6 +135,7 @@ public class ForecastActivity extends MvpLceViewStateActivity<ViewPager, ALocati
     protected void onPause() {
         super.onPause();
 
+        // Disable location updates, saves battery life!
         mFusedLocationProviderClient.removeLocationUpdates(mLocationCallback);
     }
 
@@ -129,9 +149,15 @@ public class ForecastActivity extends MvpLceViewStateActivity<ViewPager, ALocati
         mDailyForecastFragmentListener = null;
         mHourlyForecastFragmentListener = null;
     }
-    // End of GENERAL ACTIVITY region
 
+    // --------------------------------------------------------
+    // End of GENERAL ACTIVITY region
+    // --------------------------------------------------------
+
+    // --------------------------------------------------------
     // MVP-LCE-VIEW-STATE-ACTIVITY region
+    // --------------------------------------------------------
+
     @NonNull
     @Override
     public ForecastActivityPresenter createPresenter() {
@@ -173,7 +199,7 @@ public class ForecastActivity extends MvpLceViewStateActivity<ViewPager, ALocati
     }
 
     @Override
-    public void showMessage(String message) {
+    public void showToastMessage(String message) {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
     }
 
@@ -187,9 +213,15 @@ public class ForecastActivity extends MvpLceViewStateActivity<ViewPager, ALocati
         mCurrentLocationTitle.set(mCurrentLocation.getTitle());
         viewState.setStateShowContent(getData());
     }
-    // End of MVP-LCE-VIEW-STATE-ACTIVITY region
 
+    // --------------------------------------------------------
+    // End of MVP-LCE-VIEW-STATE-ACTIVITY region
+    // --------------------------------------------------------
+
+    // --------------------------------------------------------
     // TOOLBAR section
+    // --------------------------------------------------------
+
     @Override
     public ObservableField<String> getCurrentLocationTitle() {
         return mCurrentLocationTitle;
@@ -201,23 +233,30 @@ public class ForecastActivity extends MvpLceViewStateActivity<ViewPager, ALocati
     }
 
     @Override
-    public void onCurrentLocationClick() {
-        // TODO: Implement
-    }
-
-    @Override
     public void onSearchClick() {
         startActivity(
                 new Intent(this, SearchActivity.class)
         );
     }
-    // End of TOOLBAR section
 
+    // --------------------------------------------------------
+    // End of TOOLBAR section
+    // --------------------------------------------------------
+
+    // --------------------------------------------------------
     // LOCATION region
+    // --------------------------------------------------------
+
+    /**
+     * Starts the process of finding the current location of the user. Creates a new instance
+     * of {@link LocationRequest}, if needed, and starts a {@link Task} which checks if
+     * the currently configured settings are sufficient for receiving location updates.
+     */
     private void findLocation() {
         mRequestingLocationUpdates = true;
         mCurrentLocationTitle.set(getResources().getString(R.string.toolbar_location_hint));
 
+        // Do not create another instance, the contents are static
         if (mLocationRequest == null) {
             mLocationRequest = new LocationRequest();
             mLocationRequest.setInterval(Constants.LOCATION_UPDATE_INTERVAL_MILLIS);
@@ -225,6 +264,7 @@ public class ForecastActivity extends MvpLceViewStateActivity<ViewPager, ALocati
             mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
         }
 
+        // Do not start a task, if there is one already running
         if (!mIsTaskStarted) {
             mIsTaskStarted = true;
             presenter.onLocationTaskStatusChange(true);
@@ -237,6 +277,11 @@ public class ForecastActivity extends MvpLceViewStateActivity<ViewPager, ALocati
         }
     }
 
+    /**
+     * The currently configured settings are sufficient, start the location updates.
+     *
+     * @param locationSettingsResponse Ignored
+     */
     @Override
     public void onSuccess(LocationSettingsResponse locationSettingsResponse) {
         try {
@@ -246,6 +291,9 @@ public class ForecastActivity extends MvpLceViewStateActivity<ViewPager, ALocati
         }
     }
 
+    /**
+     * Navigates to the {@link MainActivity} and asks the user for permissions.
+     */
     private void requestPermissions() {
         startActivity(
                 new Intent(this, MainActivity.class)
@@ -253,6 +301,12 @@ public class ForecastActivity extends MvpLceViewStateActivity<ViewPager, ALocati
         finish();
     }
 
+    /**
+     * The currently configured settings are insufficient. Attempts to resolve
+     * the issue by showing the user dialogs.
+     *
+     * @param e The cause of the configuration failure
+     */
     @Override
     public void onFailure(@NonNull Exception e) {
         try {
@@ -278,6 +332,13 @@ public class ForecastActivity extends MvpLceViewStateActivity<ViewPager, ALocati
         presenter.onLocationTaskStatusChange(false);
     }
 
+    /**
+     * Handles a {@link com.petar.weather.app.Constants.ErrorHandling#DEFAULT} error.
+     * Stops the location updates and displays an error text to the user. If required,
+     * displays an extra dialog.
+     *
+     * @param showDialog If set to true, displays a dialog with instructions, false otherwise
+     */
     private void handleGeneralError(boolean showDialog) {
         mRequestingLocationUpdates = false;
         mFusedLocationProviderClient.removeLocationUpdates(mLocationCallback);
@@ -305,10 +366,14 @@ public class ForecastActivity extends MvpLceViewStateActivity<ViewPager, ALocati
         }
     }
 
+    /**
+     * Shows a dialog to the user when the location updates failed to execute. Gives instructions
+     * on how could the error be resolved.
+     */
     private void showEnableSettingsDialog() {
-        final AlertDialog.Builder dialog = new AlertDialog.Builder(this);
+        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
         // TODO: Add a custom implementation that links to the corresponding settings
-        dialog.setTitle(R.string.alert_dialog_location_not_found_header)
+        builder.setTitle(R.string.alert_dialog_location_not_found_header)
                 .setMessage(R.string.alert_dialog_location_not_found_text)
                 .setPositiveButton(R.string.button_settings, new DialogInterface.OnClickListener() {
                     @Override
@@ -325,21 +390,24 @@ public class ForecastActivity extends MvpLceViewStateActivity<ViewPager, ALocati
                     }
                 });
 
-        dialog.show();
+        builder.show();
     }
+
+    // --------------------------------------------------------
     // End of LOCATION region
+    // --------------------------------------------------------
 
+    // --------------------------------------------------------
     // ACTIVITY-FRAGMENT COMMUNICATION region
-    private interface IForecastActivityListener {
-        void onLocationFound(@NonNull Integer idWOE);
-    }
+    // --------------------------------------------------------
 
-    public interface IDailyForecastFragmentListener extends IForecastActivityListener {
-    }
-
-    public interface IHourlyForecastFragmentListener extends IForecastActivityListener {
-    }
-
+    /**
+     * Invokes the listeners for {@link com.petar.weather.ui.fragments.HourlyForecastFragment}
+     * and {@link com.petar.weather.ui.fragments.DailyForecastFragment} that the current location
+     * is found.
+     *
+     * @param idWOE 'Where on Earth' id, identifies a location
+     */
     public void onLocationFound(Integer idWOE) {
         if (mHourlyForecastFragmentListener != null) {
             mHourlyForecastFragmentListener.onLocationFound(idWOE);
@@ -350,21 +418,30 @@ public class ForecastActivity extends MvpLceViewStateActivity<ViewPager, ALocati
         }
     }
 
-    public void setDailyForecastFragmentListener(IDailyForecastFragmentListener dailyForecastFragmentListener) {
+    public void setDailyForecastFragmentListener(IForecastActivityForDailyForecastFragmentListener dailyForecastFragmentListener) {
         mDailyForecastFragmentListener = dailyForecastFragmentListener;
     }
 
-    public void setHourlyForecastFragmentListener(IHourlyForecastFragmentListener hourlyForecastFragmentListener) {
+    public void setHourlyForecastFragmentListener(IForecastActivityForHourlyForecastFragmentListener hourlyForecastFragmentListener) {
         mHourlyForecastFragmentListener = hourlyForecastFragmentListener;
     }
-    // End of ACTIVITY-FRAGMENT COMMUNICATION region
 
+    // --------------------------------------------------------
+    // End of ACTIVITY-FRAGMENT COMMUNICATION region
+    // --------------------------------------------------------
+
+    // --------------------------------------------------------
     // FRAGMENT-ACTIVITY COMMUNICATION region
+    // --------------------------------------------------------
+
     @Override
     public void onFragmentCreated() {
         if (mCurrentLocation != null) {
             onLocationFound(mCurrentLocation.getIdWOE());
         }
     }
+
+    // --------------------------------------------------------
     // End of FRAGMENT-ACTIVITY COMMUNICATION region
+    // --------------------------------------------------------
 }

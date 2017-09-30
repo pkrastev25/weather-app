@@ -21,6 +21,7 @@ import com.hannesdorfmann.mosby3.mvp.viewstate.lce.MvpLceViewStateFragment;
 import com.hannesdorfmann.mosby3.mvp.viewstate.lce.data.ParcelableListLceViewState;
 import com.petar.weather.R;
 import com.petar.weather.databinding.FragmentHourlyForecastBinding;
+import com.petar.weather.listeners.IForecastActivityForHourlyForecastFragmentListener;
 import com.petar.weather.listeners.IForecastFragmentListener;
 import com.petar.weather.logic.models.AForecast;
 import com.petar.weather.presenters.HourlyForecastFragmentPresenter;
@@ -37,10 +38,15 @@ import com.petar.weather.util.TimeUtil;
 import java.util.List;
 
 /**
- * A simple {@link Fragment} subclass.
+ * A {@link Fragment} used to display the hourly forecast data.
+ *
+ * @author Petar Krastev
+ * @version 1.0
+ * @since 8.7.2017
  */
-public class HourlyForecastFragment extends MvpLceViewStateFragment<SwipeRefreshLayout, List<? extends AListenerRecyclerItem>, IHourlyForecastFragment, HourlyForecastFragmentPresenter>
-        implements IHourlyForecastFragment, ForecastActivity.IHourlyForecastFragmentListener, AForecast.IForecastListener, SwipeRefreshLayout.OnRefreshListener {
+public class HourlyForecastFragment
+        extends MvpLceViewStateFragment<SwipeRefreshLayout, List<? extends AListenerRecyclerItem>, IHourlyForecastFragment, HourlyForecastFragmentPresenter>
+        implements IHourlyForecastFragment, IForecastActivityForHourlyForecastFragmentListener, AForecast.IForecastListener, SwipeRefreshLayout.OnRefreshListener {
 
     private Integer mIdWOE;
     private RecyclerView mRecyclerView;
@@ -49,7 +55,10 @@ public class HourlyForecastFragment extends MvpLceViewStateFragment<SwipeRefresh
 
     private IForecastFragmentListener mListener;
 
+    // --------------------------------------------------------
     // GENERAL FRAGMENT region
+    // --------------------------------------------------------
+
     public HourlyForecastFragment() {
         // Required empty public constructor
     }
@@ -91,7 +100,7 @@ public class HourlyForecastFragment extends MvpLceViewStateFragment<SwipeRefresh
                     int visibleItemCount = layoutManager.findLastVisibleItemPosition() + 1;
 
                     if (visibleItemCount == totalItemCount && !presenter.isLoading()) {
-                        presenter.loadNextForecast(getContext(), mIdWOE, true);
+                        presenter.loadHourlyForecastForNextDay(getContext(), mIdWOE, true);
                     }
                 }
             }
@@ -120,16 +129,28 @@ public class HourlyForecastFragment extends MvpLceViewStateFragment<SwipeRefresh
         ((ForecastActivity) getActivity()).setHourlyForecastFragmentListener(null);
         mListener = null;
     }
-    // End of GENERAL FRAGMENT region
 
+    // --------------------------------------------------------
+    // End of GENERAL FRAGMENT region
+    // --------------------------------------------------------
+
+    // --------------------------------------------------------
     // SWIPE-TO-REFRESH region
+    // --------------------------------------------------------
+
     @Override
     public void onRefresh() {
         loadData(true);
     }
-    // End of SWIPE-TO-REFRESH region
 
+    // --------------------------------------------------------
+    // End of SWIPE-TO-REFRESH region
+    // --------------------------------------------------------
+
+    // --------------------------------------------------------
     // MVP-LCE-VIEW-STATE-FRAGMENT region
+    // --------------------------------------------------------
+
     @NonNull
     @Override
     public HourlyForecastFragmentPresenter createPresenter() {
@@ -139,7 +160,7 @@ public class HourlyForecastFragment extends MvpLceViewStateFragment<SwipeRefresh
     @Override
     public void loadData(boolean pullToRefresh) {
         if (mIdWOE != null) {
-            presenter.loadForecastForToday(getContext(), mIdWOE, pullToRefresh);
+            presenter.loadHourlyForecastForToday(getContext(), mIdWOE, pullToRefresh);
         }
     }
 
@@ -178,12 +199,12 @@ public class HourlyForecastFragment extends MvpLceViewStateFragment<SwipeRefresh
     }
 
     @Override
-    public void showMessage(String message) {
+    public void showToastMessage(String message) {
         Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
     }
 
     @Override
-    public void addNextForecast(List<? extends AListenerRecyclerItem> data) {
+    public void addNextDayForecast(List<? extends AListenerRecyclerItem> data) {
         for (AListenerRecyclerItem current : data) {
             current.setListener(this);
         }
@@ -218,26 +239,41 @@ public class HourlyForecastFragment extends MvpLceViewStateFragment<SwipeRefresh
     public void removeLoadingRecyclerItem() {
         mAdapter.removeItem(mLoadingRecyclerItem);
     }
-    // End of MVP-LCE-VIEW-STATE-FRAGMENT region
 
+    // --------------------------------------------------------
+    // End of MVP-LCE-VIEW-STATE-FRAGMENT region
+    // --------------------------------------------------------
+
+    // --------------------------------------------------------
     // ACTIVITY-FRAGMENT COMMUNICATION region
+    // --------------------------------------------------------
+
     @Override
     public void onLocationFound(@NonNull Integer idWOE) {
         boolean didIdChange = !idWOE.equals(mIdWOE);
         mIdWOE = idWOE;
 
         if (didIdChange && presenter != null) {
-            presenter.loadForecastForToday(getContext(), idWOE, false);
+            presenter.loadHourlyForecastForToday(getContext(), idWOE, false);
         }
     }
-    // End of ACTIVITY-FRAGMENT COMMUNICATION region
 
+    // --------------------------------------------------------
+    // End of ACTIVITY-FRAGMENT COMMUNICATION region
+    // --------------------------------------------------------
+
+    // --------------------------------------------------------
     // FRAGMENT-FORECAST COMMUNICATION region
+    // --------------------------------------------------------
+
     @Override
-    public void onItemClick(AForecast forecast) {
+    public void onShowForecastDetails(AForecast forecast) {
         Intent intent = new Intent(getActivity(), ForecastDetailsActivity.class);
         intent.putExtra(Constants.BUNDLE_FORECAST_DETAILS_KEY, forecast);
         startActivity(intent);
     }
+
+    // --------------------------------------------------------
     // End of FRAGMENT-FORECAST COMMUNICATION region
+    // --------------------------------------------------------
 }

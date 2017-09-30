@@ -11,6 +11,13 @@ import com.petar.weather.databinding.ActivityForecastDetailsBinding;
 import com.petar.weather.logic.models.AForecast;
 import com.petar.weather.app.Constants;
 
+/**
+ * Displays in-depth information about the given forecast.
+ *
+ * @author Petar Krastev
+ * @version 1.0
+ * @since 9.7.2017
+ */
 public class ForecastDetailsActivity extends AppCompatActivity {
 
     private ObservableParcelable<AForecast> mForecast;

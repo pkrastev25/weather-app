@@ -11,9 +11,12 @@ import org.greenrobot.greendao.annotation.Keep;
 import org.greenrobot.greendao.annotation.Generated;
 
 /**
- * Created by User on 19.7.2017 г..
+ * Persistence model for a forecast.
+ *
+ * @author Petar Krastev
+ * @version 1.0
+ * @since 19.7.2017
  */
-
 @Entity(
         generateConstructors = false
 )
@@ -26,6 +29,14 @@ public class PForecast implements Comparable<PForecast> {
     private long timestamp;
     private String forecasts;
 
+    /**
+     * Initialize a new object.
+     *
+     * @param keyDB     Unique identifier for this object inside the database
+     * @param idWOE     'Where on Earth ID', identifies a location
+     * @param date      The date for the forecast
+     * @param forecasts Raw JSON response containing the forecasts
+     */
     @Keep
     public PForecast(long keyDB, long idWOE, String date, String forecasts) {
         this.keyDB = keyDB;
@@ -35,11 +46,19 @@ public class PForecast implements Comparable<PForecast> {
         this.forecasts = forecasts;
     }
 
+    /**
+     * Initialize a new object.
+     *
+     * @param keyDB     Unique identifier for this object inside the database
+     * @param idWOE     'Where on Earth ID', identifies a location
+     * @param timestamp Representation of the date for the forecast in milliseconds, used mainly for sorting the {@link PForecast} objects
+     * @param forecasts Raw JSON response containing the forecasts
+     */
     @Keep
     public PForecast(long keyDB, long idWOE, long timestamp, String forecasts) {
         this.keyDB = keyDB;
         this.idWOE = idWOE;
-        this.expireTime = TimeUtil.getCurrentTimeWithOffset(Constants.FORECAST_WEEKLY_TIME_OFFSET_FOR_CACHED_DATA_MILLIS);
+        this.expireTime = TimeUtil.getCurrentTimeWithOffset(Constants.FORECAST_DAILY_TIME_OFFSET_FOR_CACHED_DATA_MILLIS);
         this.timestamp = timestamp;
         this.forecasts = forecasts;
     }

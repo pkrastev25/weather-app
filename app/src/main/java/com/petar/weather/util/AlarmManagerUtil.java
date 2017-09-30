@@ -10,11 +10,20 @@ import com.petar.weather.app.Constants;
 import com.petar.weather.receivers.AlarmReceiver;
 
 /**
- * Created by User on 14.9.2017 г..
+ * Helper class for manipulating the {@link AlarmManager}.
+ *
+ * @author Petar Krastev
+ * @version 1.0
+ * @since 14.9.2017
  */
-
 public class AlarmManagerUtil {
 
+    /**
+     * Schedules alarms at inexact repeating intervals of {@link Constants#NOTIFICATION_INTERVAL_TIME_MILLIS}.
+     * Starts {@link AlarmReceiver} when the interval time passed.
+     *
+     * @param context {@link Context} reference
+     */
     public static void startAlarm(Context context) {
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         Intent alarmIntent = new Intent(context, AlarmReceiver.class);
@@ -34,6 +43,11 @@ public class AlarmManagerUtil {
         );
     }
 
+    /**
+     * Stops the scheduled alarms.
+     *
+     * @param context {@link Context} reference
+     */
     public static void stopAlarm(Context context) {
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         Intent alarmIntent = new Intent(context, AlarmReceiver.class);

@@ -5,9 +5,12 @@ import android.os.Parcel;
 import com.petar.weather.app.Constants;
 
 /**
- * Created by User on 20.8.2017 г..
+ * A simple loading item.
+ *
+ * @author Petar Krastev
+ * @version 1.0
+ * @since 20.8.2017
  */
-
 public class LoadingRecyclerItem extends AListenerRecyclerItem {
 
     @Override
@@ -15,10 +18,13 @@ public class LoadingRecyclerItem extends AListenerRecyclerItem {
         return Constants.RecyclerItems.LOADING_ITEM;
     }
 
+    // --------------------------------------------------------
+    // PARCELABLE region
+    // --------------------------------------------------------
+
     /**
-     * Based on https://stackoverflow.com/questions/4076946/parcelable-where-when-is-describecontents-used
-     *
-     * @return
+     * @return #CONTENTS_FILE_DESCRIPTOR
+     * @see <a href="https://stackoverflow.com/questions/4076946/parcelable-where-when-is-describecontents-used">https://stackoverflow.com/questions/4076946/parcelable-where-when-is-describecontents-used</a>
      */
     @Override
     public int describeContents() {

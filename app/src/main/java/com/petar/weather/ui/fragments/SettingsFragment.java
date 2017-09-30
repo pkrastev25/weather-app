@@ -19,11 +19,21 @@ import com.petar.weather.databinding.FragmentSettingsBinding;
 import com.petar.weather.util.AlarmManagerUtil;
 
 /**
- * A simple {@link Fragment} subclass.
+ * A {@link Fragment} used to display the settings for this application.
+ *
+ * @author Petar Krastev
+ * @version 1.0
+ * @since 8.7.2017
  */
-public class SettingsFragment extends Fragment implements CompoundButton.OnCheckedChangeListener {
+public class SettingsFragment
+        extends Fragment
+        implements CompoundButton.OnCheckedChangeListener {
 
     private ToggleButton mToggleButton;
+
+    // --------------------------------------------------------
+    // GENERAL-ACTIVITY region
+    // --------------------------------------------------------
 
     public SettingsFragment() {
         // Required empty public constructor
@@ -57,6 +67,14 @@ public class SettingsFragment extends Fragment implements CompoundButton.OnCheck
         mToggleButton = null;
     }
 
+    // --------------------------------------------------------
+    // End of GENERAL-ACTIVITY region
+    // --------------------------------------------------------
+
+    // --------------------------------------------------------
+    // TOGGLE-BUTTON region
+    // --------------------------------------------------------
+
     @Override
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
         SharedPreferences preferences = getContext().getSharedPreferences(getContext().getPackageName(), Context.MODE_PRIVATE);
@@ -68,4 +86,8 @@ public class SettingsFragment extends Fragment implements CompoundButton.OnCheck
             AlarmManagerUtil.stopAlarm(getContext());
         }
     }
+
+    // --------------------------------------------------------
+    // End of TOGGLE-BUTTON region
+    // --------------------------------------------------------
 }

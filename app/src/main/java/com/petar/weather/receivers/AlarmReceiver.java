@@ -7,11 +7,20 @@ import android.content.Intent;
 import com.petar.weather.services.NotificationIntentService;
 
 /**
- * Created by User on 14.9.2017 г..
+ * A {@link BroadcastReceiver} invoked by the {@link com.petar.weather.util.AlarmManagerUtil}.
+ *
+ * @author Petar Krastev
+ * @version 1.0
+ * @since 14.9.2017
  */
-
 public class AlarmReceiver extends BroadcastReceiver {
 
+    /**
+     * Starts the {@link NotificationIntentService}.
+     *
+     * @param context {@link Context} reference
+     * @param intent  Ignored
+     */
     @Override
     public void onReceive(Context context, Intent intent) {
         Intent notificationIntent = new Intent(context, NotificationIntentService.class);

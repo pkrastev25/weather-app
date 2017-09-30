@@ -7,9 +7,13 @@ import com.petar.weather.logic.models.AForecast;
 import com.petar.weather.app.Constants;
 
 /**
- * Created by User on 21.6.2017 г..
+ * Networking model for a forecast that is mapped to the API response.
+ *
+ * @author Petar Krastev
+ * @version 1.0
+ * @see <a href="http://www.jsonschema2pojo.org/">http://www.jsonschema2pojo.org/</a>
+ * @since 21.6.2017
  */
-
 public class NForecast extends AForecast {
 
     @SerializedName("id")
@@ -119,9 +123,17 @@ public class NForecast extends AForecast {
         return Constants.RecyclerItems.FORECAST_ITEM;
     }
 
+    // --------------------------------------------------------
+    // PARCELABLE region
+    // --------------------------------------------------------
+
     public NForecast() {
     }
 
+    /**
+     * @return #CONTENTS_FILE_DESCRIPTOR
+     * @see <a href="https://stackoverflow.com/questions/4076946/parcelable-where-when-is-describecontents-used">https://stackoverflow.com/questions/4076946/parcelable-where-when-is-describecontents-used</a>
+     */
     @Override
     public int describeContents() {
         return CONTENTS_FILE_DESCRIPTOR;

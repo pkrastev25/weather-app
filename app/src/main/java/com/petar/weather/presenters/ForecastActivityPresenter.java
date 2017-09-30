@@ -15,19 +15,35 @@ import com.petar.weather.util.FormatUtil;
 import com.petar.weather.util.NetworkUtil;
 
 /**
- * Created by User on 23.6.2017 г..
+ * Contains the business logic for the {@link com.petar.weather.ui.activities.ForecastActivity}.
+ *
+ * @author Petar Krastev
+ * @version 1.0
+ * @since 23.6.2017
  */
-
 public class ForecastActivityPresenter extends MvpBasePresenter<IForecastActivity> {
 
     private boolean mIsLoading;
 
+    /**
+     * Manipulates the loading state of the view when the location finding logic
+     * is started. Used mainly when the user triggers it.
+     *
+     * @param isTaskStarted True if the location finding task is started, false otherwise
+     */
     public void onLocationTaskStatusChange(boolean isTaskStarted) {
         if (isViewAttached() && isTaskStarted) {
             getView().showLoading(getView().getCurrentLocationShown() != null);
         }
     }
 
+    /**
+     * Performs an API request for the current location. Manipulates the view accordingly in
+     * each step. Provides error detection and handling for the result.
+     *
+     * @param context  {@link Context} reference
+     * @param location The current {@link Location} with latitude and longitude
+     */
     public void processLocationCoordinates(final Context context, final Location location) {
         if (isViewAttached() && !mIsLoading) {
             mIsLoading = true;
@@ -53,7 +69,7 @@ public class ForecastActivityPresenter extends MvpBasePresenter<IForecastActivit
                 @Override
                 public void onSuccess(ALocation result) {
                     if (isViewAttached()) {
-                        if (!NetworkUtil.isNetworkAvailable(context) && result == null) {
+                        if (!NetworkUtil.isNetworkConnected(context) && result == null) {
                             getView().showError(new Throwable(Constants.ErrorHandling.NO_INTERNET_CONNECTION), isCurrentLocationSet);
                         } else if (result == null) {
                             getView().showError(new Throwable(Constants.ErrorHandling.DEFAULT), isCurrentLocationSet);
@@ -66,7 +82,7 @@ public class ForecastActivityPresenter extends MvpBasePresenter<IForecastActivit
                             }
 
                             if (PersistenceLogic.getInstance(context).shouldLocationDataUpdate()) {
-                                getView().showMessage(ErrorHandlingUtil.generateErrorText(context, Constants.ErrorHandling.CANNOT_UPDATE_CACHED_DATA));
+                                getView().showToastMessage(ErrorHandlingUtil.generateErrorText(context, Constants.ErrorHandling.CANNOT_UPDATE_CACHED_DATA));
                             }
                         }
                     }

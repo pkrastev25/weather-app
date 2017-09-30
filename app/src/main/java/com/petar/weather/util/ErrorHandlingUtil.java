@@ -6,11 +6,21 @@ import com.petar.weather.R;
 import com.petar.weather.app.Constants;
 
 /**
- * Created by User on 6.9.2017 г..
+ * Helper used to handle the errors occurred in the application.
+ *
+ * @author Petar Krastev
+ * @version 1.0
+ * @since 6.9.2017
  */
-
 public class ErrorHandlingUtil {
 
+    /**
+     * Generates appropriate text displayed to the user for the error occurred.
+     *
+     * @param context {@link Context} reference
+     * @param cause   The cause for the error
+     * @return Helper text
+     */
     public static String generateErrorText(Context context, String cause) {
         switch (cause) {
             case Constants.ErrorHandling.NO_INTERNET_CONNECTION:
@@ -29,6 +39,13 @@ public class ErrorHandlingUtil {
         }
     }
 
+    /**
+     * Generates appropriate text displayed to the user for the error occurred.
+     *
+     * @param context {@link Context} reference
+     * @param cause   The cause for the error, instance of {@link Throwable}
+     * @return Helper text
+     */
     public static String generateErrorText(Context context, Throwable cause) {
         return generateErrorText(context, cause.getMessage());
     }

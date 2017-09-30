@@ -18,15 +18,22 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 /**
- * Created by User on 1.7.2017 г..
+ * Contains the business logic for the {@link com.petar.weather.ui.fragments.HourlyForecastFragment}.
+ *
+ * @author Petar Krastev
+ * @version 1.0
+ * @since 1.7.2017
  */
-
 public class HourlyForecastFragmentPresenter extends MvpBasePresenter<IHourlyForecastFragment> {
 
     private boolean mIsLoading;
     private long mCurrentForecastDate;
     private long mLimitForecastDate;
 
+    /**
+     * Initialize the current forecast date, used to perform the API requests,
+     * and the limit forecast date, {@link Constants#API_HOURLY_FORECAST_LIMIT_MILLIS}.
+     */
     public HourlyForecastFragmentPresenter() {
         super();
 
@@ -34,16 +41,41 @@ public class HourlyForecastFragmentPresenter extends MvpBasePresenter<IHourlyFor
         mLimitForecastDate = TimeUtil.getCurrentTimeWithOffset(Constants.API_HOURLY_FORECAST_LIMIT_MILLIS);
     }
 
-    public void loadNextForecast(Context context, int idWOE, boolean pullToRefresh) {
-        loadForecast(context, idWOE, pullToRefresh, true);
+    /**
+     * Performs an API request for the hourly forecast while keeping the previous results.
+     * It adds the new data set to the already existing one.
+     *
+     * @param context       {@link Context} reference
+     * @param idWOE         'Where on Earth ID', identifies a location
+     * @param pullToRefresh True if the request is made from a pull-to-refresh view, false otherwise
+     */
+    public void loadHourlyForecastForNextDay(Context context, int idWOE, boolean pullToRefresh) {
+        loadHourlyForecast(context, idWOE, pullToRefresh, true);
     }
 
-    public void loadForecastForToday(Context context, int idWOE, boolean pullToRefresh) {
+    /**
+     * Performs an API request for the hourly forecast. It discards the old data set and
+     * replaces it completely with the new one.
+     *
+     * @param context       {@link Context} reference
+     * @param idWOE         'Where on Earth ID', identifies a location
+     * @param pullToRefresh True if the request is made from a pull-to-refresh view, false otherwise
+     */
+    public void loadHourlyForecastForToday(Context context, int idWOE, boolean pullToRefresh) {
         mCurrentForecastDate = TimeUtil.getCurrentTime();
-        loadForecast(context, idWOE, pullToRefresh, false);
+        loadHourlyForecast(context, idWOE, pullToRefresh, false);
     }
 
-    private void loadForecast(final Context context, final int idWOE, final boolean pullToRefresh, final boolean isNextForecast) {
+    /**
+     * Performs an API request for the hourly forecast. Manipulates the view accordingly in
+     * each step. Provides error detection and handling for the result.
+     *
+     * @param context           {@link Context} reference
+     * @param idWOE             'Where on Earth ID', identifies a location
+     * @param pullToRefresh     True if the request is made from a pull-to-refresh view, false otherwise
+     * @param isNextDayForecast If true, it will not discard the old data set, it will add the new result to it, false otherwise
+     */
+    private void loadHourlyForecast(final Context context, final int idWOE, final boolean pullToRefresh, final boolean isNextDayForecast) {
         if (isViewAttached() && !mIsLoading && TimeUtil.isDateBeforeDate(mCurrentForecastDate, mLimitForecastDate)) {
             mIsLoading = true;
             final String dateRequestFormat = FormatUtil.formatDateRequest(
@@ -56,7 +88,7 @@ public class HourlyForecastFragmentPresenter extends MvpBasePresenter<IHourlyFor
             AsyncTaskUtil.doInBackground(new AsyncTaskUtil.IAsyncTaskHelperListener<List<? extends AForecast>>() {
                 @Override
                 public List<? extends AForecast> onExecuteTask() throws Exception {
-                    return DataLogic.getInstance().getLocationForecastForDate(
+                    return DataLogic.getInstance().getLocationHourlyForecastForDate(
                             context,
                             idWOE,
                             dateRequestFormat,
@@ -67,15 +99,15 @@ public class HourlyForecastFragmentPresenter extends MvpBasePresenter<IHourlyFor
                 @Override
                 public void onSuccess(List<? extends AForecast> result) {
                     if (isViewAttached()) {
-                        if (!NetworkUtil.isNetworkAvailable(context) && result == null) {
+                        if (!NetworkUtil.isNetworkConnected(context) && result == null) {
                             getView().showError(new Throwable(Constants.ErrorHandling.NO_INTERNET_CONNECTION), pullToRefresh);
                         } else if (result == null) {
                             getView().showError(new Throwable(Constants.ErrorHandling.DEFAULT), pullToRefresh);
                         } else if (result.isEmpty()) {
                             getView().showError(new Throwable(Constants.ErrorHandling.NO_RESULTS_FOR_REQUEST), pullToRefresh);
                         } else {
-                            if (isNextForecast) {
-                                getView().addNextForecast(result);
+                            if (isNextDayForecast) {
+                                getView().addNextDayForecast(result);
                             } else {
                                 getView().setData(result);
                             }
@@ -83,7 +115,7 @@ public class HourlyForecastFragmentPresenter extends MvpBasePresenter<IHourlyFor
                             getView().showContent();
 
                             if (PersistenceLogic.getInstance(context).shouldForecastDataUpdate(dateRequestFormat.hashCode(), idWOE)) {
-                                getView().showMessage(ErrorHandlingUtil.generateErrorText(context, Constants.ErrorHandling.CANNOT_UPDATE_CACHED_DATA));
+                                getView().showToastMessage(ErrorHandlingUtil.generateErrorText(context, Constants.ErrorHandling.CANNOT_UPDATE_CACHED_DATA));
                             }
 
                             if (TimeUtil.isDateToday(mCurrentForecastDate)) {

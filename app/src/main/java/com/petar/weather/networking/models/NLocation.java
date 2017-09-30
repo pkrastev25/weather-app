@@ -6,6 +6,14 @@ import com.google.gson.annotations.SerializedName;
 import com.petar.weather.logic.models.ALocation;
 import com.petar.weather.app.Constants;
 
+/**
+ * Networking model for a location that is mapped to the API response.
+ *
+ * @author Petar Krastev
+ * @version 1.0
+ * @see <a href="http://www.jsonschema2pojo.org/">http://www.jsonschema2pojo.org/</a>
+ * @since 22.6.2017
+ */
 public class NLocation extends ALocation {
 
     @SerializedName("distance")
@@ -38,10 +46,13 @@ public class NLocation extends ALocation {
         return Constants.RecyclerItems.LOCATION_ITEM;
     }
 
+    // --------------------------------------------------------
+    // PARCELABLE region
+    // --------------------------------------------------------
+
     /**
-     * Based on https://stackoverflow.com/questions/4076946/parcelable-where-when-is-describecontents-used
-     *
-     * @return
+     * @return {@link #CONTENTS_FILE_DESCRIPTOR}
+     * @see <a href="https://stackoverflow.com/questions/4076946/parcelable-where-when-is-describecontents-used">https://stackoverflow.com/questions/4076946/parcelable-where-when-is-describecontents-used</a>
      */
     @Override
     public int describeContents() {
