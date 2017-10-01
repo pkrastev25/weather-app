@@ -123,6 +123,9 @@ public class ApiLogic {
      * @return An URL pointing to the image resource
      */
     public String getPNGImageUrl(@Constants.APIWeatherStateSummary String type) {
-        return mApi.getPNGImageURL(type);
+        return String.format(
+                IApi.PNG_IMAGE_URL,
+                type
+        );
     }
 }

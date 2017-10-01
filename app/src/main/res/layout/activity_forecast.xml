@@ -23,6 +23,11 @@
             android:layout_height="match_parent"
             android:layout_below="@id/toolbar">
 
+            <!-- Error view -->
+            <include
+                layout="@layout/error_view"
+                app:view="@{view}"/>
+
             <!-- Content View -->
             <android.support.v4.view.ViewPager
                 android:id="@+id/contentView"
@@ -30,20 +35,8 @@
                 android:layout_height="match_parent"/>
 
             <!-- Loading View -->
-            <ProgressBar
-                android:id="@+id/loadingView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:indeterminate="true"/>
-
-            <!-- Error view -->
-            <TextView
-                android:id="@+id/errorView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:gravity="center"/>
+            <include
+                layout="@layout/loading_view"/>
 
         </FrameLayout>
 

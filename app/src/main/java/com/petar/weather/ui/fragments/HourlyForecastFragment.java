@@ -30,6 +30,7 @@ import com.petar.weather.ui.activities.ForecastDetailsActivity;
 import com.petar.weather.ui.adapter.BaseRecyclerAdapter;
 import com.petar.weather.ui.recycler.AListenerRecyclerItem;
 import com.petar.weather.ui.recycler.LoadingRecyclerItem;
+import com.petar.weather.ui.views.IErrorView;
 import com.petar.weather.ui.views.IHourlyForecastFragment;
 import com.petar.weather.app.Constants;
 import com.petar.weather.util.ErrorHandlingUtil;
@@ -46,7 +47,7 @@ import java.util.List;
  */
 public class HourlyForecastFragment
         extends MvpLceViewStateFragment<SwipeRefreshLayout, List<? extends AListenerRecyclerItem>, IHourlyForecastFragment, HourlyForecastFragmentPresenter>
-        implements IHourlyForecastFragment, IForecastActivityForHourlyForecastFragmentListener, AForecast.IForecastListener, SwipeRefreshLayout.OnRefreshListener {
+        implements IHourlyForecastFragment, IForecastActivityForHourlyForecastFragmentListener, AForecast.IForecastListener, SwipeRefreshLayout.OnRefreshListener, IErrorView {
 
     private Integer mIdWOE;
     private RecyclerView mRecyclerView;
@@ -275,5 +276,18 @@ public class HourlyForecastFragment
 
     // --------------------------------------------------------
     // End of FRAGMENT-FORECAST COMMUNICATION region
+    // --------------------------------------------------------
+
+    // --------------------------------------------------------
+    // ERROR-VIEW region
+    // --------------------------------------------------------
+
+    @Override
+    public void onReload() {
+        loadData(false);
+    }
+
+    // --------------------------------------------------------
+    // End of ERROR-VIEW region
     // --------------------------------------------------------
 }

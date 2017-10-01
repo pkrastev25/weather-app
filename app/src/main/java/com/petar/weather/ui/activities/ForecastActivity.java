@@ -40,6 +40,7 @@ import com.petar.weather.logic.models.ALocation;
 import com.petar.weather.persistence.PersistenceLogic;
 import com.petar.weather.presenters.ForecastActivityPresenter;
 import com.petar.weather.ui.adapter.ViewPagerFragmentAdapter;
+import com.petar.weather.ui.views.IErrorView;
 import com.petar.weather.ui.views.IForecastActivity;
 import com.petar.weather.ui.views.IToolbarView;
 import com.petar.weather.app.Constants;
@@ -56,7 +57,7 @@ import com.petar.weather.util.ErrorHandlingUtil;
  */
 public class ForecastActivity
         extends MvpLceViewStateActivity<ViewPager, ALocation, IForecastActivity, ForecastActivityPresenter>
-        implements IForecastActivity, IToolbarView, IForecastFragmentListener, OnSuccessListener<LocationSettingsResponse>, OnFailureListener, OnCompleteListener<LocationSettingsResponse> {
+        implements IForecastActivity, IToolbarView, IForecastFragmentListener, OnSuccessListener<LocationSettingsResponse>, OnFailureListener, OnCompleteListener<LocationSettingsResponse>, IErrorView {
 
     // Current location
     private ALocation mCurrentLocation;
@@ -443,5 +444,18 @@ public class ForecastActivity
 
     // --------------------------------------------------------
     // End of FRAGMENT-ACTIVITY COMMUNICATION region
+    // --------------------------------------------------------
+
+    // --------------------------------------------------------
+    // ERROR-VIEW region
+    // --------------------------------------------------------
+
+    @Override
+    public void onReload() {
+        loadData(false);
+    }
+
+    // --------------------------------------------------------
+    // End of ERROR-VIEW region
     // --------------------------------------------------------
 }

@@ -18,6 +18,7 @@ import com.petar.weather.logic.models.ALocation;
 import com.petar.weather.presenters.SearchActivityPresenter;
 import com.petar.weather.ui.adapter.BaseRecyclerAdapter;
 import com.petar.weather.ui.recycler.AListenerRecyclerItem;
+import com.petar.weather.ui.views.IErrorView;
 import com.petar.weather.ui.views.ISearchActivity;
 import com.petar.weather.app.Constants;
 import com.petar.weather.util.ErrorHandlingUtil;
@@ -34,7 +35,7 @@ import java.util.List;
  * @since 28.8.2017
  */
 public class SearchActivity extends MvpLceViewStateActivity<RecyclerView, List<? extends AListenerRecyclerItem>, ISearchActivity, SearchActivityPresenter>
-        implements ISearchActivity, SearchView.OnQueryTextListener, ALocation.ILocationListener {
+        implements ISearchActivity, SearchView.OnQueryTextListener, ALocation.ILocationListener, IErrorView {
 
     private SearchView mSearchView;
     private String mTypedText;
@@ -149,5 +150,18 @@ public class SearchActivity extends MvpLceViewStateActivity<RecyclerView, List<?
 
     // --------------------------------------------------------
     // End of ACTIVITY-LOCATION COMMUNICATION region
+    // --------------------------------------------------------
+
+    // --------------------------------------------------------
+    // ERROR-VIEW region
+    // --------------------------------------------------------
+
+    @Override
+    public void onReload() {
+        loadData(false);
+    }
+
+    // --------------------------------------------------------
+    // End of ERROR-VIEW region
     // --------------------------------------------------------
 }
