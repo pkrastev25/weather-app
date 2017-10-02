@@ -54,7 +54,6 @@
 
             <!-- Error view -->
             <include
-                style="@style/OverlappingView"
                 layout="@layout/error_view"
                 app:view="@{view}"/>
 
@@ -67,7 +66,6 @@
 
             <!-- Loading View -->
             <include
-                style="@style/OverlappingView"
                 layout="@layout/loading_view"/>
 
         </FrameLayout>

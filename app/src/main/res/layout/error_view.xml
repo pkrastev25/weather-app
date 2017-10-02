@@ -10,6 +10,7 @@
 
     <!-- A TextView with errorView id must exist! -->
     <RelativeLayout
+        style="@style/OverlappingView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:onClick="@{() -> view.onReload()}">
