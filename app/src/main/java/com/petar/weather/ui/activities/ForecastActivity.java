@@ -86,7 +86,7 @@ public class ForecastActivity
         ActivityForecastBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_forecast);
         binding.setView(this);
 
-        ViewPagerFragmentAdapter fragmentAdapter = new ViewPagerFragmentAdapter(getSupportFragmentManager());
+        ViewPagerFragmentAdapter fragmentAdapter = new ViewPagerFragmentAdapter(this, getSupportFragmentManager());
         contentView.setAdapter(fragmentAdapter);
 
         mCurrentLocationTitle = new ObservableField<>();

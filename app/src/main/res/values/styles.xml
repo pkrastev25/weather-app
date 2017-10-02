@@ -157,5 +157,17 @@
     </style>
 
     <!-- End of OVERLAPPING-VIEW region -->
+    <!-- ****************************************************** -->
+    <!-- PAGER-TAB-STRIP region -->
+
+    <style name="PagerTabStrip" parent="AppTheme">
+        <item name="android:background">@color/primary_light</item>
+        <item name="android:textColor">@color/primary_light_contrast</item>
+        <item name="android:textSize">@dimen/text_size_M</item>
+        <item name="android:paddingTop">@dimen/space_M</item>
+        <item name="android:paddingBottom">@dimen/space_M</item>
+    </style>
+
+    <!-- End of PAGER-TAB-STRIP region -->
 
 </resources>

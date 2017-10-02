@@ -60,4 +60,9 @@
 
     <!-- SEARCH text -->
     <string name="search_hint">Search for a location</string>
+
+    <!-- FRAGMENT text -->
+    <string name="fragment_hourly_forecast_title">HOURLY FORECAST</string>
+    <string name="fragment_daily_forecast_title">DAILY FORECAST</string>
+    <string name="fragment_settings_title">SETTINGS</string>
 </resources>
