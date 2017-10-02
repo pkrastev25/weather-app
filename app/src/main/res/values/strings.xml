@@ -7,7 +7,7 @@
     <!-- Alert dialogs -->
     <string name="alert_dialog_location_permissions_header">Warning</string>
     <string name="alert_dialog_location_permissions_text">In order for this app to work properly, you must allow the location permissions. The application cannot work without them!</string>
-    <string name="alert_dialog_location_not_found_header">Cannot find current location</string>
+    <string name="alert_dialog_location_not_found_header">Cannot find location</string>
     <string name="alert_dialog_location_not_found_text">Make sure that there is a valid Cell Network, Airplane Mode is \'OFF\', Location Service is \'ON\' and there is a Network Connection!</string>
 
     <!-- Buttons -->
@@ -17,8 +17,9 @@
     <string name="button_cancel">Cancel</string>
 
     <!-- Toolbar -->
-    <string name="toolbar_location_hint">Searching for your current location…</string>
+    <string name="toolbar_location_hint">Finding your location…</string>
     <string name="toolbar_location_not_found">@string/alert_dialog_location_not_found_header</string>
+    <string name="toolbar_details">Details</string>
     
     <!-- Forecast -->
     <string name="forecast_details_wind_speed">Wind speed</string>
@@ -56,4 +57,7 @@
     <string name="error_no_search_input">Please enter a name of a location or coordinates (comma separated latitude and longitude, e.g. "36.96,-122.02").</string>
     <string name="error_wrong_search_input">The input you have entered is wrong! Please try again!</string>
     <string name="error_default">Something went wrong?! Try again!</string>
+
+    <!-- SEARCH text -->
+    <string name="search_hint">Search for a location</string>
 </resources>

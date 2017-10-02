@@ -11,6 +11,9 @@
     <color name="primary_light_contrast">#BF000000</color>
 
     <color name="white">#FFF</color>
+    <color name="white_opacity_0.5">#80FFFFFF</color>
+
     <color name="black">#000</color>
+    <color name="black_opacity_0.5">#80000000</color>
 
 </resources>

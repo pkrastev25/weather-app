@@ -42,7 +42,6 @@ import com.petar.weather.presenters.ForecastActivityPresenter;
 import com.petar.weather.ui.adapter.ViewPagerFragmentAdapter;
 import com.petar.weather.ui.views.IErrorView;
 import com.petar.weather.ui.views.IForecastActivity;
-import com.petar.weather.ui.views.IToolbarView;
 import com.petar.weather.app.Constants;
 import com.petar.weather.util.ErrorHandlingUtil;
 
@@ -57,7 +56,7 @@ import com.petar.weather.util.ErrorHandlingUtil;
  */
 public class ForecastActivity
         extends MvpLceViewStateActivity<ViewPager, ALocation, IForecastActivity, ForecastActivityPresenter>
-        implements IForecastActivity, IToolbarView, IForecastFragmentListener, OnSuccessListener<LocationSettingsResponse>, OnFailureListener, OnCompleteListener<LocationSettingsResponse>, IErrorView {
+        implements IForecastActivity, IForecastFragmentListener, OnSuccessListener<LocationSettingsResponse>, OnFailureListener, OnCompleteListener<LocationSettingsResponse>, IErrorView {
 
     // Current location
     private ALocation mCurrentLocation;
@@ -223,17 +222,27 @@ public class ForecastActivity
     // TOOLBAR section
     // --------------------------------------------------------
 
-    @Override
+    /**
+     * Represents the location shown to the user.
+     *
+     * @return The title of the current location
+     */
     public ObservableField<String> getCurrentLocationTitle() {
         return mCurrentLocationTitle;
     }
 
-    @Override
+    /**
+     * Called when the user interacts with the "current location" icon.
+     * Attempts to find the current location.
+     */
     public void onFindCurrentLocationClick() {
         findLocation();
     }
 
-    @Override
+    /**
+     * Called when the user interacts with the "search" icon. Navigates
+     * to the {@link SearchActivity}.
+     */
     public void onSearchClick() {
         startActivity(
                 new Intent(this, SearchActivity.class)

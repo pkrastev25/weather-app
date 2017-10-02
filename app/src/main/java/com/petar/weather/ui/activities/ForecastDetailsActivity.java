@@ -22,6 +22,10 @@ public class ForecastDetailsActivity extends AppCompatActivity {
 
     private ObservableParcelable<AForecast> mForecast;
 
+    // --------------------------------------------------------
+    // GENERAL-ACTIVITY region
+    // --------------------------------------------------------
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,4 +45,24 @@ public class ForecastDetailsActivity extends AppCompatActivity {
     public ObservableField<AForecast> getForecast() {
         return mForecast;
     }
+
+    // --------------------------------------------------------
+    // End of GENERAL-ACTIVITY region
+    // --------------------------------------------------------
+
+    // --------------------------------------------------------
+    // TOOLBAR region
+    // --------------------------------------------------------
+
+    /**
+     * Called when the user interacts with the "x" icon. Navigates to the
+     * {@link ForecastActivity}.
+     */
+    public void onExit() {
+        onBackPressed();
+    }
+
+    // --------------------------------------------------------
+    // End of TOOLBAR region
+    // --------------------------------------------------------
 }

@@ -13,10 +13,39 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <include
+        <!-- TOOLBAR region -->
+
+        <LinearLayout
             android:id="@+id/toolbar"
-            layout="@layout/toolbar"
-            app:view="@{view}"/>
+            style="@style/Toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?android:attr/actionBarSize"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:onClick="@{() -> view.onFindCurrentLocationClick()}"
+                android:src="@mipmap/ic_launcher_round"/>
+
+            <TextView
+                style="@style/Toolbar.Text"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:ellipsize="end"
+                android:gravity="center"
+                android:maxLines="1"
+                android:text="@{view.currentLocationTitle}"/>
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:onClick="@{() -> view.onSearchClick()}"
+                android:src="@mipmap/ic_launcher_round"/>
+        </LinearLayout>
+
+        <!-- End of TOOLBAR region -->
 
         <FrameLayout
             android:layout_width="match_parent"

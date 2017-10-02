@@ -95,7 +95,18 @@
 
     <style name="Toolbar.Text" parent="Text.XL.Bold">
         <item name="android:textColor">@color/primary_contrast</item>
-        <item name="android:gravity">center</item>
+        <item name="android:padding">0dp</item>
+    </style>
+
+    <style name="Toolbar.SearchView">
+        <!-- Color the text -->
+        <item name="android:textColorPrimary">@color/primary_contrast</item>
+        <!-- Color the icons -->
+        <item name="android:textColorSecondary">@color/white_opacity_0.5</item>
+        <!-- Color the query text -->
+        <item name="android:textColorHint">@color/white_opacity_0.5</item>
+        <item name="android:textSize">@dimen/text_size_XL</item>
+        <item name="android:textStyle">bold</item>ø
     </style>
 
     <!-- End of TOOLBAR region -->
