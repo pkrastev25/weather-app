@@ -24,7 +24,7 @@ public class ImageViewBindings {
      * @param view The view in which the image resource will be loaded
      * @param type The type of resource that must be loaded, must be one of {@link com.petar.weather.app.Constants.APIWeatherStateSummary}
      */
-    @BindingAdapter({"app:imageUrl"})
+    @BindingAdapter({"imageUrl"})
     public static void loadImage(ImageView view, @Constants.APIWeatherStateSummary String type) {
         Glide.with(view.getContext())
                 .load(

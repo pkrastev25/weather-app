@@ -106,13 +106,13 @@ public class BaseRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         switch (viewType) {
             case Constants.RecyclerItems.FORECAST_ITEM:
                 view = LayoutInflater.from(parent.getContext()).inflate(R.layout.forecast_recycler_item, parent, false);
-                return new BaseRecyclerViewBindingHolder<ForecastRecyclerItemBinding>(view);
+                return new BaseRecyclerViewBindingHolder<>(view);
             case Constants.RecyclerItems.LOCATION_ITEM:
                 view = LayoutInflater.from(parent.getContext()).inflate(R.layout.location_recycler_item, parent, false);
-                return new BaseRecyclerViewBindingHolder<LocationRecyclerItemBinding>(view);
+                return new BaseRecyclerViewBindingHolder<>(view);
             case Constants.RecyclerItems.LOADING_ITEM:
                 view = LayoutInflater.from(parent.getContext()).inflate(R.layout.loading_recycler_item, parent, false);
-                return new BaseRecyclerViewBindingHolder<LoadingRecyclerItemBinding>(view);
+                return new BaseRecyclerViewBindingHolder<>(view);
             default:
                 return null;
         }

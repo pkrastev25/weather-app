@@ -14,12 +14,14 @@
 
         <!-- Error view -->
         <include
+            style="@style/OverlappingView"
             layout="@layout/error_view"
             app:view="@{view}"/>
 
         <!-- Content View -->
         <android.support.v4.widget.SwipeRefreshLayout
             android:id="@+id/contentView"
+            style="@style/OverlappingView"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
@@ -31,6 +33,7 @@
 
         <!-- Loading View -->
         <include
+            style="@style/OverlappingView"
             layout="@layout/loading_view"/>
 
     </FrameLayout>

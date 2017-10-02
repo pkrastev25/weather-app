@@ -1,11 +1,150 @@
 <resources>
 
-    <!-- Base application theme. -->
+    <!-- BASE-APPLICATION-THEME region -->
+
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
-        <!-- Customize your theme here. -->
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
+        <!-- Color the toolbar -->
+        <item name="colorPrimary">@color/primary</item>
+        <!-- Color the status bar -->
+        <item name="colorPrimaryDark">@color/primary_dark</item>
+        <!-- Color the cursors -->
+        <item name="colorAccent">@color/primary_light</item>
+        <!-- Color the background of all activities, fragments -->
+        <item name="android:windowBackground">@color/white</item>
+        <!-- Color all the text -->
+        <item name="android:textColorPrimary">@color/black</item>
     </style>
+
+    <!-- BASE-APPLICATION-THEME region -->
+    <!-- ****************************************************** -->
+    <!-- TEXT region -->
+
+    <style name="Text" parent="AppTheme">
+        <item name="android:paddingLeft">@dimen/space_L</item>
+        <item name="android:paddingRight">@dimen/space_L</item>
+    </style>
+
+    <style name="Text.XL">
+        <item name="android:textSize">@dimen/text_size_XL</item>
+        <item name="android:paddingTop">@dimen/space_XL</item>
+        <item name="android:paddingBottom">@dimen/space_XL</item>
+    </style>
+
+    <style name="Text.XL.Bold">
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="Text.L">
+        <item name="android:textSize">@dimen/text_size_L</item>
+        <item name="android:paddingTop">@dimen/space_L</item>
+        <item name="android:paddingBottom">@dimen/space_L</item>
+    </style>
+
+    <style name="Text.L.Bold">
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="Text.M">
+        <item name="android:textSize">@dimen/text_size_M</item>
+        <item name="android:paddingTop">@dimen/space_M</item>
+        <item name="android:paddingBottom">@dimen/space_M</item>
+    </style>
+
+    <style name="Text.M.Bold">
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="Text.S">
+        <item name="android:textSize">@dimen/text_size_S</item>
+        <item name="android:paddingTop">@dimen/space_S</item>
+        <item name="android:paddingBottom">@dimen/space_S</item>
+    </style>
+
+    <!-- End of TEXT region -->
+    <!-- ****************************************************** -->
+    <!-- RECYCLER-ITEMS region -->
+
+    <style name="RecyclerItems" parent="AppTheme">
+        <item name="android:padding">@dimen/space_L</item>
+    </style>
+
+    <style name="RecyclerItems.Location">
+        <item name="android:padding">0dp</item>
+    </style>
+
+    <!-- End of RECYCLER-ITEMS region -->
+    <!-- ****************************************************** -->
+    <!-- SPLASH-SCREEN region -->
+
+    <style name="SplashScreen" parent="AppTheme">
+        <item name="android:background">@color/primary_light</item>
+    </style>
+
+    <style name="SplashScreen.Text" parent="Text.XL.Bold">
+        <item name="android:textColor">@color/primary_light_contrast</item>
+        <item name="android:padding">@dimen/space_XL</item>
+    </style>
+
+    <!-- End of SPLASH-SCREEN region -->
+    <!-- ****************************************************** -->
+    <!-- TOOLBAR region -->
+
+    <style name="Toolbar" parent="AppTheme">
+        <item name="android:background">@color/primary</item>
+    </style>
+
+    <style name="Toolbar.Text" parent="Text.XL.Bold">
+        <item name="android:textColor">@color/primary_contrast</item>
+        <item name="android:gravity">center</item>
+    </style>
+
+    <!-- End of TOOLBAR region -->
+    <!-- ****************************************************** -->
+    <!-- SEPARATOR region -->
+
+    <style name="Separator" parent="AppTheme">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">1dp</item>
+        <item name="android:background">@color/black</item>
+    </style>
+
+    <style name="Separator.Partial">
+        <item name="android:layout_marginLeft">@dimen/space_XL</item>
+        <item name="android:layout_marginRight">@dimen/space_XL</item>
+    </style>
+
+    <!-- End of SEPARATOR region -->
+    <!-- ****************************************************** -->
+    <!-- SETTINGS region -->
+
+    <style name="Settings" parent="AppTheme"/>
+
+    <style name="Settings.ToggleButton">
+        <item name="android:layout_marginRight">@dimen/space_L</item>
+    </style>
+
+    <!-- End of SETTINGS region -->
+    <!-- ****************************************************** -->
+    <!-- ERROR-VIEW region -->
+
+    <style name="ErrorView" parent="AppTheme"/>
+
+    <style name="ErrorView.Text" parent="Text.L.Bold">
+        <item name="android:background">@color/primary_dark</item>
+        <item name="android:textColor">@color/primary_dark_contrast</item>
+        <item name="android:padding">@dimen/space_L</item>
+        <item name="android:gravity">center</item>
+        <item name="android:layout_margin">@dimen/space_L</item>
+    </style>
+
+    <!-- End of ERROR-VIEW region -->
+    <!-- ****************************************************** -->
+    <!-- OVERLAPPING-VIEW region -->
+
+    <style name="OverlappingView" parent="AppTheme">
+        <item name="android:background">@color/white</item>
+    </style>
+
+    <!-- End of OVERLAPPING-VIEW region -->
 
 </resources>

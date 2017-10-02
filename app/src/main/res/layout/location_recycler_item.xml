@@ -1,5 +1,7 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android">
+
     <data>
+
         <variable
             name="item"
             type="com.petar.weather.logic.models.ALocation"/>
@@ -8,19 +10,21 @@
     </data>
 
     <LinearLayout
+        style="@style/RecyclerItems.Location"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="wrap_content"
         android:onClick="@{() -> item.onItemClick()}">
 
         <TextView
-            android:layout_weight="0.5"
+            style="@style/Text.L.Bold"
             android:layout_width="0dp"
             android:layout_height="match_parent"
+            android:layout_weight="1"
             android:text="@{item.title}"/>
 
         <TextView
-            android:layout_weight="0.5"
-            android:layout_width="0dp"
+            style="@style/Text.L"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:text="@{FormatUtil.formatDistance(item.distance)}"/>
     </LinearLayout>

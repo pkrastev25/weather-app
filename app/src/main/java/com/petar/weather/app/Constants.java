@@ -149,6 +149,13 @@ public class Constants {
     public static final String FORMAT_TEMPERATURE_C = "%s\u00b0C";
 
     /**
+     * Specifies the minimum and maximum temperature format, where the 1st param
+     * is the min temperature in the form of {@link #FORMAT_TEMPERATURE_C} and the
+     * 2nd param is the max temperature in the form of {@link #FORMAT_TEMPERATURE_C}.
+     */
+    public static final String FORMAT_MIN_MAX_TEMPERATURE_C = "%s | %s";
+
+    /**
      * Specifies the time format.
      */
     public static final int FORMAT_TIME = DateFormat.MEDIUM;

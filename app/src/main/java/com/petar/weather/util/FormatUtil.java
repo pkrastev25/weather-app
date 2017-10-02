@@ -146,6 +146,22 @@ public class FormatUtil {
     }
 
     /**
+     * Formats the minimum and maximum temperature into a string according to
+     * {@link Constants#FORMAT_MIN_MAX_TEMPERATURE_C}.
+     *
+     * @param min Formatted minimum temperature according to {@link Constants#FORMAT_TEMPERATURE_C}
+     * @param max Formatted maximum temperature according to {@link Constants#FORMAT_TEMPERATURE_C}
+     * @return Formatted temperature
+     */
+    public static String formatMinMaxTemperature(double min, double max) {
+        return String.format(
+                Constants.FORMAT_MIN_MAX_TEMPERATURE_C,
+                formatTemperature(min),
+                formatTemperature(max)
+        );
+    }
+
+    /**
      * Formats the air pressure into a string, specified by {@link Constants#FORMAT_AIR_PRESSURE}.
      *
      * @param airPressure Air pressure to be formatted

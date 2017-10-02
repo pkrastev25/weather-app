@@ -9,6 +9,7 @@
     </data>
 
     <LinearLayout
+        style="@style/Toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
@@ -21,10 +22,10 @@
 
         <TextView
             android:id="@+id/current_location_text"
+            style="@style/Toolbar.Text"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:gravity="center"
             android:text="@{view.currentLocationTitle}"/>
 
         <ImageView

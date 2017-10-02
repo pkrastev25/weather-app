@@ -1,7 +1,8 @@
 <resources>
     <!-- General -->
     <string name="app_name">Weather</string>
-    <string name="splash_screen_text">This is a sample splash screen text!</string>
+    <string name="splash_screen_text">Powered by MetaWeather</string>
+    <string name="general_loading">Loading…</string>
 
     <!-- Alert dialogs -->
     <string name="alert_dialog_location_permissions_header">Warning</string>

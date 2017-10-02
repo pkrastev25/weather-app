@@ -20,23 +20,25 @@
             android:orientation="horizontal">
 
             <TextView
+                style="@style/Text.L.Bold"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:gravity="center_vertical"
                 android:text="@string/settings_enable_notifications"/>
 
             <ToggleButton
                 android:id="@+id/notifications_toggle_button"
+                style="@style/Settings.ToggleButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
 
         </LinearLayout>
 
         <TextView
-            android:layout_below="@id/notifications_row"
+            style="@style/Text.S"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_below="@id/notifications_row"
             android:text="@string/settings_enable_notifications_helper_text"/>
 
     </RelativeLayout>

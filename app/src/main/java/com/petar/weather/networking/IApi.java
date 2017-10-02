@@ -69,21 +69,9 @@ public interface IApi {
             @Path("woeid") int idWOE, @Path("date") String date
     );
 
-
     /**
-     * TODO: Find out how u can implement a solution like this one!
-     * Constructs the URL path pointing to the PNG image resource.
-     *
-     * @param type The type of resource that must be loaded, must be one of {@link com.petar.weather.app.Constants.APIWeatherStateSummary}
-     * @return The response of the request
-     */
-    @GET("/static/img/weather/png/{type}.png")
-    String getPNGImageURL(
-            @Path("type") @Constants.APIWeatherStateSummary String type
-    );
-
-    /**
-     * Contains the API endpoint for png image resources.
+     * Contains the API endpoint for PNG image resources. The param must be of
+     * type {@link com.petar.weather.app.Constants.APIWeatherStateSummary}.
      */
     String PNG_IMAGE_URL = Constants.API_BASE_URL + "/static/img/weather/png/%s.png";
 }
