@@ -1,15 +1,20 @@
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    >
 
     <data>
 
         <variable
             name="view"
-            type="com.petar.weather.ui.fragments.SettingsFragment"/>
+            type="com.petar.weather.ui.fragments.SettingsFragment"
+            />
+
     </data>
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        >
 
         <LinearLayout
             android:id="@+id/notifications_row"
@@ -17,20 +22,23 @@
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            >
 
             <TextView
                 style="@style/Text.L.Bold"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:text="@string/settings_enable_notifications"/>
+                android:text="@string/settings_enable_notifications"
+                />
 
             <ToggleButton
                 android:id="@+id/notifications_toggle_button"
                 style="@style/Settings.ToggleButton"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                />
 
         </LinearLayout>
 
@@ -39,7 +47,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/notifications_row"
-            android:text="@string/settings_enable_notifications_helper_text"/>
+            android:text="@string/settings_enable_notifications_helper_text"
+            />
 
     </RelativeLayout>
+
 </layout>

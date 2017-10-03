@@ -1,54 +1,85 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto">
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    >
 
     <data>
 
         <variable
             name="view"
-            type="com.petar.weather.ui.activities.SearchActivity"/>
+            type="com.petar.weather.ui.activities.SearchActivity"
+            />
+
     </data>
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        >
 
         <!-- TOOLBAR region -->
 
-        <android.support.v7.widget.SearchView
-            android:id="@+id/search_view"
+        <LinearLayout
+            android:id="@+id/toolbar"
+            style="@style/Toolbar"
             android:layout_width="match_parent"
             android:layout_height="?android:attr/actionBarSize"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
-            app:iconifiedByDefault="false"
-            app:queryHint="@string/search_hint"
-            app:theme="@style/Toolbar.SearchView"/>
+            android:orientation="horizontal"
+            >
+
+            <ImageView
+                style="@style/Toolbar.Icon"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:onClick="@{() -> view.onExit()}"
+                android:src="@mipmap/ic_back_white"
+                />
+
+            <android.support.v7.widget.SearchView
+                android:id="@+id/search_view"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                app:iconifiedByDefault="false"
+                app:queryHint="@string/search_hint"
+                app:searchIcon="@null"
+                app:theme="@style/Toolbar.SearchView"
+                />
+
+        </LinearLayout>
 
         <!-- End of TOOLBAR region -->
 
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_below="@id/search_view">
+            android:layout_below="@id/toolbar"
+            >
 
             <!-- Error view -->
             <include
                 layout="@layout/error_view"
-                app:view="@{view}"/>
+                app:view="@{view}"
+                />
 
             <!-- Content View -->
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/contentView"
                 style="@style/OverlappingView"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"/>
+                android:layout_height="match_parent"
+                />
 
             <!-- Loading View -->
             <include
-                layout="@layout/loading_view"/>
+                layout="@layout/loading_view"
+                />
 
         </FrameLayout>
 
     </RelativeLayout>
+
 </layout>

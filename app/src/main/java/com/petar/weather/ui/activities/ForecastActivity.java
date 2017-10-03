@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.IntentSender;
 import android.databinding.DataBindingUtil;
 import android.databinding.ObservableField;
+import android.databinding.ObservableInt;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.os.Bundle;
@@ -71,6 +72,9 @@ public class ForecastActivity
     // TOOLBAR helpers
     private ObservableField<String> mCurrentLocationTitle;
 
+    // ERROR-VIEW helpers
+    private ObservableInt mErrorViewVisibility;
+
     // ACTIVITY-FRAGMENT COMMUNICATION helpers
     private IForecastActivityForDailyForecastFragmentListener mDailyForecastFragmentListener;
     private IForecastActivityForHourlyForecastFragmentListener mHourlyForecastFragmentListener;
@@ -90,6 +94,8 @@ public class ForecastActivity
         contentView.setAdapter(fragmentAdapter);
 
         mCurrentLocationTitle = new ObservableField<>();
+        mErrorViewVisibility = new ObservableInt();
+
         mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
         mLocationCallback = new LocationCallback() {
             @Override
@@ -136,6 +142,7 @@ public class ForecastActivity
         super.onPause();
 
         // Disable location updates, saves battery life!
+        // TODO: Do not execute next line if the updates are already removed !
         mFusedLocationProviderClient.removeLocationUpdates(mLocationCallback);
     }
 
@@ -196,6 +203,27 @@ public class ForecastActivity
     @Override
     public LceViewState<ALocation, IForecastActivity> createViewState() {
         return new ParcelableDataLceViewState<>();
+    }
+
+    @Override
+    public void showError(Throwable e, boolean pullToRefresh) {
+        super.showError(e, pullToRefresh);
+
+        mErrorViewVisibility.set(errorView.getVisibility());
+    }
+
+    @Override
+    public void showContent() {
+        super.showContent();
+
+        mErrorViewVisibility.set(errorView.getVisibility());
+    }
+
+    @Override
+    public void showLoading(boolean pullToRefresh) {
+        super.showLoading(pullToRefresh);
+
+        mErrorViewVisibility.set(errorView.getVisibility());
     }
 
     @Override
@@ -462,6 +490,11 @@ public class ForecastActivity
     @Override
     public void onReload() {
         loadData(false);
+    }
+
+    @Override
+    public ObservableInt getErrorViewVisibility() {
+        return mErrorViewVisibility;
     }
 
     // --------------------------------------------------------

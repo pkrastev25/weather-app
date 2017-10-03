@@ -93,20 +93,28 @@
         <item name="android:background">@color/primary</item>
     </style>
 
+    <style name="Toolbar.Icon" parent="Icon">
+        <item name="android:left">@dimen/space_S</item>
+        <item name="android:paddingRight">@dimen/space_S</item>
+    </style>
+
     <style name="Toolbar.Text" parent="Text.XL.Bold">
         <item name="android:textColor">@color/primary_contrast</item>
         <item name="android:padding">0dp</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:ellipsize">end</item>
     </style>
 
     <style name="Toolbar.SearchView">
         <!-- Color the text -->
         <item name="android:textColorPrimary">@color/primary_contrast</item>
         <!-- Color the icons -->
-        <item name="android:textColorSecondary">@color/white_opacity_0.5</item>
+        <item name="android:textColorSecondary">@color/white</item>
         <!-- Color the query text -->
         <item name="android:textColorHint">@color/white_opacity_0.5</item>
         <item name="android:textSize">@dimen/text_size_XL</item>
-        <item name="android:textStyle">bold</item>ø
+        <item name="android:textStyle">bold</item>
     </style>
 
     <!-- End of TOOLBAR region -->
@@ -141,11 +149,9 @@
     <style name="ErrorView" parent="AppTheme"/>
 
     <style name="ErrorView.Text" parent="Text.L.Bold">
-        <item name="android:background">@color/primary_dark</item>
-        <item name="android:textColor">@color/primary_dark_contrast</item>
+        <item name="android:textColor">@color/primary_dark</item>
         <item name="android:padding">@dimen/space_L</item>
         <item name="android:gravity">center</item>
-        <item name="android:layout_margin">@dimen/space_L</item>
     </style>
 
     <!-- End of ERROR-VIEW region -->
@@ -169,5 +175,21 @@
     </style>
 
     <!-- End of PAGER-TAB-STRIP region -->
+    <!-- ****************************************************** -->
+    <!-- ICONS region -->
+
+    <style name="Icon" parent="AppTheme"/>
+
+    <!-- Must be used together with a black color icon -->
+    <style name="Icon.WhiteTinted">
+        <item name="android:tint">@color/white_opacity_0.5</item>
+    </style>
+
+    <!-- Must be used together with a white color icon -->
+    <style name="Icon.BlackTinted">
+        <item name="android:tint">@color/black_opacity_0.5</item>
+    </style>
+
+    <!-- End of ICONS region -->
 
 </resources>

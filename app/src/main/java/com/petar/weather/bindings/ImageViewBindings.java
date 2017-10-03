@@ -30,7 +30,7 @@ public class ImageViewBindings {
                 .load(
                         ApiLogic.getInstance().getPNGImageUrl(type)
                 )
-                .error(R.mipmap.ic_launcher)
+                .error(R.mipmap.ic_image_placeholder_black)
                 .into(view);
     }
 }

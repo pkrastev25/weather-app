@@ -1,17 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto">
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    >
 
     <data>
 
         <variable
             name="view"
-            type="com.petar.weather.ui.activities.ForecastActivity"/>
+            type="com.petar.weather.ui.activities.ForecastActivity"
+            />
+
     </data>
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        >
 
         <!-- TOOLBAR region -->
 
@@ -20,29 +25,33 @@
             style="@style/Toolbar"
             android:layout_width="match_parent"
             android:layout_height="?android:attr/actionBarSize"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            >
 
             <ImageView
+                style="@style/Toolbar.Icon"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:onClick="@{() -> view.onFindCurrentLocationClick()}"
-                android:src="@mipmap/ic_launcher_round"/>
+                android:src="@mipmap/ic_current_location_white"
+                />
 
             <TextView
                 style="@style/Toolbar.Text"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:ellipsize="end"
-                android:gravity="center"
-                android:maxLines="1"
-                android:text="@{view.currentLocationTitle}"/>
+                android:text="@{view.currentLocationTitle}"
+                />
 
             <ImageView
+                style="@style/Toolbar.Icon"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:onClick="@{() -> view.onSearchClick()}"
-                android:src="@mipmap/ic_launcher_round"/>
+                android:src="@mipmap/ic_search_white"
+                />
+
         </LinearLayout>
 
         <!-- End of TOOLBAR region -->
@@ -50,31 +59,38 @@
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_below="@id/toolbar">
+            android:layout_below="@id/toolbar"
+            >
 
             <!-- Error view -->
             <include
                 layout="@layout/error_view"
-                app:view="@{view}"/>
+                app:view="@{view}"
+                />
 
             <!-- Content View -->
             <android.support.v4.view.ViewPager
                 android:id="@+id/contentView"
                 style="@style/OverlappingView"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                >
 
                 <android.support.v4.view.PagerTabStrip
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    app:theme="@style/PagerTabStrip"/>
+                    app:theme="@style/PagerTabStrip"
+                    />
+
             </android.support.v4.view.ViewPager>
 
             <!-- Loading View -->
             <include
-                layout="@layout/loading_view"/>
+                layout="@layout/loading_view"
+                />
 
         </FrameLayout>
 
     </RelativeLayout>
+
 </layout>

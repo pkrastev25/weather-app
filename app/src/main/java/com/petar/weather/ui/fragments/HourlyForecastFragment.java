@@ -4,6 +4,7 @@ package com.petar.weather.ui.fragments;
 import android.app.Activity;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
+import android.databinding.ObservableInt;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -49,12 +50,19 @@ public class HourlyForecastFragment
         extends MvpLceViewStateFragment<SwipeRefreshLayout, List<? extends AListenerRecyclerItem>, IHourlyForecastFragment, HourlyForecastFragmentPresenter>
         implements IHourlyForecastFragment, IForecastActivityForHourlyForecastFragmentListener, AForecast.IForecastListener, SwipeRefreshLayout.OnRefreshListener, IErrorView {
 
+    // Current location
     private Integer mIdWOE;
+
+    // CONTENT-VIEW helpers
     private RecyclerView mRecyclerView;
     private BaseRecyclerAdapter mAdapter;
     private LoadingRecyclerItem mLoadingRecyclerItem;
 
+    // FRAGMENT-ACTIVITY COMMUNICATION helpers
     private IForecastFragmentListener mListener;
+
+    // ERROR-VIEW helpers
+    private ObservableInt mErrorViewVisibility;
 
     // --------------------------------------------------------
     // GENERAL FRAGMENT region
@@ -85,13 +93,15 @@ public class HourlyForecastFragment
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        // Must be already initialized when onFragmentCreated() is called!
+        mErrorViewVisibility = new ObservableInt();
         mLoadingRecyclerItem = new LoadingRecyclerItem();
+
         mAdapter = new BaseRecyclerAdapter();
         contentView.setOnRefreshListener(this);
         final LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
         mRecyclerView.setLayoutManager(layoutManager);
         mRecyclerView.setAdapter(mAdapter);
-
         mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
@@ -175,13 +185,6 @@ public class HourlyForecastFragment
     }
 
     @Override
-    public void showContent() {
-        super.showContent();
-
-        contentView.setRefreshing(false);
-    }
-
-    @Override
     protected String getErrorMessage(Throwable e, boolean pullToRefresh) {
         removeLoadingRecyclerItem();
 
@@ -197,6 +200,28 @@ public class HourlyForecastFragment
     @Override
     public LceViewState<List<? extends AListenerRecyclerItem>, IHourlyForecastFragment> createViewState() {
         return new ParcelableListLceViewState<>();
+    }
+
+    @Override
+    public void showError(Throwable e, boolean pullToRefresh) {
+        super.showError(e, pullToRefresh);
+
+        mErrorViewVisibility.set(errorView.getVisibility());
+    }
+
+    @Override
+    public void showContent() {
+        super.showContent();
+
+        contentView.setRefreshing(false);
+        mErrorViewVisibility.set(errorView.getVisibility());
+    }
+
+    @Override
+    public void showLoading(boolean pullToRefresh) {
+        super.showLoading(pullToRefresh);
+
+        mErrorViewVisibility.set(errorView.getVisibility());
     }
 
     @Override
@@ -285,6 +310,11 @@ public class HourlyForecastFragment
     @Override
     public void onReload() {
         loadData(false);
+    }
+
+    @Override
+    public ObservableInt getErrorViewVisibility() {
+        return mErrorViewVisibility;
     }
 
     // --------------------------------------------------------

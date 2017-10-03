@@ -2,6 +2,7 @@ package com.petar.weather.ui.activities;
 
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
+import android.databinding.ObservableInt;
 import android.support.annotation.NonNull;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -37,9 +38,15 @@ public class SearchActivity
         extends MvpLceViewStateActivity<RecyclerView, List<? extends AListenerRecyclerItem>, ISearchActivity, SearchActivityPresenter>
         implements ISearchActivity, SearchView.OnQueryTextListener, ALocation.ILocationListener, IErrorView {
 
+    // SEARCH helpers
     private SearchView mSearchView;
     private String mTypedText;
+
+    // CONTENT-VIEW helpers
     private BaseRecyclerAdapter mAdapter;
+
+    // ERROR-VIEW helpers
+    private ObservableInt mErrorViewVisibility;
 
     // --------------------------------------------------------
     // GENERAL ACTIVITY region
@@ -58,6 +65,8 @@ public class SearchActivity
         mAdapter = new BaseRecyclerAdapter();
         contentView.setLayoutManager(new LinearLayoutManager(this));
         contentView.setAdapter(mAdapter);
+
+        mErrorViewVisibility = new ObservableInt();
     }
 
     @Override
@@ -112,6 +121,27 @@ public class SearchActivity
         return new ParcelableListLceViewState<>();
     }
 
+    @Override
+    public void showError(Throwable e, boolean pullToRefresh) {
+        super.showError(e, pullToRefresh);
+
+        mErrorViewVisibility.set(errorView.getVisibility());
+    }
+
+    @Override
+    public void showContent() {
+        super.showContent();
+
+        mErrorViewVisibility.set(errorView.getVisibility());
+    }
+
+    @Override
+    public void showLoading(boolean pullToRefresh) {
+        super.showLoading(pullToRefresh);
+
+        mErrorViewVisibility.set(errorView.getVisibility());
+    }
+
     // --------------------------------------------------------
     // End of MVP-LCE-VIEW-STATE-ACTIVITY region
     // --------------------------------------------------------
@@ -161,7 +191,28 @@ public class SearchActivity
         loadData(false);
     }
 
+    @Override
+    public ObservableInt getErrorViewVisibility() {
+        return mErrorViewVisibility;
+    }
+
     // --------------------------------------------------------
     // End of ERROR-VIEW region
+    // --------------------------------------------------------
+
+    // --------------------------------------------------------
+    // TOOLBAR region
+    // --------------------------------------------------------
+
+    /**
+     * Called when the user interacts with the "x" icon. Navigates to the
+     * {@link ForecastActivity}.
+     */
+    public void onExit() {
+        onBackPressed();
+    }
+
+    // --------------------------------------------------------
+    // End of TOOLBAR region
     // --------------------------------------------------------
 }

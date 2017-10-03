@@ -1,21 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    >
 
     <data>
 
         <variable
             name="view"
-            type="com.petar.weather.ui.activities.MainActivity"/>
+            type="com.petar.weather.ui.activities.MainActivity"
+            />
+
     </data>
 
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        >
 
         <include
             android:id="@+id/splash_screen"
-            layout="@layout/splash_screen"/>
+            layout="@layout/splash_screen"
+            />
 
     </FrameLayout>
+
 </layout>
 

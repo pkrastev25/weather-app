@@ -57,6 +57,8 @@ public class SettingsFragment
 
         mToggleButton.setChecked(areNotificationsEnabled);
         mToggleButton.setOnCheckedChangeListener(this);
+
+        // TODO: Add credits for the launch icon + license of the app
     }
 
     @Override

@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    >
 
     <data>
 
         <variable
             name="view"
-            type="com.petar.weather.ui.views.IErrorView"/>
+            type="com.petar.weather.ui.views.IErrorView"
+            />
+
     </data>
 
     <!-- A TextView with errorView id must exist! -->
@@ -14,24 +18,38 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:onClick="@{() -> view.onReload()}"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:visibility="@{view.errorViewVisibility}"
+        >
 
-        <FrameLayout
+        <View
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="1">
+            android:layout_weight="1"
+            />
 
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:src="@mipmap/ic_launcher_round"/>
-        </FrameLayout>
+        <ImageView
+            style="@style/Icon.WhiteTinted"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_gravity="center"
+            android:src="@mipmap/ic_error_black"
+            />
 
         <TextView
             android:id="@+id/errorView"
             style="@style/ErrorView.Text"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            />
+
     </LinearLayout>
+
 </layout>

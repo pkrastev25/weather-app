@@ -1,34 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto">
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    >
 
     <data>
 
         <variable
             name="item"
-            type="com.petar.weather.logic.models.AForecast"/>
+            type="com.petar.weather.logic.models.AForecast"
+            />
 
-        <import type="com.petar.weather.util.FormatUtil"/>
+        <import
+            type="com.petar.weather.util.FormatUtil"
+            />
+
     </data>
 
     <LinearLayout
         style="@style/RecyclerItems"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:onClick="@{() -> item.onItemClick()}">
+        android:onClick="@{() -> item.onItemClick()}"
+        >
 
         <android.support.constraint.ConstraintLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="0.4">
+            android:layout_weight="0.4"
+            >
 
             <ImageView
+                style="@style/Icon.WhiteTinted"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 app:imageUrl="@{item.imageType}"
                 app:layout_constraintDimensionRatio="W, 1:1"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"/>
+                app:layout_constraintStart_toStartOf="parent"
+                />
 
         </android.support.constraint.ConstraintLayout>
 
@@ -38,29 +48,35 @@
             android:layout_gravity="center"
             android:layout_weight="0.6"
             android:gravity="center"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            >
 
             <TextView
                 style="@style/Text.L.Bold"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:text="@{item.weatherState}"/>
+                android:text="@{item.weatherState}"
+                />
 
             <TextView
                 style="@style/Text.M.Bold"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:text="@{FormatUtil.formatMinMaxTemperature(item.minTemp, item.maxTemp)}"/>
+                android:text="@{FormatUtil.formatMinMaxTemperature(item.minTemp, item.maxTemp)}"
+                />
 
             <TextView
                 style="@style/Text.M"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:text="@{FormatUtil.formatForecastDate(item)}"/>
+                android:text="@{FormatUtil.formatForecastDate(item)}"
+                />
 
         </LinearLayout>
+
     </LinearLayout>
+
 </layout>
