@@ -122,6 +122,10 @@ public class DailyForecastFragment
 
     @Override
     public void setData(List<? extends AListenerRecyclerItem> data) {
+        for (AListenerRecyclerItem current : data) {
+            current.setListener(this);
+        }
+
         mAdapter.setData(data);
     }
 

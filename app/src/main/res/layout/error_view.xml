@@ -9,23 +9,29 @@
     </data>
 
     <!-- A TextView with errorView id must exist! -->
-    <RelativeLayout
+    <LinearLayout
         style="@style/OverlappingView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:onClick="@{() -> view.onReload()}">
+        android:onClick="@{() -> view.onReload()}"
+        android:orientation="vertical">
 
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:src="@mipmap/ic_launcher_round"/>
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:src="@mipmap/ic_launcher_round"/>
+        </FrameLayout>
 
         <TextView
             android:id="@+id/errorView"
             style="@style/ErrorView.Text"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"/>
-    </RelativeLayout>
+            android:layout_height="wrap_content"/>
+    </LinearLayout>
 </layout>

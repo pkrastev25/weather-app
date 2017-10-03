@@ -5,10 +5,12 @@ import android.location.Location;
 import com.petar.weather.app.Constants;
 import com.petar.weather.logic.models.AForecast;
 
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
+
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.Locale;
 
 /**
@@ -28,12 +30,12 @@ public class FormatUtil {
     /**
      * A superset of {@link Constants#FORMAT_DATE}, takes into consideration the {@link Locale}.
      */
-    private static final DateFormat DATE_SHOW_FORMAT = DateFormat.getDateInstance(Constants.FORMAT_DATE, Locale.getDefault());
+    private static final DateTimeFormatter DATE_SHOW_FORMAT = DateTimeFormat.forStyle(Constants.FORMAT_DATE).withLocale(Locale.getDefault());
 
     /**
      * A superset of {@link Constants#FORMAT_TIME}, takes into consideration the {@link Locale}.
      */
-    private static final DateFormat TIME_SHOW_FORMAT = DateFormat.getTimeInstance(Constants.FORMAT_TIME, Locale.getDefault());
+    private static final DateTimeFormatter TIME_SHOW_FORMAT = DateTimeFormat.forStyle(Constants.FORMAT_TIME).withLocale(Locale.getDefault());
 
     /**
      * Formats the coordinates of the location, specified by {@link Constants#FORMAT_COORDINATES}.
@@ -74,8 +76,8 @@ public class FormatUtil {
 
         return String.format(
                 Constants.FORMAT_TIME_AND_DATE,
-                TIME_SHOW_FORMAT.format(new Date(created)),
-                DATE_SHOW_FORMAT.format(new Date(applicableDate))
+                TIME_SHOW_FORMAT.print(created),
+                DATE_SHOW_FORMAT.print(applicableDate)
         );
     }
 

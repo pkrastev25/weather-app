@@ -8,7 +8,6 @@ import com.petar.weather.persistence.PersistenceLogic;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
-import java.text.DateFormat;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Pattern;
 
@@ -157,19 +156,23 @@ public class Constants {
 
     /**
      * Specifies the time format.
+     *
+     * @see org.joda.time.format.DateTimeFormat#forStyle(String)
      */
-    public static final int FORMAT_TIME = DateFormat.MEDIUM;
+    public static final String FORMAT_TIME = "-S";
 
     /**
      * Specifies the date format.
+     *
+     * @see org.joda.time.format.DateTimeFormat#forStyle(String)
      */
-    public static final int FORMAT_DATE = DateFormat.SHORT;
+    public static final String FORMAT_DATE = "M-";
 
     /**
      * Specifies the date format, where the 1st param is the formatted time in the form of
      * {@link #FORMAT_TIME}, 2nd - formatted date in the form of {@link #FORMAT_DATE}.
      */
-    public static final String FORMAT_TIME_AND_DATE = "%s %s";
+    public static final String FORMAT_TIME_AND_DATE = "%s / %s";
 
     /**
      * Specifies the air pressure format in millibar.
