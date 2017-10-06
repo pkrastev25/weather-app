@@ -48,7 +48,7 @@ public class PersistenceLogic {
     /**
      * Keep private, invoke {@link #getInstance(Context)} ()} to get the instance.
      *
-     * @param context {@link Context}
+     * @param context {@link Context} reference
      */
     private PersistenceLogic(Context context) {
         DaoMaster.DevOpenHelper helper = new DaoMaster.DevOpenHelper(context, Constants.DB_PERSISTENCE_LOGIC_NAME, null);
@@ -62,7 +62,7 @@ public class PersistenceLogic {
      * @param location {@link NLocation} to be persisted
      */
     public void persistLocation(NLocation location) {
-        mDaoSession.getPLocationDao().insertWithoutSettingPk(
+        mDaoSession.getPLocationDao().insertOrReplace(
                 new PLocation(location)
         );
     }

@@ -54,10 +54,8 @@
         <item name="android:textStyle">bold</item>
     </style>
 
-    <style name="Text.S">
-        <item name="android:textSize">@dimen/text_size_S</item>
-        <item name="android:paddingTop">@dimen/space_S</item>
-        <item name="android:paddingBottom">@dimen/space_S</item>
+    <style name="Text.M.BoldItalic">
+        <item name="android:textStyle">bold|italic</item>
     </style>
 
     <!-- End of TEXT region -->
@@ -119,21 +117,6 @@
 
     <!-- End of TOOLBAR region -->
     <!-- ****************************************************** -->
-    <!-- SEPARATOR region -->
-
-    <style name="Separator" parent="AppTheme">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">1dp</item>
-        <item name="android:background">@color/black</item>
-    </style>
-
-    <style name="Separator.Partial">
-        <item name="android:layout_marginLeft">@dimen/space_XL</item>
-        <item name="android:layout_marginRight">@dimen/space_XL</item>
-    </style>
-
-    <!-- End of SEPARATOR region -->
-    <!-- ****************************************************** -->
     <!-- SETTINGS region -->
 
     <style name="Settings" parent="AppTheme"/>
@@ -152,6 +135,11 @@
         <item name="android:textColor">@color/primary_dark</item>
         <item name="android:padding">@dimen/space_L</item>
         <item name="android:gravity">center</item>
+    </style>
+
+    <style name="ErrorView.Banner" parent="ErrorView.Text">
+        <item name="android:background">@color/primary_dark</item>
+        <item name="android:textColor">@color/primary_dark_contrast</item>
     </style>
 
     <!-- End of ERROR-VIEW region -->

@@ -17,6 +17,7 @@ import com.petar.weather.R;
 import com.petar.weather.app.Constants;
 import com.petar.weather.databinding.FragmentSettingsBinding;
 import com.petar.weather.util.AlarmManagerUtil;
+import com.petar.weather.util.TextUtil;
 
 /**
  * A {@link Fragment} used to display the settings for this application.
@@ -40,10 +41,42 @@ public class SettingsFragment
     }
 
     @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        /*
+         * This transforms a Fragment into a “RetainingFragment” which means only
+         * the Fragment’s GUI (the android.view.View returned from onCreateView())
+         * get’s destroyed an newly created but all referenced objects (like ViewState)
+         * will still be there after screen orientation changes.
+         */
+        setRetainInstance(true);
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         FragmentSettingsBinding binding = DataBindingUtil.inflate(inflater, R.layout.fragment_settings, container, false);
         binding.setView(this);
         mToggleButton = binding.notificationsToggleButton;
+
+        TextUtil.linkifyText(
+                binding.creditsApiTextView,
+                getString(R.string.settings_credits_api_text),
+                Constants.CREDITS_API_PROVIDER,
+                Constants.CREDITS_API_PROVIDER_URL
+        );
+
+        TextUtil.linkifyText(
+                binding.creditsAppIconTextView,
+                getString(R.string.settings_credits_app_icon_text),
+                Constants.CREDITS_APP_ICON_PROVIDER,
+                Constants.CREDITS_APP_ICON_PROVIDER_URL
+        );
+
+        TextUtil.linkifyText(
+                binding.licenseTextView,
+                TextUtil.convertHTMLToText(getString(R.string.license_html))
+        );
 
         return binding.getRoot();
     }
@@ -57,15 +90,16 @@ public class SettingsFragment
 
         mToggleButton.setChecked(areNotificationsEnabled);
         mToggleButton.setOnCheckedChangeListener(this);
-
-        // TODO: Add credits for the launch icon + license of the app
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
 
-        mToggleButton.setOnCheckedChangeListener(null);
+        if (mToggleButton != null) {
+            mToggleButton.setOnCheckedChangeListener(null);
+        }
+
         mToggleButton = null;
     }
 

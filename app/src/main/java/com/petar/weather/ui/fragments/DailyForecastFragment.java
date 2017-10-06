@@ -33,6 +33,7 @@ import com.petar.weather.ui.recycler.AListenerRecyclerItem;
 import com.petar.weather.ui.views.IDailyForecastFragment;
 import com.petar.weather.app.Constants;
 import com.petar.weather.ui.views.IErrorView;
+import com.petar.weather.ui.views.ILoadingView;
 import com.petar.weather.util.ErrorHandlingUtil;
 
 import java.util.List;
@@ -46,7 +47,7 @@ import java.util.List;
  */
 public class DailyForecastFragment
         extends MvpLceViewStateFragment<SwipeRefreshLayout, List<? extends AListenerRecyclerItem>, IDailyForecastFragment, DailyForecastFragmentPresenter>
-        implements IDailyForecastFragment, IForecastActivityForDailyForecastFragmentListener, AForecast.IForecastListener, SwipeRefreshLayout.OnRefreshListener, IErrorView {
+        implements IDailyForecastFragment, IForecastActivityForDailyForecastFragmentListener, AForecast.IForecastListener, SwipeRefreshLayout.OnRefreshListener, IErrorView, ILoadingView {
 
     // Current location
     private Integer mIdWOE;
@@ -78,6 +79,19 @@ public class DailyForecastFragment
     }
 
     @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        /*
+         * This transforms a Fragment into a “RetainingFragment” which means only
+         * the Fragment’s GUI (the android.view.View returned from onCreateView())
+         * get’s destroyed an newly created but all referenced objects (like ViewState)
+         * will still be there after screen orientation changes.
+         */
+        setRetainInstance(true);
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         FragmentDailyForecastBinding binding = DataBindingUtil.inflate(inflater, R.layout.fragment_daily_forecast, container, false);
         binding.setView(this);
@@ -100,6 +114,15 @@ public class DailyForecastFragment
 
         if (mListener != null) {
             mListener.onFragmentCreated();
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        if (mIdWOE != null) {
+            presenter.updateForecast(getContext(), mIdWOE);
         }
     }
 
@@ -238,7 +261,7 @@ public class DailyForecastFragment
     // --------------------------------------------------------
 
     @Override
-    public void onReload() {
+    public void onRetry() {
         loadData(false);
     }
 
@@ -249,5 +272,18 @@ public class DailyForecastFragment
 
     // --------------------------------------------------------
     // End of ERROR-VIEW region
+    // --------------------------------------------------------
+
+    // --------------------------------------------------------
+    // LOADING-VIEW region
+    // --------------------------------------------------------
+
+    @Override
+    public String getLoadingMessage() {
+        return getString(R.string.loading_forecast);
+    }
+
+    // --------------------------------------------------------
+    // End of LOADING-VIEW region
     // --------------------------------------------------------
 }

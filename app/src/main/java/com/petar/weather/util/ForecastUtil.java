@@ -185,26 +185,26 @@ public class ForecastUtil {
     public static String generateTextForWeatherStateSummary(Context context, @Constants.APIWeatherStateSummary String weatherState) {
         switch (weatherState) {
             case Constants.APIWeatherStateSummary.SNOW:
-                return context.getString(R.string.forecast_state_snow);
+                return context.getString(R.string.notification_for_forecast_state_snow);
             case Constants.APIWeatherStateSummary.SLEET:
-                return context.getString(R.string.forecast_state_sleet);
+                return context.getString(R.string.notification_for_forecast_state_sleet);
             case Constants.APIWeatherStateSummary.HAIL:
-                return context.getString(R.string.forecast_state_hail);
+                return context.getString(R.string.notification_for_forecast_state_hail);
             case Constants.APIWeatherStateSummary.THUNDERSTORM:
-                return context.getString(R.string.forecast_state_thunderstorm);
+                return context.getString(R.string.notification_for_forecast_state_thunderstorm);
             case Constants.APIWeatherStateSummary.HEAVY_RAIN:
-                return context.getString(R.string.forecast_state_heavy_rain);
+                return context.getString(R.string.notification_for_forecast_state_heavy_rain);
             case Constants.APIWeatherStateSummary.LIGHT_RAIN:
-                return context.getString(R.string.forecast_state_light_rain);
+                return context.getString(R.string.notification_for_forecast_state_light_rain);
             case Constants.APIWeatherStateSummary.SHOWERS:
-                return context.getString(R.string.forecast_state_showers);
+                return context.getString(R.string.notification_for_forecast_state_showers);
             case Constants.APIWeatherStateSummary.HEAVY_CLOUD:
-                return context.getString(R.string.forecast_state_heavy_cloud);
+                return context.getString(R.string.notification_for_forecast_state_heavy_cloud);
             case Constants.APIWeatherStateSummary.LIGHT_CLOUD:
-                return context.getString(R.string.forecast_state_light_cloud);
+                return context.getString(R.string.notification_for_forecast_state_light_cloud);
             case Constants.APIWeatherStateSummary.CLEAR:
             default:
-                return context.getString(R.string.forecast_state_clear);
+                return context.getString(R.string.notification_for_forecast_state_clear);
         }
     }
 }

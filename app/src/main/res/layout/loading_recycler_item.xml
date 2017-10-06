@@ -27,12 +27,12 @@
             />
 
         <TextView
-            style="@style/Text.M.Bold"
+            style="@style/Text.M.BoldItalic"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/progress_bar"
             android:gravity="center"
-            android:text="@string/general_loading"
+            android:text="@string/loading_forecast"
             />
 
     </RelativeLayout>

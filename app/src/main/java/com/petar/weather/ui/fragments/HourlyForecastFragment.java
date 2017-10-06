@@ -4,6 +4,7 @@ package com.petar.weather.ui.fragments;
 import android.app.Activity;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
+import android.databinding.ObservableField;
 import android.databinding.ObservableInt;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -34,6 +35,7 @@ import com.petar.weather.ui.recycler.LoadingRecyclerItem;
 import com.petar.weather.ui.views.IErrorView;
 import com.petar.weather.ui.views.IHourlyForecastFragment;
 import com.petar.weather.app.Constants;
+import com.petar.weather.ui.views.ILoadingView;
 import com.petar.weather.util.ErrorHandlingUtil;
 import com.petar.weather.util.TimeUtil;
 
@@ -48,7 +50,7 @@ import java.util.List;
  */
 public class HourlyForecastFragment
         extends MvpLceViewStateFragment<SwipeRefreshLayout, List<? extends AListenerRecyclerItem>, IHourlyForecastFragment, HourlyForecastFragmentPresenter>
-        implements IHourlyForecastFragment, IForecastActivityForHourlyForecastFragmentListener, AForecast.IForecastListener, SwipeRefreshLayout.OnRefreshListener, IErrorView {
+        implements IHourlyForecastFragment, IForecastActivityForHourlyForecastFragmentListener, AForecast.IForecastListener, SwipeRefreshLayout.OnRefreshListener, IErrorView, ILoadingView {
 
     // Current location
     private Integer mIdWOE;
@@ -78,6 +80,19 @@ public class HourlyForecastFragment
 
         ((ForecastActivity) activity).setHourlyForecastFragmentListener(this);
         mListener = (IForecastFragmentListener) activity;
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        /*
+         * This transforms a Fragment into a “RetainingFragment” which means only
+         * the Fragment’s GUI (the android.view.View returned from onCreateView())
+         * get’s destroyed an newly created but all referenced objects (like ViewState)
+         * will still be there after screen orientation changes.
+         */
+        setRetainInstance(true);
     }
 
     @Override
@@ -111,7 +126,13 @@ public class HourlyForecastFragment
                     int visibleItemCount = layoutManager.findLastVisibleItemPosition() + 1;
 
                     if (visibleItemCount == totalItemCount && !presenter.isLoading()) {
-                        presenter.loadHourlyForecastForNextDay(getContext(), mIdWOE, true);
+                        // Make a separate thread for the request and the resulting addition of new data
+                        recyclerView.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                presenter.loadHourlyForecastForNextDay(getContext(), mIdWOE, true);
+                            }
+                        });
                     }
                 }
             }
@@ -131,6 +152,15 @@ public class HourlyForecastFragment
         super.onSaveInstanceState(outState);
 
         outState.putParcelable(Constants.BUNDLE_RECYCLER_LOADING_ITEM_KEY, mLoadingRecyclerItem);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        if (mIdWOE != null) {
+            presenter.updateForecast(getContext(), mIdWOE);
+        }
     }
 
     @Override
@@ -308,7 +338,7 @@ public class HourlyForecastFragment
     // --------------------------------------------------------
 
     @Override
-    public void onReload() {
+    public void onRetry() {
         loadData(false);
     }
 
@@ -320,4 +350,18 @@ public class HourlyForecastFragment
     // --------------------------------------------------------
     // End of ERROR-VIEW region
     // --------------------------------------------------------
+
+    // --------------------------------------------------------
+    // LOADING-VIEW region
+    // --------------------------------------------------------
+
+    @Override
+    public String getLoadingMessage() {
+        return getString(R.string.loading_forecast);
+    }
+
+    // --------------------------------------------------------
+    // End of LOADING-VIEW region
+    // --------------------------------------------------------
+
 }

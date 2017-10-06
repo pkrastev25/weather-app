@@ -2,6 +2,7 @@ package com.petar.weather.ui.activities;
 
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
+import android.databinding.ObservableField;
 import android.databinding.ObservableInt;
 import android.support.annotation.NonNull;
 import android.os.Bundle;
@@ -19,6 +20,7 @@ import com.petar.weather.presenters.SearchActivityPresenter;
 import com.petar.weather.ui.adapter.BaseRecyclerAdapter;
 import com.petar.weather.ui.recycler.AListenerRecyclerItem;
 import com.petar.weather.ui.views.IErrorView;
+import com.petar.weather.ui.views.ILoadingView;
 import com.petar.weather.ui.views.ISearchActivity;
 import com.petar.weather.app.Constants;
 import com.petar.weather.util.ErrorHandlingUtil;
@@ -36,7 +38,7 @@ import java.util.List;
  */
 public class SearchActivity
         extends MvpLceViewStateActivity<RecyclerView, List<? extends AListenerRecyclerItem>, ISearchActivity, SearchActivityPresenter>
-        implements ISearchActivity, SearchView.OnQueryTextListener, ALocation.ILocationListener, IErrorView {
+        implements ISearchActivity, SearchView.OnQueryTextListener, ALocation.ILocationListener, IErrorView, ILoadingView {
 
     // SEARCH helpers
     private SearchView mSearchView;
@@ -187,7 +189,7 @@ public class SearchActivity
     // --------------------------------------------------------
 
     @Override
-    public void onReload() {
+    public void onRetry() {
         loadData(false);
     }
 
@@ -214,5 +216,18 @@ public class SearchActivity
 
     // --------------------------------------------------------
     // End of TOOLBAR region
+    // --------------------------------------------------------
+
+    // --------------------------------------------------------
+    // LOADING-VIEW region
+    // --------------------------------------------------------
+
+    @Override
+    public String getLoadingMessage() {
+        return getString(R.string.loading_search);
+    }
+
+    // --------------------------------------------------------
+    // End of LOADING-VIEW region
     // --------------------------------------------------------
 }

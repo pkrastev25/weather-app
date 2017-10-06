@@ -44,6 +44,7 @@ import com.petar.weather.ui.adapter.ViewPagerFragmentAdapter;
 import com.petar.weather.ui.views.IErrorView;
 import com.petar.weather.ui.views.IForecastActivity;
 import com.petar.weather.app.Constants;
+import com.petar.weather.ui.views.ILoadingView;
 import com.petar.weather.util.ErrorHandlingUtil;
 
 /**
@@ -57,7 +58,7 @@ import com.petar.weather.util.ErrorHandlingUtil;
  */
 public class ForecastActivity
         extends MvpLceViewStateActivity<ViewPager, ALocation, IForecastActivity, ForecastActivityPresenter>
-        implements IForecastActivity, IForecastFragmentListener, OnSuccessListener<LocationSettingsResponse>, OnFailureListener, OnCompleteListener<LocationSettingsResponse>, IErrorView {
+        implements IForecastActivity, IForecastFragmentListener, OnSuccessListener<LocationSettingsResponse>, OnFailureListener, OnCompleteListener<LocationSettingsResponse>, IErrorView, ILoadingView {
 
     // Current location
     private ALocation mCurrentLocation;
@@ -68,6 +69,7 @@ public class ForecastActivity
     private LocationCallback mLocationCallback;
     private boolean mRequestingLocationUpdates;
     private boolean mIsTaskStarted;
+    private boolean mAreLocationUpdatesActive;
 
     // TOOLBAR helpers
     private ObservableField<String> mCurrentLocationTitle;
@@ -104,7 +106,7 @@ public class ForecastActivity
 
                 if (locationResult.getLastLocation() != null) {
                     mRequestingLocationUpdates = false;
-                    mFusedLocationProviderClient.removeLocationUpdates(this);
+                    removeLocationUpdates();
                     presenter.processLocationCoordinates(ForecastActivity.this, locationResult.getLastLocation());
                 }
             }
@@ -131,8 +133,11 @@ public class ForecastActivity
     protected void onResume() {
         super.onResume();
 
-        // Resume location updates, if they were running before the application was paused
-        if (mCurrentLocation == null && mRequestingLocationUpdates) {
+        /*
+         * Resume location updates, if they were running before the application was paused
+         * Start location updates, if they were not started recently
+         */
+        if (mCurrentLocation == null && mRequestingLocationUpdates || PersistenceLogic.getInstance(this).shouldLocationDataUpdate()) {
             findLocation();
         }
     }
@@ -142,8 +147,9 @@ public class ForecastActivity
         super.onPause();
 
         // Disable location updates, saves battery life!
-        // TODO: Do not execute next line if the updates are already removed !
-        mFusedLocationProviderClient.removeLocationUpdates(mLocationCallback);
+        if (mAreLocationUpdatesActive) {
+            removeLocationUpdates();
+        }
     }
 
     @Override
@@ -316,6 +322,14 @@ public class ForecastActivity
     }
 
     /**
+     * Removes the location updates from {@link FusedLocationProviderClient}.
+     */
+    private void removeLocationUpdates() {
+        mAreLocationUpdatesActive = false;
+        mFusedLocationProviderClient.removeLocationUpdates(mLocationCallback);
+    }
+
+    /**
      * The currently configured settings are sufficient, start the location updates.
      *
      * @param locationSettingsResponse Ignored
@@ -323,6 +337,7 @@ public class ForecastActivity
     @Override
     public void onSuccess(LocationSettingsResponse locationSettingsResponse) {
         try {
+            mAreLocationUpdatesActive = true;
             mFusedLocationProviderClient.requestLocationUpdates(mLocationRequest, mLocationCallback, null);
         } catch (SecurityException e) {
             requestPermissions();
@@ -379,7 +394,7 @@ public class ForecastActivity
      */
     private void handleGeneralError(boolean showDialog) {
         mRequestingLocationUpdates = false;
-        mFusedLocationProviderClient.removeLocationUpdates(mLocationCallback);
+        removeLocationUpdates();
         mCurrentLocationTitle.set(getString(R.string.toolbar_location_not_found));
         showError(new Throwable(Constants.ErrorHandling.DEFAULT), false);
 
@@ -488,7 +503,7 @@ public class ForecastActivity
     // --------------------------------------------------------
 
     @Override
-    public void onReload() {
+    public void onRetry() {
         loadData(false);
     }
 
@@ -499,5 +514,18 @@ public class ForecastActivity
 
     // --------------------------------------------------------
     // End of ERROR-VIEW region
+    // --------------------------------------------------------
+
+    // --------------------------------------------------------
+    // LOADING-VIEW region
+    // --------------------------------------------------------
+
+    @Override
+    public String getLoadingMessage() {
+        return getString(R.string.loading_location);
+    }
+
+    // --------------------------------------------------------
+    // End of LOADING-VIEW region
     // --------------------------------------------------------
 }

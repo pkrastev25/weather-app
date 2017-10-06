@@ -131,8 +131,8 @@ public class NotificationIntentService extends IntentService {
         NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this);
 
         notificationBuilder.setSmallIcon(R.drawable.ic_launcher);
-        notificationBuilder.setContentTitle(getString(R.string.notifications_error_title));
-        notificationBuilder.setContentText(getString(R.string.notifications_error_text));
+        notificationBuilder.setContentTitle(getString(R.string.notification_error_title));
+        notificationBuilder.setContentText(getString(R.string.notification_error_text));
         notificationBuilder.setAutoCancel(true);
 
         Intent resultIntent = new Intent(this, ForecastActivity.class);

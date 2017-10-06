@@ -26,6 +26,19 @@ public class DailyForecastFragmentPresenter extends MvpBasePresenter<IDailyForec
     private boolean mIsLoading;
 
     /**
+     * Makes a check if the cached forecast data is up-to-date. If not, performs
+     * a new API request to update it.
+     *
+     * @param context {@link Context} reference
+     * @param idWOE   'Where on Earth ID', identifies a location
+     */
+    public void updateForecast(Context context, int idWOE) {
+        if (PersistenceLogic.getInstance(context).shouldForecastDataUpdate(Constants.DB_DAILY_FORECAST_KEY, idWOE)) {
+            loadLocationDailyForecast(context, idWOE, false);
+        }
+    }
+
+    /**
      * Performs an API request for the daily forecast. Manipulates the view accordingly in
      * each step. Provides error detection and handling for the result.
      *

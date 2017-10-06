@@ -12,17 +12,38 @@
 
     </data>
 
-    <FrameLayout
+    <LinearLayout
+        android:id="@+id/splash_screen_view"
+        style="@style/SplashScreen"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:orientation="vertical"
         >
 
-        <include
-            android:id="@+id/splash_screen"
-            layout="@layout/splash_screen"
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            >
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_launcher"
+                />
+
+        </FrameLayout>
+
+        <TextView
+            style="@style/SplashScreen.Text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/splash_screen_text"
             />
 
-    </FrameLayout>
+    </LinearLayout>
 
 </layout>
 

@@ -87,6 +87,7 @@
             <!-- Loading View -->
             <include
                 layout="@layout/loading_view"
+                app:view="@{view}"
                 />
 
         </FrameLayout>

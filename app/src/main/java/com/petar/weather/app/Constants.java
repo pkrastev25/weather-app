@@ -3,6 +3,7 @@ package com.petar.weather.app;
 import android.content.Context;
 import android.support.annotation.IntDef;
 import android.support.annotation.StringDef;
+import android.widget.TextView;
 
 import com.petar.weather.persistence.PersistenceLogic;
 
@@ -560,6 +561,40 @@ public class Constants {
 
     // --------------------------------------------------------
     // End of ERROR-HANDLING region
+    // --------------------------------------------------------
+
+    // --------------------------------------------------------
+    // CREDITS region
+    // --------------------------------------------------------
+
+    /**
+     * Specifies who is the API provider for this application. Must be used
+     * within {@link com.petar.weather.R.string#settings_credits_api_text}.
+     */
+    public static final String CREDITS_API_PROVIDER = "MetaWeather";
+
+    /**
+     * Specifies the URL for {@link #CREDITS_API_PROVIDER}.
+     *
+     * @see com.petar.weather.util.TextUtil#linkifyText(TextView, String, String, String)
+     */
+    public static final String CREDITS_API_PROVIDER_URL = "http://www.metaweather.com/";
+
+    /**
+     * Specifies who is the app icon provider for this application. Must be used
+     * within {@link com.petar.weather.R.string#settings_credits_app_icon_text}.
+     */
+    public static final String CREDITS_APP_ICON_PROVIDER = "Alfredo Hernandez";
+
+    /**
+     * Specifies the URL for {@link #CREDITS_APP_ICON_PROVIDER}.
+     *
+     * @see com.petar.weather.util.TextUtil#linkifyText(TextView, String, String, String)
+     */
+    public static final String CREDITS_APP_ICON_PROVIDER_URL = "https://www.flaticon.com/authors/alfredo-hernandez";
+
+    // --------------------------------------------------------
+    // End of CREDITS region
     // --------------------------------------------------------
 
     // --------------------------------------------------------

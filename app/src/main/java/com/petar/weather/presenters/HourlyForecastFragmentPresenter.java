@@ -14,6 +14,7 @@ import com.petar.weather.util.FormatUtil;
 import com.petar.weather.util.NetworkUtil;
 import com.petar.weather.util.TimeUtil;
 
+import java.util.Calendar;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -35,10 +36,23 @@ public class HourlyForecastFragmentPresenter extends MvpBasePresenter<IHourlyFor
      * and the limit forecast date, {@link Constants#API_HOURLY_FORECAST_LIMIT_MILLIS}.
      */
     public HourlyForecastFragmentPresenter() {
-        super();
-
         mCurrentForecastDate = TimeUtil.getCurrentTime();
         mLimitForecastDate = TimeUtil.getCurrentTimeWithOffset(Constants.API_HOURLY_FORECAST_LIMIT_MILLIS);
+    }
+
+    /**
+     * Makes a check if the cached forecast data is up-to-date. If not, performs
+     * a new API request to update it.
+     *
+     * @param context {@link Context} reference
+     * @param idWOE   'Where on Earth ID', identifies a location
+     */
+    public void updateForecast(Context context, int idWOE) {
+        long keyDB = FormatUtil.formatDateRequest(Calendar.getInstance()).hashCode();
+
+        if (PersistenceLogic.getInstance(context).shouldForecastDataUpdate(keyDB, idWOE)) {
+            loadHourlyForecastForToday(context, idWOE, false);
+        }
     }
 
     /**

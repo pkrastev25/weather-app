@@ -43,7 +43,7 @@ public class MainActivity extends AppCompatActivity implements Animation.Animati
 
         ActivityMainBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
         binding.setView(this);
-        mSplashScreen = binding.splashScreen;
+        mSplashScreen = binding.splashScreenView;
 
         mAnimation = new AlphaAnimation(
                 Constants.ANIMATION_ALPHA_SPLASH_SCREEN_START,

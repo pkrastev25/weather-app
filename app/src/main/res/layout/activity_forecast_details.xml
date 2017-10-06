@@ -78,8 +78,8 @@
                     android:text="@{FormatUtil.formatForecastDate(view.forecast)}"
                     />
 
-                <View
-                    style="@style/Separator.Partial"
+                <include
+                    layout="@layout/separator"
                     />
 
                 <TextView

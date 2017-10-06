@@ -15,7 +15,7 @@ public interface IErrorView {
     /**
      * Attempts to resolve the error by calling the loading functionality.
      */
-    void onReload();
+    void onRetry();
 
     /**
      * Must be synchronized with the current visibility of the view with id errorView.
