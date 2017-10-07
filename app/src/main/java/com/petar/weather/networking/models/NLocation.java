@@ -20,8 +20,6 @@ public class NLocation extends ALocation {
     private int distance;
     @SerializedName("title")
     private String title;
-    @SerializedName("location_type")
-    private String locationType;
     @SerializedName("woeid")
     private Integer woeid;
     @SerializedName("latt_long")
@@ -63,7 +61,6 @@ public class NLocation extends ALocation {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeValue(this.distance);
         dest.writeString(this.title);
-        dest.writeString(this.locationType);
         dest.writeValue(this.woeid);
         dest.writeString(this.lattLong);
     }
@@ -74,7 +71,6 @@ public class NLocation extends ALocation {
     protected NLocation(Parcel in) {
         this.distance = (Integer) in.readValue(Integer.class.getClassLoader());
         this.title = in.readString();
-        this.locationType = in.readString();
         this.woeid = (Integer) in.readValue(Integer.class.getClassLoader());
         this.lattLong = in.readString();
     }

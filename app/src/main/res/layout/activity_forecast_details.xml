@@ -16,9 +16,10 @@
 
     </data>
 
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:orientation="vertical"
         >
 
         <!-- TOOLBAR region -->
@@ -34,6 +35,7 @@
                 style="@style/Toolbar.Icon"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
+                android:contentDescription="@string/content_description_back_icon"
                 android:onClick="@{() -> view.onExit()}"
                 android:src="@mipmap/ic_back_white"
                 />
@@ -43,17 +45,20 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:text="@string/toolbar_details"
+                android:text="@{view.forecast.weatherState}"
                 />
 
         </LinearLayout>
+
+        <include
+            layout="@layout/item_shadow_down"
+            />
 
         <!-- End of TOOLBAR region -->
 
         <ScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_below="@id/toolbar"
             >
 
             <LinearLayout
@@ -67,11 +72,11 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center"
-                    android:text="@{view.forecast.weatherState}"
+                    android:text="@{view.location.title}"
                     />
 
                 <TextView
-                    style="@style/Text.XL"
+                    style="@style/Text.M"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center"
@@ -79,7 +84,7 @@
                     />
 
                 <include
-                    layout="@layout/separator"
+                    layout="@layout/item_separator"
                     />
 
                 <TextView
@@ -184,6 +189,6 @@
 
         </ScrollView>
 
-    </RelativeLayout>
+    </LinearLayout>
 
 </layout>

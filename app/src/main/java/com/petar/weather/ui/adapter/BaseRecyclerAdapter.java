@@ -7,9 +7,9 @@ import android.view.ViewGroup;
 
 import com.petar.weather.BR;
 import com.petar.weather.R;
-import com.petar.weather.databinding.ForecastRecyclerItemBinding;
-import com.petar.weather.databinding.LoadingRecyclerItemBinding;
-import com.petar.weather.databinding.LocationRecyclerItemBinding;
+import com.petar.weather.databinding.RecyclerItemForecastBinding;
+import com.petar.weather.databinding.RecyclerItemLoadingBinding;
+import com.petar.weather.databinding.RecyclerItemLocationBinding;
 import com.petar.weather.ui.recycler.AListenerRecyclerItem;
 import com.petar.weather.app.Constants;
 
@@ -105,13 +105,13 @@ public class BaseRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
         switch (viewType) {
             case Constants.RecyclerItems.FORECAST_ITEM:
-                view = LayoutInflater.from(parent.getContext()).inflate(R.layout.forecast_recycler_item, parent, false);
+                view = LayoutInflater.from(parent.getContext()).inflate(R.layout.recycler_item_forecast, parent, false);
                 return new BaseRecyclerViewBindingHolder<>(view);
             case Constants.RecyclerItems.LOCATION_ITEM:
-                view = LayoutInflater.from(parent.getContext()).inflate(R.layout.location_recycler_item, parent, false);
+                view = LayoutInflater.from(parent.getContext()).inflate(R.layout.recycler_item_location, parent, false);
                 return new BaseRecyclerViewBindingHolder<>(view);
             case Constants.RecyclerItems.LOADING_ITEM:
-                view = LayoutInflater.from(parent.getContext()).inflate(R.layout.loading_recycler_item, parent, false);
+                view = LayoutInflater.from(parent.getContext()).inflate(R.layout.recycler_item_loading, parent, false);
                 return new BaseRecyclerViewBindingHolder<>(view);
             default:
                 return null;
@@ -124,18 +124,18 @@ public class BaseRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
         switch (holder.getItemViewType()) {
             case Constants.RecyclerItems.FORECAST_ITEM:
-                BaseRecyclerViewBindingHolder<ForecastRecyclerItemBinding> forecastBindingBaseRecyclerViewBindingHolder = (BaseRecyclerViewBindingHolder<ForecastRecyclerItemBinding>) holder;
-                forecastBindingBaseRecyclerViewBindingHolder.getBinding().setVariable(BR.item, item);
+                BaseRecyclerViewBindingHolder<RecyclerItemForecastBinding> forecastBindingBaseRecyclerViewBindingHolder = (BaseRecyclerViewBindingHolder<RecyclerItemForecastBinding>) holder;
+                forecastBindingBaseRecyclerViewBindingHolder.getBinding().setVariable(BR.view, item);
                 forecastBindingBaseRecyclerViewBindingHolder.getBinding().executePendingBindings();
                 break;
             case Constants.RecyclerItems.LOCATION_ITEM:
-                BaseRecyclerViewBindingHolder<LocationRecyclerItemBinding> locationBindingBaseRecyclerViewBindingHolder = (BaseRecyclerViewBindingHolder<LocationRecyclerItemBinding>) holder;
-                locationBindingBaseRecyclerViewBindingHolder.getBinding().setVariable(BR.item, item);
+                BaseRecyclerViewBindingHolder<RecyclerItemLocationBinding> locationBindingBaseRecyclerViewBindingHolder = (BaseRecyclerViewBindingHolder<RecyclerItemLocationBinding>) holder;
+                locationBindingBaseRecyclerViewBindingHolder.getBinding().setVariable(BR.view, item);
                 locationBindingBaseRecyclerViewBindingHolder.getBinding().executePendingBindings();
                 break;
             case Constants.RecyclerItems.LOADING_ITEM:
-                BaseRecyclerViewBindingHolder<LoadingRecyclerItemBinding> loadingRecyclerItemBindingBaseRecyclerViewBindingHolder = (BaseRecyclerViewBindingHolder<LoadingRecyclerItemBinding>) holder;
-                loadingRecyclerItemBindingBaseRecyclerViewBindingHolder.getBinding().setVariable(BR.item, item);
+                BaseRecyclerViewBindingHolder<RecyclerItemLoadingBinding> loadingRecyclerItemBindingBaseRecyclerViewBindingHolder = (BaseRecyclerViewBindingHolder<RecyclerItemLoadingBinding>) holder;
+                loadingRecyclerItemBindingBaseRecyclerViewBindingHolder.getBinding().setVariable(BR.view, item);
                 loadingRecyclerItemBindingBaseRecyclerViewBindingHolder.getBinding().executePendingBindings();
                 break;
             default:

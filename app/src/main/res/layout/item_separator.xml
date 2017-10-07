@@ -5,5 +5,5 @@
     android:layout_height="1dp"
     android:layout_marginLeft="@dimen/space_L"
     android:layout_marginRight="@dimen/space_L"
-    android:background="@color/black_opacity_0.5"
+    android:background="@color/black_opacity_50"
     />

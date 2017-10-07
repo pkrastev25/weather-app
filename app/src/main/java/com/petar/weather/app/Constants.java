@@ -369,6 +369,12 @@ public class Constants {
      */
     public static final String BUNDLE_RECYCLER_LOADING_ITEM_KEY = "BUNDLE_RECYCLER_LOADING_ITEM_KEY";
 
+    /**
+     * Unique bundle key. In order to ensure this, keep the variable declaration
+     * the same as its value!
+     */
+    public static final String BUNDLE_LOCATION_DETAILS_KEY = "BUNDLE_LOCATION_DETAILS_KEY";
+
     // --------------------------------------------------------
     // End of BUNDLE-KEYS region
     // --------------------------------------------------------

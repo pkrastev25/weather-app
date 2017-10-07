@@ -10,6 +10,7 @@ import com.petar.weather.R;
 import com.petar.weather.databinding.ActivityForecastDetailsBinding;
 import com.petar.weather.logic.models.AForecast;
 import com.petar.weather.app.Constants;
+import com.petar.weather.logic.models.ALocation;
 
 /**
  * Displays in-depth information about the given forecast.
@@ -21,6 +22,7 @@ import com.petar.weather.app.Constants;
 public class ForecastDetailsActivity extends AppCompatActivity {
 
     private ObservableParcelable<AForecast> mForecast;
+    private ObservableParcelable<ALocation> mLocation;
 
     // --------------------------------------------------------
     // GENERAL-ACTIVITY region
@@ -34,16 +36,24 @@ public class ForecastDetailsActivity extends AppCompatActivity {
         binding.setView(this);
 
         mForecast = new ObservableParcelable<>();
+        mLocation = new ObservableParcelable<>();
         Bundle bundle = getIntent().getExtras();
 
         if (bundle != null) {
             AForecast forecast = bundle.getParcelable(Constants.BUNDLE_FORECAST_DETAILS_KEY);
             mForecast.set(forecast);
+
+            ALocation location = bundle.getParcelable(Constants.BUNDLE_LOCATION_DETAILS_KEY);
+            mLocation.set(location);
         }
     }
 
     public ObservableField<AForecast> getForecast() {
         return mForecast;
+    }
+
+    public ObservableParcelable<ALocation> getLocation() {
+        return mLocation;
     }
 
     // --------------------------------------------------------

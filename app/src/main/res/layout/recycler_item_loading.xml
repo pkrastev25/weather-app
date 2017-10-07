@@ -6,7 +6,7 @@
     <data>
 
         <variable
-            name="item"
+            name="view"
             type="com.petar.weather.ui.recycler.LoadingRecyclerItem"
             />
 

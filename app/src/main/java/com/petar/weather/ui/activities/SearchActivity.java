@@ -88,6 +88,7 @@ public class SearchActivity
     // MVP-LCE-VIEW-STATE-ACTIVITY region
     // --------------------------------------------------------
 
+    @NonNull
     @Override
     public SearchActivityPresenter createPresenter() {
         return new SearchActivityPresenter();
@@ -175,6 +176,8 @@ public class SearchActivity
     @Override
     public void onLocationChosen(ALocation location) {
         Intent intent = new Intent(this, ForecastActivity.class);
+        // Overwrite the Activity stack
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         intent.putExtra(Constants.BUNDLE_LOCATION_FROM_SEARCH_KEY, location);
         startActivity(intent);
         finish();

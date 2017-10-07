@@ -19,7 +19,7 @@
 
         <!-- Error view -->
         <include
-            layout="@layout/error_view"
+            layout="@layout/view_error"
             app:view="@{view}"
             />
 
@@ -33,6 +33,7 @@
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/recycler"
+                style="@style/RecyclerView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 />
@@ -41,7 +42,7 @@
 
         <!-- Loading View -->
         <include
-            layout="@layout/loading_view"
+            layout="@layout/view_loading"
             app:view="@{view}"
             />
 

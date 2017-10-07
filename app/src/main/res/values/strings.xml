@@ -26,7 +26,6 @@
     <!-- TOOLBAR -->
     <string name="toolbar_location_hint">@string/loading_location</string>
     <string name="toolbar_location_not_found">@string/alert_dialog_location_not_found_header</string>
-    <string name="toolbar_details">Details</string>
 
     <!-- FORECAST -->
     <string name="forecast_details_wind_speed">Wind speed</string>
@@ -77,4 +76,14 @@
     <string name="fragment_hourly_forecast_title">HOURLY FORECAST</string>
     <string name="fragment_daily_forecast_title">DAILY FORECAST</string>
     <string name="fragment_settings_title">SETTINGS</string>
+    
+    <!-- CONTENT DESCRIPTION -->
+    <string name="content_description_current_location_icon">Current location</string>
+    <string name="content_description_search_icon">Search</string>
+    <string name="content_description_back_icon">Back</string>
+    <string name="content_description_app_icon">App icon</string>
+    <string name="content_description_error_icon">Error icon</string>
+    <string name="content_description_city_icon">City icon</string>
+    <!-- The param must be replaced by the weather state -->
+    <string name="content_description_weather_state_icon">%s icon</string>
 </resources>

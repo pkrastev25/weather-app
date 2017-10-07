@@ -190,7 +190,7 @@ public class ForecastActivity
     public void setData(ALocation current) {
         mCurrentLocation = current;
         mCurrentLocationTitle.set(current.getTitle());
-        onLocationFound(current.getIdWOE());
+        onLocationFound(current);
     }
 
     @Override
@@ -425,7 +425,7 @@ public class ForecastActivity
      */
     private void showEnableSettingsDialog() {
         final AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        // TODO: Add a custom implementation that links to the corresponding settings
+
         builder.setTitle(R.string.alert_dialog_location_not_found_header)
                 .setMessage(R.string.alert_dialog_location_not_found_text)
                 .setPositiveButton(R.string.button_settings, new DialogInterface.OnClickListener() {
@@ -459,15 +459,15 @@ public class ForecastActivity
      * and {@link com.petar.weather.ui.fragments.DailyForecastFragment} that the current location
      * is found.
      *
-     * @param idWOE 'Where on Earth' id, identifies a location
+     * @param location The current location of the user
      */
-    public void onLocationFound(Integer idWOE) {
+    public void onLocationFound(ALocation location) {
         if (mHourlyForecastFragmentListener != null) {
-            mHourlyForecastFragmentListener.onLocationFound(idWOE);
+            mHourlyForecastFragmentListener.onLocationFound(location);
         }
 
         if (mDailyForecastFragmentListener != null) {
-            mDailyForecastFragmentListener.onLocationFound(idWOE);
+            mDailyForecastFragmentListener.onLocationFound(location);
         }
     }
 
@@ -490,7 +490,7 @@ public class ForecastActivity
     @Override
     public void onFragmentCreated() {
         if (mCurrentLocation != null) {
-            onLocationFound(mCurrentLocation.getIdWOE());
+            onLocationFound(mCurrentLocation);
         }
     }
 

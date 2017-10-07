@@ -2,6 +2,8 @@ package com.petar.weather.listeners;
 
 import android.support.annotation.NonNull;
 
+import com.petar.weather.logic.models.ALocation;
+
 /**
  * The mediator between {@link com.petar.weather.ui.activities.ForecastActivity}
  * and {@link com.petar.weather.ui.fragments.DailyForecastFragment}/
@@ -17,7 +19,7 @@ public interface IForecastActivityListener {
     /**
      * Notifies the listener that the current location has been found.
      *
-     * @param idWOE 'Where on Earth ID', identifies a location
+     * @param location The current location of the user
      */
-    void onLocationFound(@NonNull Integer idWOE);
+    void onLocationFound(@NonNull ALocation location);
 }

@@ -7,11 +7,11 @@ import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.SwitchCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
-import android.widget.ToggleButton;
 
 import com.petar.weather.R;
 import com.petar.weather.app.Constants;
@@ -30,7 +30,7 @@ public class SettingsFragment
         extends Fragment
         implements CompoundButton.OnCheckedChangeListener {
 
-    private ToggleButton mToggleButton;
+    private SwitchCompat mToggleButton;
 
     // --------------------------------------------------------
     // GENERAL-ACTIVITY region

@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -26,6 +27,7 @@ import com.petar.weather.databinding.FragmentHourlyForecastBinding;
 import com.petar.weather.listeners.IForecastActivityForHourlyForecastFragmentListener;
 import com.petar.weather.listeners.IForecastFragmentListener;
 import com.petar.weather.logic.models.AForecast;
+import com.petar.weather.logic.models.ALocation;
 import com.petar.weather.presenters.HourlyForecastFragmentPresenter;
 import com.petar.weather.ui.activities.ForecastActivity;
 import com.petar.weather.ui.activities.ForecastDetailsActivity;
@@ -53,7 +55,7 @@ public class HourlyForecastFragment
         implements IHourlyForecastFragment, IForecastActivityForHourlyForecastFragmentListener, AForecast.IForecastListener, SwipeRefreshLayout.OnRefreshListener, IErrorView, ILoadingView {
 
     // Current location
-    private Integer mIdWOE;
+    private ALocation mLocation;
 
     // CONTENT-VIEW helpers
     private RecyclerView mRecyclerView;
@@ -130,7 +132,7 @@ public class HourlyForecastFragment
                         recyclerView.post(new Runnable() {
                             @Override
                             public void run() {
-                                presenter.loadHourlyForecastForNextDay(getContext(), mIdWOE, true);
+                                presenter.loadHourlyForecastForNextDay(getContext(), mLocation.getIdWOE(), true);
                             }
                         });
                     }
@@ -145,6 +147,11 @@ public class HourlyForecastFragment
         if (savedInstanceState != null) {
             mLoadingRecyclerItem = savedInstanceState.getParcelable(Constants.BUNDLE_RECYCLER_LOADING_ITEM_KEY);
         }
+
+        // Style the pull-to-refresh color
+        contentView.setColorSchemeColors(
+                ContextCompat.getColor(getContext(), R.color.primary)
+        );
     }
 
     @Override
@@ -158,8 +165,8 @@ public class HourlyForecastFragment
     public void onResume() {
         super.onResume();
 
-        if (mIdWOE != null) {
-            presenter.updateForecast(getContext(), mIdWOE);
+        if (mLocation != null) {
+            presenter.updateForecast(getContext(), mLocation.getIdWOE());
         }
     }
 
@@ -200,8 +207,8 @@ public class HourlyForecastFragment
 
     @Override
     public void loadData(boolean pullToRefresh) {
-        if (mIdWOE != null) {
-            presenter.loadHourlyForecastForToday(getContext(), mIdWOE, pullToRefresh);
+        if (mLocation != null) {
+            presenter.loadHourlyForecastForToday(getContext(), mLocation.getIdWOE(), pullToRefresh);
         }
     }
 
@@ -305,12 +312,12 @@ public class HourlyForecastFragment
     // --------------------------------------------------------
 
     @Override
-    public void onLocationFound(@NonNull Integer idWOE) {
-        boolean didIdChange = !idWOE.equals(mIdWOE);
-        mIdWOE = idWOE;
+    public void onLocationFound(@NonNull ALocation location) {
+        boolean didLocationChange = !location.equals(mLocation);
+        mLocation = location;
 
-        if (didIdChange && presenter != null) {
-            presenter.loadHourlyForecastForToday(getContext(), idWOE, false);
+        if (didLocationChange && presenter != null) {
+            presenter.loadHourlyForecastForToday(getContext(), location.getIdWOE(), false);
         }
     }
 
@@ -326,6 +333,7 @@ public class HourlyForecastFragment
     public void onShowForecastDetails(AForecast forecast) {
         Intent intent = new Intent(getActivity(), ForecastDetailsActivity.class);
         intent.putExtra(Constants.BUNDLE_FORECAST_DETAILS_KEY, forecast);
+        intent.putExtra(Constants.BUNDLE_LOCATION_DETAILS_KEY, mLocation);
         startActivity(intent);
     }
 

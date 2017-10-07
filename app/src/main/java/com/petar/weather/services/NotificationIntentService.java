@@ -105,7 +105,7 @@ public class NotificationIntentService extends IntentService {
     private void buildForecastNotification(AForecast forecast) {
         NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this);
 
-        notificationBuilder.setSmallIcon(R.drawable.ic_launcher);
+        notificationBuilder.setSmallIcon(R.mipmap.ic_launcher);
         notificationBuilder.setContentTitle(forecast.getWeatherState());
         notificationBuilder.setContentText(ForecastUtil.generateTextForWeatherStateSummary(this, forecast.getWeatherStateSummary()));
         notificationBuilder.setAutoCancel(true);
@@ -130,7 +130,7 @@ public class NotificationIntentService extends IntentService {
     private void buildErrorNotification() {
         NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this);
 
-        notificationBuilder.setSmallIcon(R.drawable.ic_launcher);
+        notificationBuilder.setSmallIcon(R.mipmap.ic_launcher);
         notificationBuilder.setContentTitle(getString(R.string.notification_error_title));
         notificationBuilder.setContentText(getString(R.string.notification_error_text));
         notificationBuilder.setAutoCancel(true);

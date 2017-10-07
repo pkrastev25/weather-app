@@ -13,9 +13,10 @@
 
     </data>
 
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:orientation="vertical"
         >
 
         <!-- TOOLBAR region -->
@@ -25,8 +26,6 @@
             style="@style/Toolbar"
             android:layout_width="match_parent"
             android:layout_height="?android:attr/actionBarSize"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
             android:orientation="horizontal"
             >
 
@@ -34,6 +33,7 @@
                 style="@style/Toolbar.Icon"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
+                android:contentDescription="@string/content_description_back_icon"
                 android:onClick="@{() -> view.onExit()}"
                 android:src="@mipmap/ic_back_white"
                 />
@@ -51,36 +51,39 @@
 
         </LinearLayout>
 
+        <include
+            layout="@layout/item_shadow_down"
+            />
+
         <!-- End of TOOLBAR region -->
 
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_below="@id/toolbar"
             >
 
             <!-- Error view -->
             <include
-                layout="@layout/error_view"
+                layout="@layout/view_error"
                 app:view="@{view}"
                 />
 
             <!-- Content View -->
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/contentView"
-                style="@style/OverlappingView"
+                style="@style/RecyclerView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 />
 
             <!-- Loading View -->
             <include
-                layout="@layout/loading_view"
+                layout="@layout/view_loading"
                 app:view="@{view}"
                 />
 
         </FrameLayout>
 
-    </RelativeLayout>
+    </LinearLayout>
 
 </layout>

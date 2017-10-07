@@ -32,8 +32,6 @@ public class NForecast extends AForecast {
     private double minTemp;
     @SerializedName("max_temp")
     private double maxTemp;
-    @SerializedName("the_temp")
-    private double theTemp;
     @SerializedName("wind_speed")
     private double windSpeed;
     @SerializedName("wind_direction")
@@ -42,10 +40,6 @@ public class NForecast extends AForecast {
     private double airPressure;
     @SerializedName("humidity")
     private int humidity;
-    @SerializedName("visibility")
-    private double visibility;
-    @SerializedName("predictability")
-    private int predictability;
 
     public Long getId() {
         return id;
@@ -149,13 +143,10 @@ public class NForecast extends AForecast {
         dest.writeString(this.applicableDate);
         dest.writeDouble(this.minTemp);
         dest.writeDouble(this.maxTemp);
-        dest.writeDouble(this.theTemp);
         dest.writeDouble(this.windSpeed);
         dest.writeDouble(this.windDirection);
         dest.writeDouble(this.airPressure);
         dest.writeInt(this.humidity);
-        dest.writeDouble(this.visibility);
-        dest.writeInt(this.predictability);
     }
 
     protected NForecast(Parcel in) {
@@ -167,13 +158,10 @@ public class NForecast extends AForecast {
         this.applicableDate = in.readString();
         this.minTemp = in.readDouble();
         this.maxTemp = in.readDouble();
-        this.theTemp = in.readDouble();
         this.windSpeed = in.readDouble();
         this.windDirection = in.readDouble();
         this.airPressure = in.readDouble();
         this.humidity = in.readInt();
-        this.visibility = in.readDouble();
-        this.predictability = in.readInt();
     }
 
     public static final Creator<NForecast> CREATOR = new Creator<NForecast>() {

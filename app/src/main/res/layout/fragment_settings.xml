@@ -11,17 +11,16 @@
 
     </data>
 
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:orientation="vertical"
         >
 
         <LinearLayout
             android:id="@+id/notifications_row"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
             android:orientation="horizontal"
             >
 
@@ -33,19 +32,22 @@
                 android:text="@string/settings_enable_notifications"
                 />
 
-            <ToggleButton
+            <android.support.v7.widget.SwitchCompat
                 android:id="@+id/notifications_toggle_button"
                 style="@style/Settings.ToggleButton"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 />
 
         </LinearLayout>
 
+        <include
+            layout="@layout/item_shadow_down"
+            />
+
         <ScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_below="@id/notifications_row"
             >
 
             <LinearLayout
@@ -69,7 +71,7 @@
                     />
 
                 <include
-                    layout="@layout/separator"
+                    layout="@layout/item_separator"
                     />
 
                 <TextView
@@ -94,7 +96,7 @@
                     />
 
                 <include
-                    layout="@layout/separator"
+                    layout="@layout/item_separator"
                     />
 
                 <TextView
@@ -108,6 +110,6 @@
 
         </ScrollView>
 
-    </RelativeLayout>
+    </LinearLayout>
 
 </layout>
