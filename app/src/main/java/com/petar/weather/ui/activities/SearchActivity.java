@@ -2,7 +2,6 @@ package com.petar.weather.ui.activities;
 
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
-import android.databinding.ObservableField;
 import android.databinding.ObservableInt;
 import android.support.annotation.NonNull;
 import android.os.Bundle;

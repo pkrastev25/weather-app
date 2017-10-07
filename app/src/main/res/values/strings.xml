@@ -35,7 +35,6 @@
     <string name="forecast_details_max_temperature">Max</string>
     <string name="forecast_details_air_pressure">Air pressure</string>
     <string name="forecast_details_humidity">Humidity</string>
-    <string name="forecast_details_accuracy">Accuracy</string>
 
     <!-- SETTINGS -->
     <string name="settings_enable_notifications">Receive notifications</string>

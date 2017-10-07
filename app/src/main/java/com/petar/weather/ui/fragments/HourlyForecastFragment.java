@@ -4,7 +4,6 @@ package com.petar.weather.ui.fragments;
 import android.app.Activity;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
-import android.databinding.ObservableField;
 import android.databinding.ObservableInt;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
