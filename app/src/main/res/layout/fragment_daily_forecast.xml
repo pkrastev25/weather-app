@@ -1,0 +1,51 @@
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    >
+
+    <data>
+
+        <variable
+            name="view"
+            type="com.petar.weather.ui.fragments.DailyForecastFragment"
+            />
+
+    </data>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        >
+
+        <!-- Error view -->
+        <include
+            layout="@layout/view_error"
+            app:view="@{view}"
+            />
+
+        <!-- Content View -->
+        <android.support.v4.widget.SwipeRefreshLayout
+            android:id="@+id/contentView"
+            style="@style/OverlappingView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            >
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/recycler"
+                style="@style/RecyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                />
+
+        </android.support.v4.widget.SwipeRefreshLayout>
+
+        <!-- Loading View -->
+        <include
+            layout="@layout/view_loading"
+            app:view="@{view}"
+            />
+
+    </FrameLayout>
+
+</layout>

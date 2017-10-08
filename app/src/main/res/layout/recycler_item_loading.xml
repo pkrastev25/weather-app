@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    >
+
+    <data>
+
+        <variable
+            name="view"
+            type="com.petar.weather.ui.recycler.LoadingRecyclerItem"
+            />
+
+    </data>
+
+    <RelativeLayout
+        style="@style/RecyclerItems"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        >
+
+        <ProgressBar
+            android:id="@+id/progress_bar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            />
+
+        <TextView
+            style="@style/Text.M.BoldItalic"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/progress_bar"
+            android:gravity="center"
+            android:text="@string/loading_forecast"
+            />
+
+    </RelativeLayout>
+
+</layout>

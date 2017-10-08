@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    >
+
+    <data>
+
+        <variable
+            name="view"
+            type="com.petar.weather.ui.views.IErrorView"
+            />
+
+    </data>
+
+    <!-- A TextView with errorView id must exist! -->
+    <LinearLayout
+        style="@style/OverlappingView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:visibility="@{view.errorViewVisibility}"
+        >
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            />
+
+        <ImageView
+            style="@style/Icon.WhiteTinted"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_gravity="center"
+            android:contentDescription="@string/content_description_error_icon"
+            android:src="@mipmap/ic_error_black"
+            />
+
+        <TextView
+            android:id="@+id/errorView"
+            style="@style/ErrorView.Text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            />
+
+        <include
+            layout="@layout/item_shadow_up"
+            />
+
+        <TextView
+            style="@style/ErrorView.Banner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:onClick="@{() -> view.onRetry()}"
+            android:text="@string/button_retry"
+            />
+
+    </LinearLayout>
+
+</layout>

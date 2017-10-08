@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    >
+
+    <data>
+
+        <variable
+            name="view"
+            type="com.petar.weather.ui.activities.ForecastActivity"
+            />
+
+    </data>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        >
+
+        <!-- TOOLBAR region -->
+
+        <LinearLayout
+            android:id="@+id/toolbar"
+            style="@style/Toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?android:attr/actionBarSize"
+            android:orientation="horizontal"
+            >
+
+            <ImageView
+                style="@style/Toolbar.Icon"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:contentDescription="@string/content_description_current_location_icon"
+                android:onClick="@{() -> view.onFindCurrentLocationClick()}"
+                android:src="@mipmap/ic_current_location_white"
+                />
+
+            <TextView
+                style="@style/Toolbar.Text"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="@{view.currentLocationTitle}"
+                />
+
+            <ImageView
+                style="@style/Toolbar.Icon"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:contentDescription="@string/content_description_search_icon"
+                android:onClick="@{() -> view.onSearchClick()}"
+                android:src="@mipmap/ic_search_white"
+                />
+
+        </LinearLayout>
+
+        <!-- End of TOOLBAR region -->
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@id/toolbar"
+            >
+
+            <!-- Error view -->
+            <include
+                layout="@layout/view_error"
+                app:view="@{view}"
+                />
+
+            <!-- Content View -->
+            <android.support.v4.view.ViewPager
+                android:id="@+id/contentView"
+                style="@style/OverlappingView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                >
+
+                <android.support.v4.view.PagerTabStrip
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:theme="@style/PagerTabStrip"
+                    />
+
+            </android.support.v4.view.ViewPager>
+
+            <!-- Loading View -->
+            <include
+                layout="@layout/view_loading"
+                app:view="@{view}"
+                />
+
+        </FrameLayout>
+
+    </RelativeLayout>
+
+</layout>

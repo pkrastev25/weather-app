@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    >
+
+    <data>
+
+        <variable
+            name="view"
+            type="com.petar.weather.logic.models.AForecast"
+            />
+
+        <import
+            type="com.petar.weather.util.FormatUtil"
+            />
+
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        >
+
+        <LinearLayout
+            android:baselineAligned="false"
+            style="@style/RecyclerItems"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:onClick="@{() -> view.onItemClick()}"
+            >
+
+            <android.support.constraint.ConstraintLayout
+                style="@style/RecyclerItems.Forecast"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.4"
+                >
+
+                <ImageView
+                    style="@style/Icon.WhiteTinted"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:contentDescription="@{@string/content_description_weather_state_icon(view.weatherState)}"
+                    app:imageUrl="@{view.imageType}"
+                    app:layout_constraintDimensionRatio="W, 1:1"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    />
+
+            </android.support.constraint.ConstraintLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:layout_weight="0.6"
+                android:gravity="center"
+                android:orientation="vertical"
+                >
+
+                <TextView
+                    style="@style/Text.L.Bold"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="@{view.weatherState}"
+                    />
+
+                <TextView
+                    style="@style/Text.M.Bold"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="@{FormatUtil.formatMinMaxTemperature(view.minTemp, view.maxTemp)}"
+                    />
+
+                <TextView
+                    style="@style/Text.M"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="@{FormatUtil.formatForecastDate(view)}"
+                    />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <include
+            layout="@layout/item_separator"
+            />
+
+    </LinearLayout>
+
+</layout>

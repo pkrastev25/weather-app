@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    >
+
+    <data>
+
+        <variable
+            name="view"
+            type="com.petar.weather.ui.activities.ForecastDetailsActivity"
+            />
+
+        <import
+            type="com.petar.weather.util.FormatUtil"
+            />
+
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        >
+
+        <!-- TOOLBAR region -->
+
+        <LinearLayout
+            android:id="@+id/toolbar"
+            style="@style/Toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?android:attr/actionBarSize"
+            >
+
+            <ImageView
+                style="@style/Toolbar.Icon"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:contentDescription="@string/content_description_back_icon"
+                android:onClick="@{() -> view.onExit()}"
+                android:src="@mipmap/ic_back_white"
+                />
+
+            <TextView
+                style="@style/Toolbar.Text"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="@{view.forecast.weatherState}"
+                />
+
+        </LinearLayout>
+
+        <include
+            layout="@layout/item_shadow_down"
+            />
+
+        <!-- End of TOOLBAR region -->
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            >
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                >
+
+                <TextView
+                    style="@style/Text.XL.Bold"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="@{view.location.title}"
+                    />
+
+                <TextView
+                    style="@style/Text.M"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="@{FormatUtil.formatForecastDate(view.forecast)}"
+                    />
+
+                <include
+                    layout="@layout/item_separator"
+                    />
+
+                <TextView
+                    style="@style/Text.M.Bold"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/forecast_details_wind_speed"
+                    />
+
+                <TextView
+                    style="@style/Text.M"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@{FormatUtil.formatWindSpeed(view.forecast.windSpeed)}"
+                    />
+
+                <TextView
+                    style="@style/Text.M.Bold"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/forecast_details_wind_direction"
+                    />
+
+                <TextView
+                    style="@style/Text.M"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@{FormatUtil.formatWindDirection(view.forecast.windDirection)}"
+                    />
+
+                <TextView
+                    style="@style/Text.M.Bold"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/forecast_details_wind_direction_compass"
+                    />
+
+                <TextView
+                    style="@style/Text.M"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@{view.forecast.windDirectionCompass}"
+                    />
+
+                <TextView
+                    style="@style/Text.M.Bold"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/forecast_details_max_temperature"
+                    />
+
+                <TextView
+                    style="@style/Text.M"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@{FormatUtil.formatTemperature(view.forecast.maxTemp)}"
+                    />
+
+                <TextView
+                    style="@style/Text.M.Bold"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/forecast_details_min_temperature"
+                    />
+
+                <TextView
+                    style="@style/Text.M"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@{FormatUtil.formatTemperature(view.forecast.minTemp)}"
+                    />
+
+                <TextView
+                    style="@style/Text.M.Bold"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/forecast_details_air_pressure"
+                    />
+
+                <TextView
+                    style="@style/Text.M"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@{FormatUtil.formatAirPressure(view.forecast.airPressure)}"
+                    />
+
+                <TextView
+                    style="@style/Text.M.Bold"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/forecast_details_humidity"
+                    />
+
+                <TextView
+                    style="@style/Text.M"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@{FormatUtil.formatHumidity(view.forecast.humidity)}"
+                    />
+
+            </LinearLayout>
+
+        </ScrollView>
+
+    </LinearLayout>
+
+</layout>
