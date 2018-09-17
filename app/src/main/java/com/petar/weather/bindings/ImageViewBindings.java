@@ -4,6 +4,7 @@ import android.databinding.BindingAdapter;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.petar.weather.R;
 import com.petar.weather.app.Constants;
 import com.petar.weather.networking.ApiLogic;
@@ -29,8 +30,8 @@ public class ImageViewBindings {
         Glide.with(view.getContext())
                 .load(
                         ApiLogic.getInstance().getPNGImageUrl(type)
-                )
-                .error(R.mipmap.ic_image_placeholder_black)
-                .into(view);
+                ).apply(new RequestOptions()
+                        .error(R.mipmap.ic_image_placeholder_black)
+                ).into(view);
     }
 }

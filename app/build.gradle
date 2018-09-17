@@ -3,18 +3,24 @@ apply plugin: 'com.android.application'
 apply plugin: 'org.greenrobot.greendao'
 
 android {
-    compileSdkVersion 25
-    buildToolsVersion "25.0.3"
+    compileSdkVersion 27
+    buildToolsVersion '27.0.3'
     defaultConfig {
         applicationId "com.petar.weather"
         minSdkVersion 15
-        targetSdkVersion 25
-        versionCode 1
+        targetSdkVersion 27
+        versionCode createDailyVersionCode()
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
         release {
+            debuggable false
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+        debug {
+            debuggable true
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
@@ -22,37 +28,53 @@ android {
     dataBinding {
         enabled = true
     }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
-    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
-        exclude group: 'com.android.support', module: 'support-annotations'
-    })
-    testCompile 'junit:junit:4.12'
+    // Dependency versions
+    ext.support_library_version = '27.1.1'
+    ext.google_services_library_version = '15.0.1'
+    ext.retrofit_library_version = '2.4.0'
 
-    // Components
-    compile 'com.android.support:appcompat-v7:25.3.1'
-    compile 'com.android.support:recyclerview-v7:25.3.1'
-    compile 'com.android.support:support-v4:25.3.1'
-    compile 'com.android.support.constraint:constraint-layout:1.0.2'
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+
+    // Testing
+    testImplementation 'junit:junit:4.12'
+    androidTestImplementation 'com.android.support.test:runner:1.0.2'
+    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
+
+    // UI Components
+    implementation "com.android.support:appcompat-v7:$support_library_version"
+    implementation "com.android.support:recyclerview-v7:$support_library_version"
+    implementation "com.android.support:support-v4:$support_library_version"
+    implementation 'com.android.support.constraint:constraint-layout:1.1.3'
 
     // MVP
-    compile 'com.hannesdorfmann.mosby3:mvp-lce:3.0.4'
+    implementation 'com.hannesdorfmann.mosby3:mvp-lce:3.0.4'
 
     // Networking
-    compile 'com.squareup.retrofit2:retrofit:2.3.0'
-    compile 'com.squareup.retrofit2:converter-gson:2.3.0'
+    implementation "com.squareup.retrofit2:retrofit:$retrofit_library_version"
+    implementation "com.squareup.retrofit2:converter-gson:$retrofit_library_version"
 
     // Date & Time manipulation
-    compile 'net.danlew:android.joda:2.9.9'
+    implementation 'net.danlew:android.joda:2.9.9'
 
     // Loading
-    compile 'com.github.bumptech.glide:glide:3.7.0'
+    implementation 'com.github.bumptech.glide:glide:4.8.0'
 
     // Persistence
-    compile 'org.greenrobot:greendao:3.2.2'
+    implementation 'org.greenrobot:greendao:3.2.2'
 
     // Location
-    compile 'com.google.android.gms:play-services-location:11.0.4'
+    implementation "com.google.android.gms:play-services-location:$google_services_library_version"
+}
+
+static int createDailyVersionCode() {
+    Calendar calendar = GregorianCalendar.newInstance()
+    def dateString = calendar.getTime().format('yyyyMMdd')
+    return Integer.parseInt(dateString)
 }
