@@ -345,11 +345,11 @@ public class ForecastActivity
     }
 
     /**
-     * Navigates to the {@link MainActivity} and asks the user for permissions.
+     * Navigates to the {@link HomeActivity} and asks the user for permissions.
      */
     private void requestPermissions() {
         startActivity(
-                new Intent(this, MainActivity.class)
+                new Intent(this, HomeActivity.class)
         );
         finish();
     }

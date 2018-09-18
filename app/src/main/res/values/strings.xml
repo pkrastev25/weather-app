@@ -75,7 +75,7 @@
     <string name="fragment_hourly_forecast_title">HOURLY FORECAST</string>
     <string name="fragment_daily_forecast_title">DAILY FORECAST</string>
     <string name="fragment_settings_title">SETTINGS</string>
-    
+
     <!-- CONTENT DESCRIPTION -->
     <string name="content_description_current_location_icon">Current location</string>
     <string name="content_description_search_icon">Search</string>

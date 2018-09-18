@@ -39,6 +39,8 @@ dependencies {
     ext.support_library_version = '27.1.1'
     ext.google_services_library_version = '15.0.1'
     ext.retrofit_library_version = '2.4.0'
+    ext.rx_java_version = '2.1.0'
+    ext.butter_knife_version = '8.8.1'
 
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
@@ -48,6 +50,7 @@ dependencies {
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
 
     // UI Components
+    implementation "com.android.support:support-v4:$support_library_version"
     implementation "com.android.support:appcompat-v7:$support_library_version"
     implementation "com.android.support:recyclerview-v7:$support_library_version"
     implementation "com.android.support:support-v4:$support_library_version"
@@ -71,6 +74,14 @@ dependencies {
 
     // Location
     implementation "com.google.android.gms:play-services-location:$google_services_library_version"
+
+    // RxJava
+    implementation "io.reactivex.rxjava2:rxandroid:$rx_java_version"
+    implementation "io.reactivex.rxjava2:rxjava:$rx_java_version"
+
+    // View binder
+    implementation "com.jakewharton:butterknife:$butter_knife_version"
+    annotationProcessor "com.jakewharton:butterknife-compiler:$butter_knife_version"
 }
 
 static int createDailyVersionCode() {

@@ -1,50 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout
+<android.support.constraint.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    >
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.activities.MainActivity">
 
-    <data>
-
-        <variable
-            name="view"
-            type="com.petar.weather.ui.activities.MainActivity"
-            />
-
-    </data>
-
-    <LinearLayout
-        android:id="@+id/splash_screen_view"
-        style="@style/SplashScreen"
+    <FrameLayout
+        android:id="@+id/phone_content_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        >
+        android:layout_height="match_parent"/>
 
-        <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            >
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:contentDescription="@string/content_description_app_icon"
-                android:src="@mipmap/ic_launcher"
-                />
-
-        </FrameLayout>
-
-        <TextView
-            style="@style/SplashScreen.Text"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:text="@string/splash_screen_text"
-            />
-
-    </LinearLayout>
-
-</layout>
-
+</android.support.constraint.ConstraintLayout>
